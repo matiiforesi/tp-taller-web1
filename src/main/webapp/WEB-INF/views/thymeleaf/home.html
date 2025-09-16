@@ -10,6 +10,7 @@
   <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
 
   <!-- custom style -->
+    <link rel="stylesheet" th:href="@{/css/colores.css}">
   <link rel="stylesheet" th:href="@{/css/main.css}"/>
 
 </head>
@@ -20,10 +21,10 @@
   <a class="navbar-brand" href="#">Mi Web</a>
 </nav>
 
-<main role="main" class="container" >
+<main role="main" class="container w-100 h-100" >
   <div class = "container" style="display:flex; justify-content:center; align-items:center; gap:1em;flex-direction:column">
     <h1>Bienvenidos a Taller Web 1</h1>
-      <div id="carouselExample" class="carousel slide bg-success" style="width:50%">
+      <div id="carouselExample" class="carousel slide bg-success" style="width:50%" data-bs-ride="carousel">
           <div class="carousel-inner">
               <div class="carousel-item active bg-secondary">
                   <div class="card p-5">
@@ -40,7 +41,7 @@
               <div class="carousel-item bg-secondary">
                   <div class="card p-5">
                       <h2>Deportes</h2>
-                      <button class="btn btn-block btn-primary">Ingresar</button>
+                      <button class="btn w-100 btn-primary">Ingresar</button>
                   </div>
               </div>
               <div class="carousel-item bg-secondary">
@@ -64,12 +65,12 @@
       </form>
       </div>
       <a href="" class="btn btn-lg btn-primary btn-block">Crear Cuestionario</a>
-    <a href="login.html" class="btn btn-lg btn-primary btn-block">Volver</a>
+    <a href="login.html" class="btn btn-lg btn-danger btn-block">Cerrar sesion</a>
   </div>
 </main>
 <!-- /.container -->
 
 <!-- Boostrap core js -->
-<script type="text/javascript" th:src="@{webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
 </body>
 </html>

@@ -1,0 +1,12 @@
+:root {
+  /* Colores */
+  --periwinkle: #c6d8ff;
+  --ruddy-blue: #71a9f7;
+  --ultra-violet: #6b5ca5;
+  --byzantium: #72195a;
+  --tyrian-purple: #4c1036;
+
+  /* Gradientes */
+  --gradient-top: linear-gradient(0deg, var(--periwinkle), var(--ruddy-blue), var(--ultra-violet), var(--byzantium), var(--tyrian-purple));
+  --gradient-radial: radial-gradient(var(--periwinkle), var(--ruddy-blue), var(--ultra-violet), var(--byzantium), var(--tyrian-purple));
+}

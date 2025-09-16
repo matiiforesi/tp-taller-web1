@@ -17,13 +17,53 @@
 <body>
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-  <a class="navbar-brand" href="#">UNLAM</a>
+  <a class="navbar-brand" href="#">Mi Web</a>
 </nav>
 
-<main role="main" class="container">
-  <div class = "container">
+<main role="main" class="container" >
+  <div class = "container" style="display:flex; justify-content:center; align-items:center; gap:1em;flex-direction:column">
     <h1>Bienvenidos a Taller Web 1</h1>
-
+      <div id="carouselExample" class="carousel slide bg-success" style="width:50%">
+          <div class="carousel-inner">
+              <div class="carousel-item active bg-secondary">
+                  <div class="card p-5">
+                      <h2>Historia</h2>
+                      <button class="btn btn-block btn-primary">Ingresar</button>
+                  </div>
+              </div>
+              <div class="carousel-item bg-secondary">
+                  <div class="card p-5">
+                      <h2>Geografia</h2>
+                      <button class="btn btn-block btn-primary">Ingresar</button>
+                  </div>
+              </div>
+              <div class="carousel-item bg-secondary">
+                  <div class="card p-5">
+                      <h2>Deportes</h2>
+                      <button class="btn btn-block btn-primary">Ingresar</button>
+                  </div>
+              </div>
+              <div class="carousel-item bg-secondary">
+                  <div class="card p-5">
+                      <h2>Matematicas</h2>
+                      <button class="btn btn-block btn-primary">Ingresar</button>
+                  </div>
+              </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon"></span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+              <span class="carousel-control-next-icon"></span>
+          </button>
+      </div>
+      <div class="card p-3" style="gap:5px; width:30em">
+      <form class="border d-flex" style="flex-direction: column; gap:4px">
+          <input type="text" id="id_partida" placeholder="PIN de cuestionario">
+          <input type="submit" class="btn btn-lg btn-primary btn-block" value="Ingresar">
+      </form>
+      </div>
+      <a href="" class="btn btn-lg btn-primary btn-block">Crear Cuestionario</a>
     <a href="login.html" class="btn btn-lg btn-primary btn-block">Volver</a>
   </div>
 </main>

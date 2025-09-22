@@ -16,6 +16,9 @@ public class Usuario {
     private String rol;
     private Boolean activo = false;
 
+    private String nombre = "";
+    private Long puntaje = 0L;
+
     public Long getId() {
         return id;
     }
@@ -54,4 +57,8 @@ public class Usuario {
     public void activar() {
         activo = true;
     }
+    public String getNombre() {return nombre;}
+    public void setNombre(String nombre) {this.nombre = nombre;}
+    public Long getPuntaje() {return puntaje;}
+    public void setPuntaje(Long puntaje) {this.puntaje = puntaje;}
 }

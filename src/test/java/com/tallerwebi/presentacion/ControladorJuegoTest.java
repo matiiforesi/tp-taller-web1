@@ -33,7 +33,6 @@ public class ControladorJuegoTest {
     }
     public void givenCuestionario(){
         Preguntas pregunta = new Preguntas();
-        pregunta.setId(3L);
         pregunta.setEnunciado("¿Cuando fue la revolucion de Mayo?");
         pregunta.setCategoria("Historia");
         pregunta.setDificultad("Facil");
@@ -54,7 +53,7 @@ public class ControladorJuegoTest {
     public void thenCuestionario(ModelAndView vista){
         //Devuelve la vista y el modelo
         assertThat(vista.getViewName(), equalToIgnoringCase("pregunta"));
-        Preguntas model=(Preguntas)vista.getModel().get("preguntas");
+        Preguntas model=(Preguntas)vista.getModel().get("pregunta");
 
         assertThat(model.getEnunciado(),equalToIgnoringCase("¿Cuando fue la revolucion de Mayo?"));
         assertThat(model.getRespuestaCorrecta(),equalToIgnoringCase("25 de mayo"));

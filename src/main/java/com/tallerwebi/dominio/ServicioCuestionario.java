@@ -4,7 +4,11 @@ import com.tallerwebi.infraestructura.RepositorioCuestionarioImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.List;
+
 @Service ("servicioCuestionario")
+@Transactional
 public class ServicioCuestionario {
 
     @Autowired
@@ -27,7 +31,9 @@ public class ServicioCuestionario {
     }
 
     public Cuestionario buscar(Long idCuestionario){
+
         return repositorioCuestionario.buscar(idCuestionario);
+
     }
     public void modificar(Cuestionario cuestionario){
         repositorioCuestionario.modificar(cuestionario);

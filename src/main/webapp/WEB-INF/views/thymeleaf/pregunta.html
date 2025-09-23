@@ -5,11 +5,11 @@
     <title>Pregunta</title>
 </head>
 <body>
-<h3 th:text="'Categoría: ' + ${preguntas.categoria}"></h3>
-<h2 th:text="${preguntas.enunciado}"></h2>
 
-<form th:action="@{/juego/responder}" method="post">
-    <div th:each="opcion : ${preguntas.opciones}">
+<h2 th:text="${pregunta.enunciado}"></h2>
+
+<form th:action="@{/responder}" method="post">
+    <div th:each="opcion : ${pregunta.opciones}">
         <label>
             <input type="radio" name="respuesta" th:value="${opcion}" required>
             <span th:text="${opcion}"></span>
@@ -17,5 +17,6 @@
     </div>
     <button type="submit">Responder</button>
 </form>
+<p th:text="${error}"></p>
 </body>
 </html>

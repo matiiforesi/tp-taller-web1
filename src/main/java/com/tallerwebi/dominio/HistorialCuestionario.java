@@ -1,18 +1,17 @@
 package com.tallerwebi.dominio;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-public class HistorialDeCuestionarios {
+public class HistorialCuestionario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nombre;
+    private String nombreCuestionario;
+
+    private String nombreUsuario;
 
     private Long puntaje;
 
@@ -20,10 +19,18 @@ public class HistorialDeCuestionarios {
 
     private Integer preguntasErradas;
 
+    @ManyToOne
+    private Usuario jugador;
+
     public Long getId() {return id;}
     public void setId(Long id) {this.id = id;}
-    public String getNombre() {return nombre;}
-    public void setNombre(String nombre) {this.nombre = nombre;}
+
+    public String getNombreCuestionario() {return nombreCuestionario;}
+    public void setNombreCuestionario(String nombre) {this.nombreCuestionario = nombre;}
+
+    public String getNombreUsuario() {return nombreUsuario;}
+    public void setNombreUsuario(String nombre) {this.nombreUsuario = nombre;}
+
     public Long getPuntaje() {return puntaje;}
     public void setPuntaje(Long puntaje) {this.puntaje = puntaje;}
     public Integer getPreguntasCorrectas() {return preguntasCorrectas;}

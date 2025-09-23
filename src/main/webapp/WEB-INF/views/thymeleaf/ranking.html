@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ranking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+        }
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin-top: 1rem;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 0.5rem 1rem;
+            text-align: left;
+        }
+        th {
+            background-color: #555;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        h1 {
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Ranking General -->
+<div th:if="${rankingGeneral != null}">
+    <h1>Ranking General</h1>
+    <table th:if="${!#lists.isEmpty(rankingGeneral)}">
+        <thead>
+        <tr>
+            <th>Jugador</th>
+            <th>Puntaje</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="usuario : ${rankingGeneral}">
+            <td th:text="${usuario.nombre}">Nombre</td>
+            <td th:text="${usuario.puntaje}">Puntaje</td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(rankingGeneral)}">No hay usuarios para mostrar.</p>
+</div>
+
+<!-- Ranking Cuestionario -->
+<div th:if="${rankingCuestionario != null}">
+    <h1 th:text="'Cuestionario de ' + ${nombreCuestionario}"></h1>
+    <table th:if="${!#lists.isEmpty(rankingCuestionario)}">
+        <thead>
+        <tr>
+            <th>Jugador</th>
+            <th>Puntaje</th>
+            <th>Correctas</th>
+            <th>Erradas</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="historial : ${rankingCuestionario}">
+            <td th:text="${historial.nombreUsuario}">Usuario</td>
+            <td th:text="${historial.puntaje}">Puntaje</td>
+            <td th:text="${historial.preguntasCorrectas}">Correctas</td>
+            <td th:text="${historial.preguntasErradas}">Erradas</td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(rankingCuestionario)}">No hay resultados para este cuestionario.</p>
+</div>
+
+</body>
+</html>

@@ -5,6 +5,7 @@ import com.tallerwebi.dominio.RepositorioCuestionario;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository("repositorioCuestionario")
@@ -12,24 +13,34 @@ public class RepositorioCuestionarioImpl implements RepositorioCuestionario {
 
     private SessionFactory sessionFactory;
 
+    @Autowired
+    public RepositorioCuestionarioImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
     @Override
     public void guardar(Cuestionario cuestionario) {
-
+        sessionFactory.getCurrentSession().save(cuestionario);
     }
 
     @Override
-    public Cuestionario buscar(Integer id) {
-        return null;
+    public Cuestionario buscar(Long id) {
+
+        final Session session = sessionFactory.getCurrentSession();
+        return (Cuestionario) session.createCriteria(Cuestionario.class)
+                .add(Restrictions.eq("id", id)).uniqueResult();
     }
 
     @Override
     public void modificar(Cuestionario cuestionario) {
-
+        sessionFactory.getCurrentSession().update(cuestionario);
     }
 
     @Override
     public Cuestionario buscarPorCategoria(String categoria) {
-        return null;
+
+        final Session session = sessionFactory.getCurrentSession();
+        return (Cuestionario) session.createCriteria(Cuestionario.class)     //con esto te devuelve la pregunta que coincida con la categoria de los param
+                .add(Restrictions.eq("categoria", categoria)).uniqueResult();
     }
 
     @Override

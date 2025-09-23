@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pregunta</title>
+</head>
+<body>
+<h3 th:text="'Categoría: ' + ${preguntas.categoria}"></h3>
+<h2 th:text="${preguntas.enunciado}"></h2>
+
+<form th:action="@{/juego/responder}" method="post">
+    <div th:each="opcion : ${preguntas.opciones}">
+        <label>
+            <input type="radio" name="respuesta" th:value="${opcion}" required>
+            <span th:text="${opcion}"></span>
+        </label><br/>
+    </div>
+    <button type="submit">Responder</button>
+</form>
+</body>
+</html>

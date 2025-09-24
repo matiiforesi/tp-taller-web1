@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import java.util.List;
 
 @Repository("repositorioCuestionario")
 public class RepositorioCuestionarioImpl implements RepositorioCuestionario {
@@ -51,13 +52,10 @@ public class RepositorioCuestionarioImpl implements RepositorioCuestionario {
                 .uniqueResult();
     }
 
-
-//    void guardar(Cuestionario cuestionario);
-//    Cuestionario buscar(Integer id);
-//    void modificar(Cuestionario cuestionario);
-//    Cuestionario buscarPorCategoria(String categoria);
-//    Cuestionario buscarPorDificultad(String dificultad);
-
-
-
+    @Override
+    public List<Cuestionario> buscarTodo(){
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("from Cuestionario", Cuestionario.class).list();
+        }
+    }
 }

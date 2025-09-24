@@ -27,6 +27,12 @@ public class Preguntas {
     @Column(name = "respuesta_incorrecta_3")
     private String respuestaIncorrecta3;
 
+    @ManyToOne
+    @JoinColumn(name = "cuestionario_id", nullable = false)
+    private Cuestionario cuestionario;
+
+    public Cuestionario getCuestionario() {return cuestionario;}
+    public void setCuestionario(Cuestionario cuestionario) {this.cuestionario = cuestionario;}
     public Long getId() {return id;}
     public void setId(Long id) {this.id = id;}
     public String getEnunciado() {return enunciado;}

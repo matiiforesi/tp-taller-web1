@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -9,12 +10,17 @@ public class Cuestionario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nombre;
+
     private String descripcion;
+
     private String categoria;
+
     private String dificultad;
-    @OneToMany
-    private List<Preguntas> preguntas;
+
+    @OneToMany(mappedBy = "cuestionario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Preguntas> preguntas = new ArrayList<>();
 
     public Long getId() {
         return id;

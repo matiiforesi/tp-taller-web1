@@ -1,0 +1,17 @@
+
+.contenedor_general{
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    flex-direction:column;
+    height:90vh;
+}
+
+.opciones{
+    display:flex;
+    flex-direction: column;
+}
+
+label{
+    font-size: large;
+}

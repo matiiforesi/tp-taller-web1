@@ -3,10 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Pregunta</title>
+    <!-- Boostrap core css -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+
+    <!-- custom style -->
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" th:href="@{/css/pregunta.css}">
 </head>
 <body>
 
-<h2 th:text="${pregunta.enunciado}"></h2>
+<!--<h2 th:text="${pregunta.enunciado}"></h2>
 
 <form th:action="@{/responder}" method="post">
     <div th:each="opcion : ${pregunta.opciones}">
@@ -17,6 +23,32 @@
     </div>
     <button type="submit">Responder</button>
 </form>
-<p th:text="${error}"></p>
+<p th:text="${error}"></p>-->
+<div class="contenedor_general w-100">
+<h2>¿Cuando fue la revolucion de mayo?</h2>
+
+    <div>
+<form class="opciones" action="#" method="post">
+
+    <div>
+    <input type="radio" name="respuesta" id="respuesta" value="25 de mayo" required>
+    <label for="respuesta">25 de mayo</label>
+    </div>
+    <div>
+    <input type="radio" name="respuesta" id="respuesta2" value="23 de abril" required>
+    <label for="respuesta2">23 de abril</label>
+    </div>
+    <div>
+    <input type="radio" name="respuesta" id="respuesta3" value="24 de mayo" required>
+    <label for="respuesta3">24 de mayo</label>
+    </div>
+    <div>
+    <input type="radio" name="respuesta" id="respuesta4" value="26 de mayo" required>
+    <label for="respuesta4">26 de mayo</label>
+    </div>
+    <button type="submit">Responder</button>
+</form>
+    </div>
+</div>
 </body>
 </html>

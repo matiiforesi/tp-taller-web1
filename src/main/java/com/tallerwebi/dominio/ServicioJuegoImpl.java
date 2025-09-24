@@ -22,4 +22,18 @@ public class ServicioJuegoImpl implements ServicioJuego {
         }
         return Boolean.FALSE;
     }
+
+    @Override
+    public Integer acumularPuntaje(Long idPregunta, Long idJugador,String respuesta) {
+
+        Integer puntaje=0;
+
+        if(validarRespuesta(respuesta,idPregunta)){
+            puntaje+=200;
+        }
+
+        return puntaje;
+    }
+
+
 }

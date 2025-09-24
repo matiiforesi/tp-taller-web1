@@ -30,6 +30,30 @@ public class ServicioJuegoTest {
         Boolean obtenido=whenSeValideLaRespuestaIncorrecta();
         thenSeValideRespuestaIncorrecta(obtenido);
     }
+    @Test
+    public void queAcumulePuntos(){
+
+        givenCreacionPreguntas();
+        Integer obtenido=whenAcumulaPuntaje("25 de mayo");
+        thenAcumulaPuntaje(200,obtenido);
+    }
+
+    @Test
+    public void queNoSumePuntos(){
+        givenCreacionPreguntas();
+        Integer obtenido= whenAcumulaPuntaje("23 de abril");
+        thenAcumulaPuntaje(0,obtenido);
+    }
+    private void thenAcumulaPuntaje(Integer esperado,Integer puntaje){
+        assertEquals(esperado,puntaje);
+    }
+
+    private Integer whenAcumulaPuntaje(String respuesta){
+        if(whenSeValideLaRespuestaSiEsCorrecta()){
+            return servicioJuego.acumularPuntaje(2L, 1L, respuesta);
+        }
+        return 0;
+    }
 
     private Boolean whenSeValideLaRespuestaIncorrecta() {
         return servicioJuego.validarRespuesta("23 de Abril",2L);

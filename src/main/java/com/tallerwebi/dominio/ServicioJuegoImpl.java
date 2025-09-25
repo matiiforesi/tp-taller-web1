@@ -24,7 +24,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
     }
 
     @Override
-    public Integer acumularPuntaje(Long idPregunta, Long idJugador,String respuesta) {
+    public Integer obtenerPuntaje(Long idPregunta, Long idJugador,String respuesta) {
 
         Integer puntaje=0;
 

@@ -35,5 +35,16 @@ public class ServicioJuegoImpl implements ServicioJuego {
         return puntaje;
     }
 
+    @Override
+    public Preguntas obtenerPregunta(Cuestionario cuestionario,Integer indicePregunta) {
+        return cuestionario.getPreguntas().get(indicePregunta);
+    }
+
+    @Override
+    public Cuestionario obtenerCuestionario (Long id) {
+        //return servicioCuestionario.buscar(id);
+        return servicioCuestionario.buscarTodo().get(0);
+    }
+
 
 }

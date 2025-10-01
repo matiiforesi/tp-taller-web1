@@ -1,9 +1,6 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.Cuestionario;
-import com.tallerwebi.dominio.Preguntas;
-import com.tallerwebi.dominio.RepositorioCuestionario;
-import com.tallerwebi.dominio.ServicioCuestionario;
+import com.tallerwebi.dominio.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /*
@@ -24,26 +23,33 @@ import java.util.List;
 public class ControladorJuego {
 
     @Autowired
-    private ServicioCuestionario servicioCuestionario;
+    private ServicioJuego servicioJuego;
 
     @Autowired
-    public ControladorJuego(ServicioCuestionario servicioCuestionario){
-        this.servicioCuestionario=servicioCuestionario;
+    public ControladorJuego(ServicioJuego servicioJuego){
+        this.servicioJuego = servicioJuego;
     }
 
     @RequestMapping("/iniciar/{idCuestionario}")
     public ModelAndView iniciar(@PathVariable("idCuestionario") Long idCuestionario){
+        System.out.println("Iniciando el controlador" + idCuestionario);
         ModelMap model = new ModelMap();
-        Cuestionario cuestionario= servicioCuestionario.buscar(idCuestionario);
+        Cuestionario cuestionario= servicioJuego.obtenerCuestionario(idCuestionario);
+        System.out.println("Cuestionario obtenida: " + cuestionario);
 
         if(cuestionario==null){
             model.put("error","No se encontro ningun cuestionario");
             return new ModelAndView("pregunta",model);
         }
 
-        Preguntas pregunta= cuestionario.getPreguntas().get(0);
+        Preguntas pregunta= servicioJuego.obtenerPregunta(cuestionario,0);
+        List<String>opciones= Arrays.asList(pregunta.getRespuestaCorrecta(),pregunta.getRespuestaIncorrecta1(),pregunta.getRespuestaIncorrecta2(),pregunta.getRespuestaIncorrecta3());
+        Collections.shuffle(opciones);
+        System.out.println("Pregunta obtenida: " + pregunta);
 
+        model.put("cuestionario",cuestionario);
         model.put("pregunta",pregunta);
+        model.put("opciones",opciones);
 
         return new ModelAndView("pregunta",model);
     }

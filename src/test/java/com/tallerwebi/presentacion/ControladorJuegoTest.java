@@ -1,8 +1,6 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.Cuestionario;
-import com.tallerwebi.dominio.Preguntas;
-import com.tallerwebi.dominio.ServicioCuestionario;
+import com.tallerwebi.dominio.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -20,7 +18,8 @@ import static org.mockito.Mockito.mock;
 public class ControladorJuegoTest {
 
     private ServicioCuestionario servicioMock= mock(ServicioCuestionario.class);
-    private ControladorJuego controladorJuego = new ControladorJuego(this.servicioMock);
+    private ServicioJuegoImpl servicioJuego= new ServicioJuegoImpl(servicioMock);
+    private ControladorJuego controladorJuego = new ControladorJuego(servicioJuego);
 
     @Test
     public void queDevuelvaLaPreguntaConSusOpciones(){
@@ -43,7 +42,7 @@ public class ControladorJuegoTest {
 
         Cuestionario ejemplo= new Cuestionario();
         ejemplo.setPreguntas(Arrays.asList(pregunta));
-        Mockito.when(servicioMock.buscar(3L)).thenReturn(ejemplo);
+        Mockito.when(servicioJuego.obtenerCuestionario(3L)).thenReturn(ejemplo);
 
     }
     public ModelAndView whenCuestionarioDevuelvaLaPregunta(){

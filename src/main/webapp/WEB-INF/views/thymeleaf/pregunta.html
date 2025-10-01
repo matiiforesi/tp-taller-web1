@@ -23,7 +23,7 @@
     </div>
     <button type="submit">Responder</button>
 </form>
-<p th:text="${error}"></p>-->
+<p th:text="${error}"></p>
 <div class="contenedor_general w-100">
 <h2>¿Cuando fue la revolucion de mayo?</h2>
 
@@ -49,6 +49,27 @@
     <button type="submit">Responder</button>
 </form>
     </div>
+</div> -->
+<div class="contenedor_general w-100">
+    <div>
+<h2 th:text="${pregunta.enunciado}"></h2>
+
+<form th:action="@{'/juego/' + ${cuestionario.id} + '/siguiente'}" method="post">
+   <!-- <ul>
+        <li th:each="opcion : ${opciones}">
+            <input type="radio" name="respuesta" th:value="${opcion}"/>
+            <span th:text="${opcion}"></span>
+        </li>
+    </ul>-->
+    <div th:each="opcion : ${opciones}">
+        <label>
+            <input type="radio" name="respuesta" th:value="${opcion}" required>
+            <span th:text="${opcion}"></span>
+        </label><br/>
+    </div>
+    <button type="submit">Siguiente</button>
+</form>
+</div>
 </div>
 </body>
 </html>

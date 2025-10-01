@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,7 +17,7 @@ public class ServicioJuegoTest {
 * Que Te devuelva si es incorrecta*/
 
     private ServicioCuestionario serv= mock(ServicioCuestionario.class);
-    private ServicioJuegoImpl servicioJuego= new ServicioJuegoImpl(serv);
+    private ServicioJuego servicioJuego= new ServicioJuegoImpl(serv);
     @Test
     public void queSeValideLaRespuestaSiEsCorrecta(){
 
@@ -44,6 +45,34 @@ public class ServicioJuegoTest {
         Integer obtenido= whenAcumulaPuntaje("23 de abril");
         thenAcumulaPuntaje(0,obtenido);
     }
+
+    @Test
+    public void queObtengaElCuestionario(){
+        Cuestionario cuestionarioMock= new  Cuestionario();
+        cuestionarioMock.setId(1L);
+
+        Mockito.when(serv.buscar(1L)).thenReturn(cuestionarioMock);
+        Cuestionario resultado= servicioJuego.obtenerCuestionario(1L);
+
+        assertEquals(cuestionarioMock,resultado);
+    }
+
+    @Test
+    public void queObtengaLaPregunta(){
+        Preguntas pregunta_uno= new Preguntas();
+        pregunta_uno.setId(1L);
+
+        Preguntas pregunta_dos= new Preguntas();
+        pregunta_dos.setId(2L);
+
+        Cuestionario cuestionario= new Cuestionario();
+        cuestionario.setPreguntas(List.of(pregunta_uno,pregunta_dos));
+
+        Preguntas obtenido= servicioJuego.obtenerPregunta(cuestionario,1);
+
+        assertEquals(2L,obtenido.getId());
+    }
+
     private void thenAcumulaPuntaje(Integer esperado,Integer puntaje){
         assertEquals(esperado,puntaje);
     }

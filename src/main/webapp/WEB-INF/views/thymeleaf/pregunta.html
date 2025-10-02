@@ -67,8 +67,11 @@
             <span th:text="${opcion}"></span>
         </label><br/>
     </div>
-    <button type="submit">Siguiente</button>
 </form>
+    <form th:action="@{/siguiente}" method="post">
+        <input type="hidden" name="indicePregunta" th:value="${indicePregunta}">
+    <button type="submit">Siguiente</button>
+    </form>
 </div>
 </div>
 </body>

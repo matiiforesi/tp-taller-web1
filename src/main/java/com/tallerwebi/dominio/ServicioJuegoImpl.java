@@ -24,7 +24,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
     }
 
     @Override
-    public Integer acumularPuntaje(Long idPregunta, Long idJugador,String respuesta) {
+    public Integer obtenerPuntaje(Long idPregunta, Long idJugador,String respuesta) {
 
         Integer puntaje=0;
 
@@ -42,8 +42,8 @@ public class ServicioJuegoImpl implements ServicioJuego {
 
     @Override
     public Cuestionario obtenerCuestionario (Long id) {
-        //return servicioCuestionario.buscar(id);
-        return servicioCuestionario.buscarTodo().get(0);
+        return servicioCuestionario.buscar(id);
+        //return servicioCuestionario.buscarTodo().get(0);
     }
 
 

@@ -17,6 +17,7 @@
 <div th:each="trivia : ${trivias}" class="card mb-3">
     <div class="card-body">
         <h5 class="card-title" th:text="${trivia.nombre}"></h5>
+        <p class="card-text" th:text="${trivia.id}"></p>
         <p class="card-text" th:text="${trivia.descripcion}"></p>
         <p><strong>Categoria:</strong> <span th:text="${trivia.categoria}"></span></p>
         <p><strong>Dificultad:</strong> <span th:text="${trivia.dificultad}"></span></p>

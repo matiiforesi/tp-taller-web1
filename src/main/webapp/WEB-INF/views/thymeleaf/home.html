@@ -25,16 +25,27 @@
   <div class = "container" style="display:flex; justify-content:center; align-items:center; gap:1em;flex-direction:column">
     <h1>Bienvenidos a Taller Web 1</h1>
       <div id="carouselExample" class="carousel slide bg-success" style="width:50%" data-bs-ride="carousel">
-          <div class="carousel-inner">
+          <!--<div class="carousel-inner">
               <div class="carousel-item active bg-secondary">
                   <div class="card p-5">
                       <h2>Historia</h2>
-                      <form th:action="@{/iniciar/{idCuestionario}}">
-                      <button class="btn btn-block btn-primary">Ingresar</button>
-                      </form>
+                      <a th:href="@{/iniciar/{idCuestionario}(idCuestionario=${cuestionario.id})}" class="btn btn-block btn-primary">
+                          Ingresar
+                      </a>
+                  </div>
+              </div> -->
+          <div class="carousel-inner">
+              <div th:each="cuestionario, iterStat : ${cuestionarios}" th:class="'carousel-item bg-secondary' + (iterStat.index == 0 ? ' active' : '')">
+                  <div class="card p-5">
+                      <h2 th:text="${cuestionario.nombre}">Nombre del cuestionario</h2>
+                      <a th:href="@{/iniciar/{idCuestionario}(idCuestionario=${cuestionario.id})}" class="btn btn-block btn-primary">Ingresar</a>
                   </div>
               </div>
-              <div class="carousel-item bg-secondary">
+          </div>
+          <div th:if="${#lists.isEmpty(cuestionarios)}">
+              <p>No hay cuestionarios disponibles.</p>
+          </div>
+            <!--  <div class="carousel-item bg-secondary">
                   <div class="card p-5">
                       <h2>Geografia</h2>
                       <button class="btn btn-block btn-primary">Ingresar</button>
@@ -52,7 +63,7 @@
                       <button class="btn btn-block btn-primary">Ingresar</button>
                   </div>
               </div>
-          </div>
+          </div>-->
           <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
               <span class="carousel-control-prev-icon"></span>
           </button>
@@ -61,10 +72,10 @@
           </button>
       </div>
       <div class="card p-3" style="gap:5px; width:30em">
-      <form class="border d-flex" style="flex-direction: column; gap:4px">
-          <input type="text" id="id_partida" placeholder="PIN de cuestionario">
-          <input type="submit" class="btn btn-lg btn-primary btn-block" value="Ingresar">
-      </form>
+          <form th:action="@{/iniciar}" method="get" class="d-flex flex-column gap-3">
+              <input type="number" name="idCuestionario" placeholder="ID del cuestionario" required class="form-control">
+              <button type="submit" class="btn btn-primary">Ingresar</button>
+          </form>
       </div>
       <a href="cuestionario/new" class="btn btn-lg btn-primary btn-block">Crear Cuestionario</a>
     <a href="login.html" class="btn btn-lg btn-danger btn-block">Cerrar sesion</a>

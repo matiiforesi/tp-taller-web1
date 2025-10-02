@@ -79,7 +79,7 @@ public class ServicioJuegoTest {
 
     private Integer whenAcumulaPuntaje(String respuesta){
         if(whenSeValideLaRespuestaSiEsCorrecta()){
-            return servicioJuego.acumularPuntaje(2L, 1L, respuesta);
+            return servicioJuego.obtenerPuntaje(2L, 1L, respuesta);
         }
         return 0;
     }

@@ -5,7 +5,8 @@ import com.tallerwebi.dominio.ServicioRanking;
 import com.tallerwebi.dominio.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -21,11 +22,10 @@ public class ControladorRanking {
         this.servicioRanking = servicioRanking;
     }
 
-    @GetMapping("/ranking")
+    @RequestMapping("/ranking")
     public ModelAndView mostrarRankingGeneral() {
-        List<Usuario> ranking = servicioRanking.rankingGeneral();
+        List<Usuario> ranking = servicioRanking.obtenerRankingGeneral();
 
-        // demo
 //        if (ranking.isEmpty()) {
 //            Usuario usuario1 = new Usuario();
 //            Usuario usuario2 = new Usuario();
@@ -39,16 +39,27 @@ public class ControladorRanking {
 //            ranking = List.of(usuario1, usuario2, usuario3);
 //        }
 
-        ModelAndView mav = new ModelAndView("ranking");
-        mav.addObject("rankingGeneral", ranking);
-        return mav;
+        ModelMap model = new ModelMap();
+        model.addAttribute("rankingGeneral", ranking);
+        return new ModelAndView("ranking", model);
     }
 
-    @GetMapping("/rankingCuestionario")
-    public ModelAndView mostrarRankingCuestionario(@RequestParam("nombreCuestionario")String nombreCuestionario) {
-        List<HistorialCuestionario> ranking = servicioRanking.rankingCuestionario(nombreCuestionario);
+    @RequestMapping("/rankingCuestionario")
+    public ModelAndView mostrarRankingCuestionario(
+            @RequestParam(value = "nombreCuestionario", required = false) String nombreCuestionario,
+            @RequestParam(value = "idCuestionario", required = false) Long idCuestionario) {
 
-        // demo
+        List<HistorialCuestionario> ranking;
+
+        if (idCuestionario != null) {
+            ranking = servicioRanking.obtenerRankingCuestionarioPorId(idCuestionario);
+            if (!ranking.isEmpty() && ranking.get(0).getNombreCuestionario() != null) {
+                nombreCuestionario = ranking.get(0).getNombreCuestionario();
+            }
+        } else {
+            ranking = servicioRanking.obtenerRankingCuestionarioPorNombre(nombreCuestionario);
+        }
+
 //        if (ranking.isEmpty()) {
 //            HistorialCuestionario h1 = new HistorialCuestionario();
 //            HistorialCuestionario h2 = new HistorialCuestionario();
@@ -56,6 +67,9 @@ public class ControladorRanking {
 //            h1.setNombreUsuario("Mateo");
 //            h2.setNombreUsuario("Juan");
 //            h3.setNombreUsuario("Matias");
+//            h1.setId(1L);
+//            h2.setId(1L);
+//            h3.setId(1L);
 //            h1.setNombreCuestionario("Historia");
 //            h2.setNombreCuestionario("Historia");
 //            h3.setNombreCuestionario("Historia");
@@ -71,9 +85,11 @@ public class ControladorRanking {
 //            ranking = List.of(h1, h2, h3);
 //        }
 
-        ModelAndView mav = new ModelAndView("ranking");
-        mav.addObject("rankingCuestionario", ranking);
-        mav.addObject("nombreCuestionario", nombreCuestionario);
-        return mav;
+        ModelMap model = new ModelMap();
+        model.addAttribute("rankingCuestionario", ranking);
+        model.addAttribute("idCuestionario", idCuestionario);
+        model.addAttribute("nombreCuestionario", nombreCuestionario);
+
+        return new ModelAndView("ranking", model);
     }
 }

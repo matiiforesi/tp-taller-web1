@@ -4,7 +4,16 @@ import java.util.List;
 
 public interface RepositorioHistorial {
 
-    List<Usuario> obtenerRankingGeneral();
+    HistorialCuestionario buscar(Long id);
 
-    List<HistorialCuestionario> obtenerRankingCuestionario(String nombreCuestionario);
+    void guardar(HistorialCuestionario historialCuestionario);
+
+    void modificar(HistorialCuestionario historialCuestionario);
+
+    List<Usuario> buscarRankingGeneral();
+
+    List<HistorialCuestionario> buscarRankingCuestionarioPorNombre(String nombreCuestionario);
+
+    List<HistorialCuestionario> buscarRankingCuestionarioPorId(Long idCuestionario);
+
 }

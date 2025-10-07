@@ -3,92 +3,81 @@ package com.tallerwebi.integracion;
 import com.tallerwebi.dominio.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ServicioRankingTest {
 
-    @Mock
-    private RepositorioHistorial repositorioHistorial;
-
-    @InjectMocks
-    private ServicioRankingImpl servicioRanking;
+    private RepositorioHistorial repositorioHistorial = mock(RepositorioHistorial.class);
+    private ServicioRankingImpl servicioRanking = new ServicioRankingImpl(mock(RepositorioUsuario.class), repositorioHistorial);
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        Mockito.reset(repositorioHistorial);
     }
 
     @Test
-    public void queElRankingEsteOrdenado() {
-        givenRankingGeneralConUsuarios();
-        List<Usuario> resultado = whenTraerRankingGeneral();
-        thenRankingGeneralOrdenado(resultado);
+    public void queSeLlameAlRepoAlObtenerRankingGeneral() {
+        givenRepoConRankingGeneralVacio();
+        whenObtenerRankingGeneral();
+        thenSeLlamaABuscarRankingGeneral();
     }
 
-    private void givenRankingGeneralConUsuarios() {
-        Usuario usuario1 = new Usuario();
-        Usuario usuario2 = new Usuario();
-        usuario1.setNombre("Matias");
-        usuario2.setNombre("Damian");
-        usuario1.setPuntaje(50L);
-        usuario2.setPuntaje(100L);
-
-        when(repositorioHistorial.obtenerRankingGeneral()).thenReturn(Arrays.asList(usuario2, usuario1));
+    private void givenRepoConRankingGeneralVacio() {
+        when(repositorioHistorial.buscarRankingGeneral()).thenReturn(Collections.emptyList());
     }
 
-    private List<Usuario> whenTraerRankingGeneral() {
-        return servicioRanking.rankingGeneral();
+    private void whenObtenerRankingGeneral() {
+        servicioRanking.obtenerRankingGeneral();
     }
 
-    private void thenRankingGeneralOrdenado(List<Usuario> resultado) {
-        assertThat(resultado, hasSize(2));
-        assertThat(resultado.get(0).getPuntaje(), greaterThanOrEqualTo(resultado.get(1).getPuntaje()));
-        assertThat(resultado.get(0).getNombre(), equalTo("Damian"));
-        assertThat(resultado.get(1).getNombre(), equalTo("Matias"));
+    private void thenSeLlamaABuscarRankingGeneral() {
+        verify(repositorioHistorial, times(1)).buscarRankingGeneral();
     }
 
     @Test
-    public void queSePuedaFiltrarPorCuestionario() {
-        HistorialCuestionario h1 = new HistorialCuestionario();
-        h1.setNombreUsuario("Matias");
-        h1.setPuntaje(70L);
+    public void queSeLlameAlRepoAlFiltrarPorNombre() {
+        String nombreCuestionario = "Historia";
 
-        givenRankingCuestionario("Historia", Collections.singletonList(h1));
-        List<HistorialCuestionario> resultado = whenTraerRankingCuestionario("Historia");
-        thenRankingCuestionarioFiltrado(resultado, 1, "Matias", 70L);
+        givenRepoConRankingPorNombreVacio(nombreCuestionario);
+        whenObtenerRankingCuestionarioPorNombre(nombreCuestionario);
+        thenSeLlamaABuscarRankingCuestionarioPorNombre(nombreCuestionario);
     }
 
-    private void givenRankingCuestionario(String nombreCuestionario, List<HistorialCuestionario> resultados) {
-        when(repositorioHistorial.obtenerRankingCuestionario(nombreCuestionario)).thenReturn(resultados);
+    private void givenRepoConRankingPorNombreVacio(String nombreCuestionario) {
+        when(repositorioHistorial.buscarRankingCuestionarioPorNombre(nombreCuestionario))
+                .thenReturn(Collections.emptyList());
     }
 
-    private List<HistorialCuestionario> whenTraerRankingCuestionario(String nombreCuestionario) {
-        return servicioRanking.rankingCuestionario(nombreCuestionario);
+    private void whenObtenerRankingCuestionarioPorNombre(String nombreCuestionario) {
+        servicioRanking.obtenerRankingCuestionarioPorNombre(nombreCuestionario);
     }
 
-    private void thenRankingCuestionarioFiltrado(List<HistorialCuestionario> resultado, int size, String nombreUsuario, Long puntaje) {
-        assertThat(resultado, hasSize(size));
-        if (size > 0) {
-            HistorialCuestionario h = resultado.get(0);
-            assertThat(h.getNombreUsuario(), equalTo(nombreUsuario));
-            assertThat(h.getPuntaje(), equalTo(puntaje));
-        }
+    private void thenSeLlamaABuscarRankingCuestionarioPorNombre(String nombreCuestionario) {
+        verify(repositorioHistorial, times(1)).buscarRankingCuestionarioPorNombre(nombreCuestionario);
     }
 
     @Test
-    public void siNoHayJugadoresElRankingCuestionarioEstaVacio() {
-        givenRankingCuestionario("Geografia", Collections.emptyList());
-        List<HistorialCuestionario> resultado = whenTraerRankingCuestionario("Geografia");
-        thenRankingCuestionarioFiltrado(resultado, 0, null, null);
+    public void queSeLlameAlRepoAlFiltrarRankingPorId() {
+        Long idCuestionario = 1L;
+
+        givenRepoConRankingCuestionarioPorIdVacio(idCuestionario);
+        whenObtenerRankingCuestionarioPorId(idCuestionario);
+        thenSeLlamaABuscarRankingCuestionarioPorId(idCuestionario);
+    }
+
+    private void givenRepoConRankingCuestionarioPorIdVacio(Long idCuestionario) {
+        when(repositorioHistorial.buscarRankingCuestionarioPorId(idCuestionario)).thenReturn(Collections.emptyList());
+    }
+
+    private void whenObtenerRankingCuestionarioPorId(Long idCuestionario) {
+        servicioRanking.obtenerRankingCuestionarioPorId(idCuestionario);
+    }
+
+    private void thenSeLlamaABuscarRankingCuestionarioPorId(Long idCuestionario) {
+        verify(repositorioHistorial, times(1)).buscarRankingCuestionarioPorId(idCuestionario);
     }
 }

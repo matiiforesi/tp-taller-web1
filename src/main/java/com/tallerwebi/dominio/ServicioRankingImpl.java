@@ -14,18 +14,23 @@ public class ServicioRankingImpl implements ServicioRanking {
     private final RepositorioHistorial repositorioHistorial;
 
     @Autowired
-    public ServicioRankingImpl (RepositorioUsuario repositorioUsuario, RepositorioHistorial repositorioHistorial) {
+    public ServicioRankingImpl(RepositorioUsuario repositorioUsuario, RepositorioHistorial repositorioHistorial) {
         this.repositorioUsuario = repositorioUsuario;
         this.repositorioHistorial = repositorioHistorial;
     }
 
     @Override
-    public List<Usuario> rankingGeneral() {
-        return repositorioHistorial.obtenerRankingGeneral();
+    public List<Usuario> obtenerRankingGeneral() {
+        return repositorioHistorial.buscarRankingGeneral();
     }
 
     @Override
-    public List<HistorialCuestionario> rankingCuestionario(String nombreCuestionario) {
-        return repositorioHistorial.obtenerRankingCuestionario(nombreCuestionario);
+    public List<HistorialCuestionario> obtenerRankingCuestionarioPorNombre(String nombreCuestionario) {
+        return repositorioHistorial.buscarRankingCuestionarioPorNombre(nombreCuestionario);
+    }
+
+    @Override
+    public List<HistorialCuestionario> obtenerRankingCuestionarioPorId(Long id) {
+        return repositorioHistorial.buscarRankingCuestionarioPorId(id);
     }
 }

@@ -1,10 +1,12 @@
-    package com.tallerwebi.dominio;
+package com.tallerwebi.dominio;
 
-    import java.util.List;
+import java.util.List;
 
-    public interface ServicioRanking {
+public interface ServicioRanking {
 
-        List<Usuario> rankingGeneral();
+    List<Usuario> obtenerRankingGeneral();
 
-        List<HistorialCuestionario> rankingCuestionario(String nombreCuestionario);
-    }
+    List<HistorialCuestionario> obtenerRankingCuestionarioPorNombre(String nombreCuestionario);
+
+    List<HistorialCuestionario> obtenerRankingCuestionarioPorId(Long idCuestionario);
+}

@@ -9,14 +9,17 @@ import javax.transaction.Transactional;
 public class ServicioJuegoImpl implements ServicioJuego {
 
     private ServicioCuestionario servicioCuestionario;
+    private ServicioPregunta servicioPregunta;
 
-    public ServicioJuegoImpl(ServicioCuestionario servicioCuestionario) {
+    public ServicioJuegoImpl(ServicioCuestionario servicioCuestionario, ServicioPregunta servicioPregunta) {
         this.servicioCuestionario = servicioCuestionario;
+        this.servicioPregunta = servicioPregunta;
     }
 
     @Override
     public Boolean validarRespuesta(String respuesta,Long id) {
-        Preguntas pregunta= servicioCuestionario.buscar(id).getPreguntas().get(0);
+       // Preguntas pregunta= servicioCuestionario.buscar(id).getPreguntas().get(0);
+        Preguntas pregunta= servicioPregunta.obtenerPorId(id);
         if(pregunta.getRespuestaCorrecta().equals(respuesta.trim())){
             return Boolean.TRUE;
         }

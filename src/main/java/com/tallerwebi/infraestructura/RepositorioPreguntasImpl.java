@@ -8,6 +8,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+@Repository
 public class RepositorioPreguntasImpl implements RepositorioPreguntas {
 
     private SessionFactory sessionFactory;
@@ -21,6 +22,7 @@ public class RepositorioPreguntasImpl implements RepositorioPreguntas {
     public Preguntas buscarPregunta(Long idPregunta) {
        final Session session = sessionFactory.getCurrentSession();
         return (Preguntas) session.createCriteria(Preguntas.class)
+                .add(Restrictions.eq("id", idPregunta))
                 .uniqueResult();
     }
 

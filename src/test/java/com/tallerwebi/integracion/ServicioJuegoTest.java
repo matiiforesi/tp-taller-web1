@@ -17,7 +17,8 @@ public class ServicioJuegoTest {
 * Que Te devuelva si es incorrecta*/
 
     private ServicioCuestionario serv= mock(ServicioCuestionario.class);
-    private ServicioJuego servicioJuego= new ServicioJuegoImpl(serv);
+    private ServicioPregunta servPregunta= mock(ServicioPregunta.class);
+    private ServicioJuego servicioJuego= new ServicioJuegoImpl(serv, servPregunta);
     @Test
     public void queSeValideLaRespuestaSiEsCorrecta(){
 
@@ -32,7 +33,7 @@ public class ServicioJuegoTest {
         thenSeValideRespuestaIncorrecta(obtenido);
     }
     @Test
-    public void queAcumulePuntos(){
+    public void queObtengaPuntos(){
 
         givenCreacionPreguntas();
         Integer obtenido=whenAcumulaPuntaje("25 de mayo");
@@ -79,13 +80,13 @@ public class ServicioJuegoTest {
 
     private Integer whenAcumulaPuntaje(String respuesta){
         if(whenSeValideLaRespuestaSiEsCorrecta()){
-            return servicioJuego.obtenerPuntaje(2L, 1L, respuesta);
+            return servicioJuego.obtenerPuntaje(1L, 1L, respuesta);
         }
         return 0;
     }
 
     private Boolean whenSeValideLaRespuestaIncorrecta() {
-        return servicioJuego.validarRespuesta("23 de Abril",2L);
+        return servicioJuego.validarRespuesta("23 de Abril",1L);
     }
     private void thenSeValideRespuestaIncorrecta(Boolean obtenido) {
         assertEquals(Boolean.FALSE, obtenido);
@@ -93,6 +94,7 @@ public class ServicioJuegoTest {
 
     private void givenCreacionPreguntas(){
         Preguntas pregunta = new Preguntas();
+        pregunta.setId(1L);
         pregunta.setEnunciado("¿Cuando fue la revolucion de Mayo?");
         pregunta.setCategoria("Historia");
         pregunta.setDificultad("Facil");
@@ -101,14 +103,15 @@ public class ServicioJuegoTest {
         pregunta.setRespuestaIncorrecta2("24 de Junio");
         pregunta.setRespuestaIncorrecta3("25 de Julio");
 
-        Cuestionario c=new Cuestionario();
+       /* Cuestionario c=new Cuestionario();
         c.setPreguntas(Arrays.asList(pregunta));
 
-        Mockito.when(serv.buscar(2L)).thenReturn(c);
+        Mockito.when(serv.buscar(2L)).thenReturn(c);*/
+        Mockito.when(servPregunta.obtenerPorId(1L)).thenReturn(pregunta);
     }
 
     private Boolean whenSeValideLaRespuestaSiEsCorrecta(){
-        return servicioJuego.validarRespuesta("25 de mayo",2L);
+        return servicioJuego.validarRespuesta("25 de mayo",1L);
     }
 
     private void thenValideLaRespuesta(Boolean respuesta){

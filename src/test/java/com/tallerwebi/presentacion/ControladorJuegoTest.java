@@ -18,8 +18,9 @@ import static org.mockito.Mockito.mock;
 public class ControladorJuegoTest {
 
     private ServicioCuestionario servicioMock= mock(ServicioCuestionario.class);
-    private ServicioJuegoImpl servicioJuego= new ServicioJuegoImpl(servicioMock);
-    private ControladorJuego controladorJuego = new ControladorJuego(servicioJuego);
+    private ServicioPregunta servicioPregunta= mock(ServicioPregunta.class);
+    private ServicioJuegoImpl servicioJuego= new ServicioJuegoImpl(servicioMock,servicioPregunta);
+    private ControladorJuego controladorJuego = new ControladorJuego(servicioJuego,servicioPregunta);
 
     @Test
     public void queDevuelvaLaPreguntaConSusOpciones(){

@@ -54,7 +54,7 @@
     <div>
 <h2 th:text="${pregunta.enunciado}"></h2>
 
-<form th:action="@{'/juego/' + ${cuestionario.id} + '/siguiente'}" method="post">
+<form th:if="${!respondida}" th:action="@{'/juego/' + ${cuestionario.id} + '/validar'}" method="post">
    <!-- <ul>
         <li th:each="opcion : ${opciones}">
             <input type="radio" name="respuesta" th:value="${opcion}"/>
@@ -67,11 +67,27 @@
             <span th:text="${opcion}"></span>
         </label><br/>
     </div>
+    <input type="hidden" name="idPregunta" th:value="${pregunta.id}" />
+    <input type="hidden" name="indicePregunta" th:value="${indicePregunta}">
+    <input type="submit" value="Responder">
 </form>
-    <form th:action="@{/siguiente}" method="post">
+    <!--<form th:action="@{/siguiente}" method="post">
         <input type="hidden" name="indicePregunta" th:value="${indicePregunta}">
     <button type="submit">Siguiente</button>
-    </form>
+    </form>-->
+        <div th:if="${respondida}">
+            <div th:if="${esCorrecta}" style="color: green; font-weight: bold;">
+                ✅ ¡Respuesta correcta!
+            </div>
+            <div th:if="${!esCorrecta}" style="color: red; font-weight: bold;">
+                ❌ Respuesta incorrecta.
+            </div>
+
+            <form th:action="@{/siguiente}" method="post">
+                <input type="hidden" name="indicePregunta" th:value="${indicePregunta}">
+                <button type="submit">Siguiente</button>
+            </form>
+        </div>
 </div>
 </div>
 </body>

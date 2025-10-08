@@ -44,7 +44,7 @@ public class ControladorJuego {
         Preguntas pregunta= servicioJuego.obtenerPregunta(cuestionario,0);
         List<String>opciones= Arrays.asList(pregunta.getRespuestaCorrecta(),pregunta.getRespuestaIncorrecta1(),pregunta.getRespuestaIncorrecta2(),pregunta.getRespuestaIncorrecta3());
         Collections.shuffle(opciones);
-        System.out.println("Pregunta obtenida: " + pregunta);
+        servicioJuego.reiniciarPuntaje();
 
         model.put("cuestionario",cuestionario);
         model.put("pregunta",pregunta);
@@ -71,7 +71,7 @@ public class ControladorJuego {
         Preguntas pregunta= servicioJuego.obtenerPregunta(cuestionario,0);
         List<String>opciones= Arrays.asList(pregunta.getRespuestaCorrecta(),pregunta.getRespuestaIncorrecta1(),pregunta.getRespuestaIncorrecta2(),pregunta.getRespuestaIncorrecta3());
         Collections.shuffle(opciones);
-        System.out.println("Pregunta obtenida: " + pregunta);
+        servicioJuego.reiniciarPuntaje();
 
         model.put("cuestionario",cuestionario);
         model.put("pregunta",pregunta);

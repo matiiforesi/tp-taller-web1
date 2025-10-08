@@ -6,4 +6,5 @@ public interface ServicioJuego {
     Integer obtenerPuntaje(Long idPregunta, String respuesta);
     Preguntas obtenerPregunta(Cuestionario cuestionario,Integer indicePregunta);
     Cuestionario obtenerCuestionario (Long id);
+    void reiniciarPuntaje();
 }

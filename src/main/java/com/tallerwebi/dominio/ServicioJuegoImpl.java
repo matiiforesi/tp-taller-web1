@@ -50,6 +50,9 @@ public class ServicioJuegoImpl implements ServicioJuego {
         return servicioCuestionario.buscar(id);
         //return servicioCuestionario.buscarTodo().get(0);
     }
-
+    @Override
+    public void reiniciarPuntaje() {
+        this.puntajeTotal=0;
+    }
 
 }

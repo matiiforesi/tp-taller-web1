@@ -18,7 +18,7 @@ import java.util.List;
 *
 * */
 @Controller
-@SessionAttributes({"idCuestionario", "indicePregunta"})
+@SessionAttributes({"idCuestionario", "indicePregunta" , "puntajeTotal"})
 public class ControladorJuego {
 
 
@@ -53,6 +53,7 @@ public class ControladorJuego {
         model.put("indicePregunta",0);
         model.put("respondida",false);
         model.put("esCorrecta",null);
+        model.put("puntajeTotal",0);
 
         return new ModelAndView("pregunta",model);
     }
@@ -79,6 +80,7 @@ public class ControladorJuego {
         model.put("indicePregunta",0);
         model.put("respondida",false);
         model.put("esCorrecta",null);
+        model.put("puntajeTotal",0);
 
         return new ModelAndView("pregunta",model);
     }
@@ -101,20 +103,22 @@ public class ControladorJuego {
             model.put("esCorrecta",null);
             return new ModelAndView("pregunta",model);
         }
-        return new ModelAndView("home");
+        return new ModelAndView("final_partida",model);
     }
 
     @RequestMapping("/juego/{idCuestionario}/validar")
-    public ModelAndView validarPregunta(@PathVariable("idCuestionario") Long idCuestionario,@RequestParam Long idPregunta,@RequestParam String respuesta,@RequestParam int indicePregunta){
+    public ModelAndView validarPregunta(@PathVariable("idCuestionario") Long idCuestionario,@RequestParam Long idPregunta,@RequestParam String respuesta,@RequestParam int indicePregunta,@SessionAttribute("puntajeTotal") Integer puntajeTotal){
             ModelMap model = new ModelMap();
             Cuestionario cuestionario=servicioJuego.obtenerCuestionario(idCuestionario);
             Preguntas pregunta= servicioPregunta.obtenerPorId(idPregunta);
-            boolean esCorrecta=servicioJuego.validarRespuesta(respuesta,pregunta.getId());
+            boolean esCorrecta=servicioJuego.validarRespuesta(respuesta,idPregunta);
+            puntajeTotal=servicioJuego.obtenerPuntaje(idPregunta,respuesta);
 
             model.put("pregunta",pregunta);
             model.put("indicePregunta",indicePregunta);
             model.put("esCorrecta",esCorrecta);
             model.put("respondida",true);
+            model.put("puntajeTotal",puntajeTotal);
 
             return new ModelAndView("pregunta",model);
     }

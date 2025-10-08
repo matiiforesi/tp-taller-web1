@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Final de partida</title>
+    <!-- Boostrap core css -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+
+    <!-- custom style -->
+    <link rel="stylesheet" th:href="@{/css/colores.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<div class="card" style="width:20em">
+    <h1>¡Partida Finalizada!</h1>
+    <p>Tu puntaje final es:</p>
+    <h2 th:text="${puntajeTotal}"></h2>
+    <a href="/spring/home" class="btn">Volver al inicio</a>
+</div>
+</body>
+</html>

@@ -82,7 +82,7 @@
             <div th:if="${!esCorrecta}" style="color: red; font-weight: bold;">
                 ❌ Respuesta incorrecta.
             </div>
-
+            <p>Puntaje Total <span th:text="${puntajeTotal}"></span></p>
             <form th:action="@{/siguiente}" method="post">
                 <input type="hidden" name="indicePregunta" th:value="${indicePregunta}">
                 <button type="submit">Siguiente</button>

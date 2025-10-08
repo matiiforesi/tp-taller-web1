@@ -10,6 +10,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
 
     private ServicioCuestionario servicioCuestionario;
     private ServicioPregunta servicioPregunta;
+    private Integer puntajeTotal=0;
 
     public ServicioJuegoImpl(ServicioCuestionario servicioCuestionario, ServicioPregunta servicioPregunta) {
         this.servicioCuestionario = servicioCuestionario;
@@ -27,15 +28,16 @@ public class ServicioJuegoImpl implements ServicioJuego {
     }
 
     @Override
-    public Integer obtenerPuntaje(Long idPregunta, Long idJugador,String respuesta) {
+    public Integer obtenerPuntaje(Long idPregunta,String respuesta) {
 
         Integer puntaje=0;
 
         if(validarRespuesta(respuesta,idPregunta)){
-            puntaje+=200;
+            puntaje=200;
         }
+        this.puntajeTotal+=puntaje;
 
-        return puntaje;
+        return this.puntajeTotal;
     }
 
     @Override

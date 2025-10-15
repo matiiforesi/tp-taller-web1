@@ -13,7 +13,9 @@ public class Preguntas {
 
     private String categoria;
 
-    private String dificultad;
+    @ManyToOne
+    @JoinColumn(name = "dificultad_id", nullable = false)
+    private Dificultad dificultad;
 
     @Column(name = "respuesta_correcta")
     private String respuestaCorrecta;
@@ -41,8 +43,8 @@ public class Preguntas {
     }
     public String getCategoria() {return categoria;}
     public void setCategoria(String categoria) {this.categoria = categoria;}
-    public String getDificultad() {return dificultad;}
-    public void setDificultad(String dificultad) {this.dificultad = dificultad;}
+    public Dificultad getDificultad() {return dificultad;}
+    public void setDificultad(Dificultad dificultad) {this.dificultad = dificultad;}
     public String getRespuestaCorrecta() {return respuestaCorrecta;}
     public void setRespuestaCorrecta(String respuestaCorrecta) {this.respuestaCorrecta = respuestaCorrecta;}
     public String getRespuestaIncorrecta1() {return respuestaIncorrecta1;}

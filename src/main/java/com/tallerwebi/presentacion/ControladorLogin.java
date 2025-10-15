@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ControladorLogin {
@@ -76,9 +78,13 @@ public class ControladorLogin {
     @RequestMapping(path = "/home", method = RequestMethod.GET)
     public ModelAndView irAHome() {
         ModelMap model= new ModelMap();
-        List<Cuestionario> cuestionarios=servicioCuestionario.buscarTodo();
-        model.put("cuestionarios",cuestionarios);
-        return new ModelAndView("home");
+        List<Cuestionario> cuestionarios = servicioCuestionario.buscarTodo();
+        Collections.shuffle(cuestionarios);
+        List<Cuestionario> seleccionados = cuestionarios.stream()
+                .limit(4)
+                .collect(Collectors.toList());
+        model.put("cuestionarios", seleccionados);
+        return new ModelAndView("home", model);
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET)

@@ -37,19 +37,20 @@ public class RepositorioCuestionarioImpl implements RepositorioCuestionario {
     }
 
     @Override
-    public Cuestionario buscarPorCategoria(String categoria) {
-
+    public List<Cuestionario> buscarPorCategoria(String categoria) {
         final Session session = sessionFactory.getCurrentSession();
-        return (Cuestionario) session.createCriteria(Cuestionario.class)     //con esto te devuelve la pregunta que coincida con la categoria de los param
-                .add(Restrictions.eq("categoria", categoria)).uniqueResult();
+        return session.createCriteria(Cuestionario.class)
+                .add(Restrictions.eq("categoria", categoria))
+                .list();
     }
 
     @Override
-    public Cuestionario buscarPorDificultad(String dificultad) {
+    public List<Cuestionario> buscarPorDificultad(String dificultad) {
         final Session session = sessionFactory.getCurrentSession();
-        return (Cuestionario) session.createCriteria(Cuestionario.class)
-                .add(Restrictions.eq("dificultad", dificultad))
-                .uniqueResult();
+        return session.createCriteria(Cuestionario.class)
+                .createAlias("dificultad", "dif")
+                .add(Restrictions.eq("dif.nombre", dificultad))
+                .list();
     }
 
     @Override

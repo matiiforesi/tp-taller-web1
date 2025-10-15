@@ -3,18 +3,14 @@ package com.tallerwebi.presentacion;
 import com.tallerwebi.dominio.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
-import java.util.Optional;
 
-import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -32,7 +28,9 @@ public class ControladorJuegoTest {
         pregunta= new Preguntas();
         pregunta.setEnunciado("¿Cuando fue la revolucion de Mayo?");
         pregunta.setCategoria("Historia");
-        pregunta.setDificultad("Facil");
+        Dificultad dificultad = new Dificultad();
+        dificultad.setNombre("Facil");
+        pregunta.setDificultad(dificultad);
         pregunta.setRespuestaCorrecta("25 de mayo");
         pregunta.setRespuestaIncorrecta1("23 de Abril");
         pregunta.setRespuestaIncorrecta2("24 de Junio");
@@ -72,7 +70,6 @@ public class ControladorJuegoTest {
     }
 
     public void thenCuestionario(ModelAndView vista){
-        //Devuelve la vista y el modelo
         assertThat(vista.getViewName(), equalToIgnoringCase("pregunta"));
         Preguntas model=(Preguntas)vista.getModel().get("pregunta");
 

@@ -7,7 +7,7 @@ public interface RepositorioCuestionario {
     void guardar(Cuestionario cuestionario);
     Cuestionario buscar(Long id);
     void modificar(Cuestionario cuestionario);
-    Cuestionario buscarPorCategoria(String categoria);
-    Cuestionario buscarPorDificultad(String dificultad);
+    List<Cuestionario> buscarPorCategoria(String categoria);
+    List<Cuestionario> buscarPorDificultad(String dificultad);
     List<Cuestionario> buscarTodo();
 }

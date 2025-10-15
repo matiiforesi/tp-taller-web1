@@ -97,7 +97,9 @@ public class ServicioJuegoTest {
         pregunta.setId(1L);
         pregunta.setEnunciado("¿Cuando fue la revolucion de Mayo?");
         pregunta.setCategoria("Historia");
-        pregunta.setDificultad("Facil");
+        Dificultad dificultad = new Dificultad();
+        dificultad.setNombre("Facil");
+        pregunta.setDificultad(dificultad);
         pregunta.setRespuestaCorrecta("25 de mayo");
         pregunta.setRespuestaIncorrecta1("23 de Abril");
         pregunta.setRespuestaIncorrecta2("24 de Junio");

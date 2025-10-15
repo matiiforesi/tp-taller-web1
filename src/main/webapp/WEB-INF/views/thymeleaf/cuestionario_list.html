@@ -20,7 +20,7 @@
         <p class="card-text" th:text="${trivia.id}"></p>
         <p class="card-text" th:text="${trivia.descripcion}"></p>
         <p><strong>Categoria:</strong> <span th:text="${trivia.categoria}"></span></p>
-        <p><strong>Dificultad:</strong> <span th:text="${trivia.dificultad}"></span></p>
+        <p><strong>Dificultad:</strong> <span th:text="${trivia.dificultad.nombre}"></span></p>
 
         <h6>Preguntas:</h6>
         <ul th:if="${trivia.preguntas != null}">

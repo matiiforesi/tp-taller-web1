@@ -17,7 +17,9 @@ public class Cuestionario {
 
     private String categoria;
 
-    private String dificultad;
+    @ManyToOne
+    @JoinColumn(name = "dificultad_id", nullable = false)
+    private Dificultad dificultad;
 
     @OneToMany(mappedBy = "cuestionario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Preguntas> preguntas = new ArrayList<>();
@@ -54,11 +56,11 @@ public class Cuestionario {
         this.categoria = categoria;
     }
 
-    public String getDificultad() {
+    public Dificultad getDificultad() {
         return dificultad;
     }
 
-    public void setDificultad(String dificultad) {
+    public void setDificultad(Dificultad dificultad) {
         this.dificultad = dificultad;
     }
 

@@ -20,68 +20,35 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
   <a class="navbar-brand" href="#">Mi Web</a>
 </nav>
+<main role="main" class="container w-100 h-100">
+    <div class="container d-flex flex-column align-items-center gap-4">
 
-<main role="main" class="container w-100 h-100" >
-  <div class = "container" style="display:flex; justify-content:center; align-items:center; gap:1em;flex-direction:column">
-    <h1>Bienvenidos a Taller Web 1</h1>
-      <div id="carouselExample" class="carousel slide bg-success" style="width:50%" data-bs-ride="carousel">
-          <!--<div class="carousel-inner">
-              <div class="carousel-item active bg-secondary">
-                  <div class="card p-5">
-                      <h2>Historia</h2>
-                      <a th:href="@{/iniciar/{idCuestionario}(idCuestionario=${cuestionario.id})}" class="btn btn-block btn-primary">
-                          Ingresar
-                      </a>
-                  </div>
-              </div> -->
-          <div class="carousel-inner">
-              <div th:each="cuestionario, iterStat : ${cuestionarios}" th:class="'carousel-item bg-secondary' + (iterStat.index == 0 ? ' active' : '')">
-                  <div class="card p-5">
-                      <h2 th:text="${cuestionario.nombre}">Nombre del cuestionario</h2>
-                      <a th:href="@{/iniciar/{idCuestionario}(idCuestionario=${cuestionario.id})}" class="btn btn-block btn-primary">Ingresar</a>
-                  </div>
-              </div>
-          </div>
-          <div th:if="${#lists.isEmpty(cuestionarios)}">
-              <p>No hay cuestionarios disponibles.</p>
-          </div>
-            <!--  <div class="carousel-item bg-secondary">
-                  <div class="card p-5">
-                      <h2>Geografia</h2>
-                      <button class="btn btn-block btn-primary">Ingresar</button>
-                  </div>
-              </div>
-              <div class="carousel-item bg-secondary">
-                  <div class="card p-5">
-                      <h2>Deportes</h2>
-                      <button class="btn w-100 btn-primary">Ingresar</button>
-                  </div>
-              </div>
-              <div class="carousel-item bg-secondary">
-                  <div class="card p-5">
-                      <h2>Matematicas</h2>
-                      <button class="btn btn-block btn-primary">Ingresar</button>
-                  </div>
-              </div>
-          </div>-->
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon"></span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-              <span class="carousel-control-next-icon"></span>
-          </button>
-      </div>
-      <div class="card p-3" style="gap:5px; width:30em">
-          <form th:action="@{/iniciar}" method="get" class="d-flex flex-column gap-3">
-              <input type="number" name="idCuestionario" placeholder="ID del cuestionario" required class="form-control">
-              <button type="submit" class="btn btn-primary">Ingresar</button>
-          </form>
-      </div>
-      <a href="cuestionario/new" class="btn btn-lg btn-primary btn-block">Crear Cuestionario</a>
-    <a href="login.html" class="btn btn-lg btn-danger btn-block">Cerrar sesion</a>
-  </div>
+        <h1>Bienvenidos a Taller Web 1</h1>
+
+        <!-- cuestionarios aleatorios -->
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <div th:each="cuestionario : ${cuestionarios}" class="card text-center p-3" style="width: 14rem;">
+                <h5 th:text="${cuestionario.nombre}">Nombre del cuestionario</h5>
+                <p th:text="${cuestionario.descripcion}">Descripción</p>
+                <p><strong th:text="${cuestionario.categoria}">Categoría</strong></p>
+                <a th:href="@{/iniciar/{idCuestionario}(idCuestionario=${cuestionario.id})}" class="btn btn-primary">
+                    Ingresar
+                </a>
+            </div>
+        </div>
+
+        <div class="card p-3" style="gap:5px; width:30em">
+            <form th:action="@{/iniciar}" method="get" class="d-flex flex-column gap-3">
+                <input type="number" name="idCuestionario" placeholder="ID del cuestionario" required class="form-control">
+                <button type="submit" class="btn btn-primary">Ingresar</button>
+            </form>
+        </div>
+
+        <a href="cuestionario/new" class="btn btn-lg btn-primary">Crear Cuestionario</a>
+        <a href="login.html" class="btn btn-lg btn-danger">Cerrar sesión</a>
+
+    </div>
 </main>
-<!-- /.container -->
 
 <!-- Boostrap core js -->
 <script type="text/javascript" th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>

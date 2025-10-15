@@ -1,11 +1,13 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -13,7 +15,8 @@ import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 public class ControladorJuegoTest {
 
@@ -21,6 +24,24 @@ public class ControladorJuegoTest {
     private ServicioPregunta servicioPregunta= mock(ServicioPregunta.class);
     private ServicioJuegoImpl servicioJuego= new ServicioJuegoImpl(servicioMock,servicioPregunta);
     private ControladorJuego controladorJuego = new ControladorJuego(servicioJuego,servicioPregunta);
+    private Preguntas pregunta;
+    private Cuestionario cuestionario=new Cuestionario();
+
+    @BeforeEach
+    public void setUp(){
+        pregunta= new Preguntas();
+        pregunta.setEnunciado("¿Cuando fue la revolucion de Mayo?");
+        pregunta.setCategoria("Historia");
+        pregunta.setDificultad("Facil");
+        pregunta.setRespuestaCorrecta("25 de mayo");
+        pregunta.setRespuestaIncorrecta1("23 de Abril");
+        pregunta.setRespuestaIncorrecta2("24 de Junio");
+        pregunta.setRespuestaIncorrecta3("25 de Julio");
+
+        cuestionario= new Cuestionario();
+        cuestionario.setId(3L);
+        cuestionario.setPreguntas(Arrays.asList(pregunta,pregunta));
+    }
 
     @Test
     public void queDevuelvaLaPreguntaConSusOpciones(){
@@ -31,20 +52,20 @@ public class ControladorJuegoTest {
         //validacion
         thenCuestionario(vista);
     }
+
+    @Test
+    public void siNoEncuentraElCuestionario(){
+
+        Cuestionario ejem=new Cuestionario();
+        HttpSession sesion= mock(HttpSession.class);
+        ejem.setId(1L);
+        ModelAndView mav= controladorJuego.iniciarPorFormulario(1L, sesion);
+        assertEquals("vista-error-cuestionario",mav.getViewName());
+    }
+
+
     public void givenCuestionario(){
-        Preguntas pregunta = new Preguntas();
-        pregunta.setEnunciado("¿Cuando fue la revolucion de Mayo?");
-        pregunta.setCategoria("Historia");
-        pregunta.setDificultad("Facil");
-        pregunta.setRespuestaCorrecta("25 de mayo");
-        pregunta.setRespuestaIncorrecta1("23 de Abril");
-        pregunta.setRespuestaIncorrecta2("24 de Junio");
-        pregunta.setRespuestaIncorrecta3("25 de Julio");
-
-        Cuestionario ejemplo= new Cuestionario();
-        ejemplo.setPreguntas(Arrays.asList(pregunta));
-        Mockito.when(servicioJuego.obtenerCuestionario(3L)).thenReturn(ejemplo);
-
+        Mockito.when(servicioJuego.obtenerCuestionario(3L)).thenReturn(cuestionario);
     }
     public ModelAndView whenCuestionarioDevuelvaLaPregunta(){
         return controladorJuego.iniciar(3L);

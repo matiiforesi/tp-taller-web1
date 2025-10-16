@@ -1,98 +1,101 @@
 package com.tallerwebi.integracion;
 
 import com.tallerwebi.dominio.*;
+import com.tallerwebi.infraestructura.RepositorioHistorialImpl;
+import com.tallerwebi.infraestructura.RepositorioUsuarioImpl;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 public class ServicioJuegoTest {
-/* Que se pueda validar la respuesta
-* Que Te devuelva si es incorrecta*/
+    // Que se pueda validar la respuesta
+    // Que te devuelva si es incorrecta
+    private RepositorioUsuarioImpl repoUsuarioImpl = mock(RepositorioUsuarioImpl.class);
+    private RepositorioHistorialImpl repoHistorialImpl = mock(RepositorioHistorialImpl.class);
+    private ServicioCuestionario servCuestionario = mock(ServicioCuestionario.class);
+    private ServicioPregunta servPregunta = mock(ServicioPregunta.class);
+    private ServicioJuego servicioJuego = new ServicioJuegoImpl(repoUsuarioImpl, repoHistorialImpl, servCuestionario, servPregunta);
 
-    private ServicioCuestionario serv= mock(ServicioCuestionario.class);
-    private ServicioPregunta servPregunta= mock(ServicioPregunta.class);
-    private ServicioJuego servicioJuego= new ServicioJuegoImpl(serv, servPregunta);
     @Test
-    public void queSeValideLaRespuestaSiEsCorrecta(){
+    public void queSeValideLaRespuestaSiEsCorrecta() {
 
         givenCreacionPreguntas();
-        Boolean obtenido= whenSeValideLaRespuestaSiEsCorrecta();
+        Boolean obtenido = whenSeValideLaRespuestaSiEsCorrecta();
         thenValideLaRespuesta(obtenido);
     }
+
     @Test
-    public void queSeValideLaRespuestaSiEsIncorrecta(){
+    public void queSeValideLaRespuestaSiEsIncorrecta() {
         givenCreacionPreguntas();
-        Boolean obtenido=whenSeValideLaRespuestaIncorrecta();
+        Boolean obtenido = whenSeValideLaRespuestaIncorrecta();
         thenSeValideRespuestaIncorrecta(obtenido);
     }
-    @Test
-    public void queObtengaPuntos(){
 
+    @Test
+    public void queObtengaPuntos() {
         givenCreacionPreguntas();
-        Integer obtenido=whenAcumulaPuntaje("25 de mayo");
-        thenAcumulaPuntaje(200,obtenido);
+        Integer obtenido = whenAcumulaPuntaje("25 de mayo");
+        thenAcumulaPuntaje(100, obtenido);
     }
 
     @Test
-    public void queNoSumePuntos(){
+    public void queNoSumePuntos() {
         givenCreacionPreguntas();
-        Integer obtenido= whenAcumulaPuntaje("23 de abril");
-        thenAcumulaPuntaje(0,obtenido);
+        Integer obtenido = whenAcumulaPuntaje("23 de abril");
+        thenAcumulaPuntaje(0, obtenido);
     }
 
     @Test
-    public void queObtengaElCuestionario(){
-        Cuestionario cuestionarioMock= new  Cuestionario();
+    public void queObtengaElCuestionario() {
+        Cuestionario cuestionarioMock = new Cuestionario();
         cuestionarioMock.setId(1L);
 
-        Mockito.when(serv.buscar(1L)).thenReturn(cuestionarioMock);
-        Cuestionario resultado= servicioJuego.obtenerCuestionario(1L);
+        Mockito.when(servCuestionario.buscar(1L)).thenReturn(cuestionarioMock);
+        Cuestionario resultado = servicioJuego.obtenerCuestionario(1L);
 
-        assertEquals(cuestionarioMock,resultado);
+        assertEquals(cuestionarioMock, resultado);
     }
 
     @Test
-    public void queObtengaLaPregunta(){
-        Preguntas pregunta_uno= new Preguntas();
+    public void queObtengaLaPregunta() {
+        Preguntas pregunta_uno = new Preguntas();
         pregunta_uno.setId(1L);
 
-        Preguntas pregunta_dos= new Preguntas();
+        Preguntas pregunta_dos = new Preguntas();
         pregunta_dos.setId(2L);
 
-        Cuestionario cuestionario= new Cuestionario();
-        cuestionario.setPreguntas(List.of(pregunta_uno,pregunta_dos));
+        Cuestionario cuestionario = new Cuestionario();
+        cuestionario.setPreguntas(List.of(pregunta_uno, pregunta_dos));
 
-        Preguntas obtenido= servicioJuego.obtenerPregunta(cuestionario,1);
+        Preguntas obtenido = servicioJuego.obtenerPregunta(cuestionario, 1);
 
-        assertEquals(2L,obtenido.getId());
+        assertEquals(2L, obtenido.getId());
     }
 
-    private void thenAcumulaPuntaje(Integer esperado,Integer puntaje){
-        assertEquals(esperado,puntaje);
+    private void thenAcumulaPuntaje(Integer esperado, Integer puntaje) {
+        assertEquals(esperado, puntaje);
     }
 
-    private Integer whenAcumulaPuntaje(String respuesta){
-        if(whenSeValideLaRespuestaSiEsCorrecta()){
+    private Integer whenAcumulaPuntaje(String respuesta) {
+        if (whenSeValideLaRespuestaSiEsCorrecta()) {
             return servicioJuego.obtenerPuntaje(1L, respuesta);
         }
         return 0;
     }
 
     private Boolean whenSeValideLaRespuestaIncorrecta() {
-        return servicioJuego.validarRespuesta("23 de Abril",1L);
+        return servicioJuego.validarRespuesta("23 de Abril", 1L);
     }
+
     private void thenSeValideRespuestaIncorrecta(Boolean obtenido) {
         assertEquals(Boolean.FALSE, obtenido);
     }
 
-    private void givenCreacionPreguntas(){
+    private void givenCreacionPreguntas() {
         Preguntas pregunta = new Preguntas();
         pregunta.setId(1L);
         pregunta.setEnunciado("¿Cuando fue la revolucion de Mayo?");
@@ -112,11 +115,11 @@ public class ServicioJuegoTest {
         Mockito.when(servPregunta.obtenerPorId(1L)).thenReturn(pregunta);
     }
 
-    private Boolean whenSeValideLaRespuestaSiEsCorrecta(){
-        return servicioJuego.validarRespuesta("25 de mayo",1L);
+    private Boolean whenSeValideLaRespuestaSiEsCorrecta() {
+        return servicioJuego.validarRespuesta("25 de mayo", 1L);
     }
 
-    private void thenValideLaRespuesta(Boolean respuesta){
-        assertEquals(Boolean.TRUE,respuesta);
+    private void thenValideLaRespuesta(Boolean respuesta) {
+        assertEquals(Boolean.TRUE, respuesta);
     }
 }

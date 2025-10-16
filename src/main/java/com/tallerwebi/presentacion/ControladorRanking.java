@@ -53,11 +53,13 @@ public class ControladorRanking {
 
         if (idCuestionario != null) {
             ranking = servicioRanking.obtenerRankingCuestionarioPorId(idCuestionario);
-            if (!ranking.isEmpty() && ranking.get(0).getNombreCuestionario() != null) {
+            if (!ranking.isEmpty()) {
                 nombreCuestionario = ranking.get(0).getNombreCuestionario();
             }
-        } else {
+        } else if (nombreCuestionario != null) {
             ranking = servicioRanking.obtenerRankingCuestionarioPorNombre(nombreCuestionario);
+        } else {
+            ranking = List.of();
         }
 
 //        if (ranking.isEmpty()) {

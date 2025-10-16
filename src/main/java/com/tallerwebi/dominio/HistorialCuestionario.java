@@ -11,6 +11,8 @@ public class HistorialCuestionario {
 
     private String nombreCuestionario;
 
+    private Long idCuestionario;
+
     private String nombreUsuario;
 
     private Long puntaje;
@@ -28,13 +30,21 @@ public class HistorialCuestionario {
     public String getNombreCuestionario() {return nombreCuestionario;}
     public void setNombreCuestionario(String nombre) {this.nombreCuestionario = nombre;}
 
+    public Long getIdCuestionario() {return idCuestionario;}
+    public void setIdCuestionario(Long idCuestionario) {this.idCuestionario = idCuestionario;}
+
     public String getNombreUsuario() {return nombreUsuario;}
     public void setNombreUsuario(String nombre) {this.nombreUsuario = nombre;}
 
     public Long getPuntaje() {return puntaje;}
     public void setPuntaje(Long puntaje) {this.puntaje = puntaje;}
+
     public Integer getPreguntasCorrectas() {return preguntasCorrectas;}
     public void setPreguntasCorrectas(Integer preguntasCorrectas) {this.preguntasCorrectas = preguntasCorrectas;}
+    
     public Integer getPreguntasErradas() {return preguntasErradas;}
     public void setPreguntasErradas(Integer preguntasErradas) {this.preguntasErradas = preguntasErradas;}
+
+    public Usuario getJugador() {return jugador;}
+    public void setJugador(Usuario jugador) {this.jugador = jugador;}
 }

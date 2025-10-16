@@ -1,31 +1,39 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
+import com.tallerwebi.infraestructura.RepositorioHistorialImpl;
+import com.tallerwebi.infraestructura.RepositorioUsuarioImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ControladorJuegoTest {
 
-    private ServicioCuestionario servicioMock= mock(ServicioCuestionario.class);
-    private ServicioPregunta servicioPregunta= mock(ServicioPregunta.class);
-    private ServicioJuegoImpl servicioJuego= new ServicioJuegoImpl(servicioMock,servicioPregunta);
-    private ControladorJuego controladorJuego = new ControladorJuego(servicioJuego,servicioPregunta);
+    private RepositorioUsuarioImpl repoUsuarioImpl = mock(RepositorioUsuarioImpl.class);
+    private RepositorioHistorialImpl repoHistorialImpl = mock(RepositorioHistorialImpl.class);
+    private ServicioCuestionario servCuestionario = mock(ServicioCuestionario.class);
+    private ServicioPregunta servPregunta = mock(ServicioPregunta.class);
+
+    private ServicioJuegoImpl servJuego = new ServicioJuegoImpl(repoUsuarioImpl, repoHistorialImpl, servCuestionario, servPregunta);
+
+    private ControladorJuego controladorJuego = new ControladorJuego(servJuego, servPregunta);
+
     private Preguntas pregunta;
-    private Cuestionario cuestionario=new Cuestionario();
+    private Cuestionario cuestionario = new Cuestionario();
 
     @BeforeEach
-    public void setUp(){
-        pregunta= new Preguntas();
+    public void setUp() {
+        pregunta = new Preguntas();
         pregunta.setEnunciado("¿Cuando fue la revolucion de Mayo?");
         pregunta.setCategoria("Historia");
         Dificultad dificultad = new Dificultad();
@@ -36,48 +44,58 @@ public class ControladorJuegoTest {
         pregunta.setRespuestaIncorrecta2("24 de Junio");
         pregunta.setRespuestaIncorrecta3("25 de Julio");
 
-        cuestionario= new Cuestionario();
+        cuestionario = new Cuestionario();
         cuestionario.setId(3L);
-        cuestionario.setPreguntas(Arrays.asList(pregunta,pregunta));
+        cuestionario.setPreguntas(Arrays.asList(pregunta, pregunta));
     }
 
     @Test
-    public void queDevuelvaLaPreguntaConSusOpciones(){
+    public void queDevuelvaLaPreguntaConSusOpciones() {
         //preparacion
-       givenCuestionario();
+        givenCuestionario();
         //ejecucion
-        ModelAndView vista=whenCuestionarioDevuelvaLaPregunta();
+        ModelAndView vista = whenCuestionarioDevuelvaLaPregunta();
         //validacion
         thenCuestionario(vista);
     }
 
     @Test
-    public void siNoEncuentraElCuestionario(){
+    public void siNoEncuentraElCuestionario() {
 
-        Cuestionario ejem=new Cuestionario();
-        HttpSession sesion= mock(HttpSession.class);
+        Cuestionario ejem = new Cuestionario();
+        HttpSession sesion = mock(HttpSession.class);
         ejem.setId(1L);
-        ModelAndView mav= controladorJuego.iniciarPorFormulario(1L, sesion);
-        assertEquals("vista-error-cuestionario",mav.getViewName());
+        ModelAndView mav = controladorJuego.iniciarPorFormulario(1L, sesion);
+        assertEquals("vista-error-cuestionario", mav.getViewName());
     }
 
 
-    public void givenCuestionario(){
-        Mockito.when(servicioJuego.obtenerCuestionario(3L)).thenReturn(cuestionario);
-    }
-    public ModelAndView whenCuestionarioDevuelvaLaPregunta(){
-        return controladorJuego.iniciar(3L);
+    public void givenCuestionario() {
+        when(servJuego.obtenerCuestionario(3L)).thenReturn(cuestionario);
     }
 
-    public void thenCuestionario(ModelAndView vista){
+    public ModelAndView whenCuestionarioDevuelvaLaPregunta() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpSession session = mock(HttpSession.class);
+
+        Usuario usuario = new Usuario();
+        usuario.setNombre("Prueba");
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute("usuario")).thenReturn(usuario);
+
+        return controladorJuego.iniciarPorFormulario(3L, session);
+    }
+
+
+    public void thenCuestionario(ModelAndView vista) {
         assertThat(vista.getViewName(), equalToIgnoringCase("pregunta"));
-        Preguntas model=(Preguntas)vista.getModel().get("pregunta");
+        Preguntas model = (Preguntas) vista.getModel().get("pregunta");
 
-        assertThat(model.getEnunciado(),equalToIgnoringCase("¿Cuando fue la revolucion de Mayo?"));
-        assertThat(model.getRespuestaCorrecta(),equalToIgnoringCase("25 de mayo"));
-        assertThat(model.getRespuestaIncorrecta1(),equalToIgnoringCase("23 de Abril"));
-        assertThat(model.getRespuestaIncorrecta2(),equalToIgnoringCase("24 de Junio"));
-        assertThat(model.getRespuestaIncorrecta3(),equalToIgnoringCase("25 de Julio"));
+        assertThat(model.getEnunciado(), equalToIgnoringCase("¿Cuando fue la revolucion de Mayo?"));
+        assertThat(model.getRespuestaCorrecta(), equalToIgnoringCase("25 de mayo"));
+        assertThat(model.getRespuestaIncorrecta1(), equalToIgnoringCase("23 de Abril"));
+        assertThat(model.getRespuestaIncorrecta2(), equalToIgnoringCase("24 de Junio"));
+        assertThat(model.getRespuestaIncorrecta3(), equalToIgnoringCase("25 de Julio"));
     }
 
 }

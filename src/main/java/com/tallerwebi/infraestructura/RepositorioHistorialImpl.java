@@ -67,7 +67,7 @@ public class RepositorioHistorialImpl implements RepositorioHistorial {
         final Session session = sessionFactory.getCurrentSession();
         return session.createQuery(
                 "from HistorialCuestionario h " +
-                        "where h.id = :idCuestionario " +
+                        "where h.idCuestionario = :idCuestionario " +
                         "order by h.puntaje desc",
                 HistorialCuestionario.class
         ).setParameter("idCuestionario", idCuestionario).list();

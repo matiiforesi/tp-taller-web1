@@ -14,11 +14,11 @@ INSERT INTO Cuestionario (id, nombre, descripcion, categoria, dificultad_id) VAL
 -- Preguntas Cuestionario 1 (Historia)
 INSERT INTO Preguntas (id, enunciado, categoria, dificultad_id, respuesta_correcta, respuesta_incorrecta_1, respuesta_incorrecta_2, respuesta_incorrecta_3, cuestionario_id) VALUES
 (1, '¿En qué año comenzó la Primera Guerra Mundial?', 'Historia', 1, '1914', '1918', '1939', '1925', 1),
-(2, '¿Quién fue el primer emperador romano?', 'Historia', 1, 'Augusto', 'Julio César', 'Nerón', 'Trajano', 1);
+(2, '¿Quién fue el primer emperador romano?', 'Historia', 1, 'Augusto', 'Julio Cesar', 'Neron', 'Trajano', 1);
 
 -- Preguntas Cuestionario 2 (Ciencia)
 INSERT INTO Preguntas (id, enunciado, categoria, dificultad_id, respuesta_correcta, respuesta_incorrecta_1, respuesta_incorrecta_2, respuesta_incorrecta_3, cuestionario_id) VALUES
-(3, '¿Cuál es el elemento químico con símbolo O?', 'Ciencia', 2, 'Oxígeno', 'Oro', 'Osmio', 'Ozono', 2),
+(3, '¿Cuál es el elemento químico con símbolo O?', 'Ciencia', 2, 'Oxigeno', 'Oro', 'Osmio', 'Ozono', 2),
 (4, '¿Quién desarrolló la teoría de la relatividad?', 'Ciencia', 2, 'Albert Einstein', 'Isaac Newton', 'Galileo Galilei', 'Nikola Tesla', 2);
 
 -- Preguntas Cuestionario 3 (Cine)

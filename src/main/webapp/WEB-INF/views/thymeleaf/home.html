@@ -31,7 +31,7 @@
                 <h5 th:text="${cuestionario.nombre}">Nombre del cuestionario</h5>
                 <p th:text="${cuestionario.descripcion}">Descripción</p>
                 <p><strong th:text="${cuestionario.categoria}">Categoría</strong></p>
-                <a th:href="@{/iniciar/{idCuestionario}(idCuestionario=${cuestionario.id})}" class="btn btn-primary">
+                <a th:href="@{/iniciar?(idCuestionario=${cuestionario.id})}" class="btn btn-primary">
                     Ingresar
                 </a>
             </div>

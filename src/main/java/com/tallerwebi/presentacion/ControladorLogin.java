@@ -26,7 +26,8 @@ public class ControladorLogin {
     private ServicioCuestionario servicioCuestionario;
 
     @Autowired
-    public ControladorLogin(ServicioLogin servicioLogin) {this.servicioLogin = servicioLogin;
+    public ControladorLogin(ServicioLogin servicioLogin) {
+        this.servicioLogin = servicioLogin;
     }
 
     @RequestMapping("/login")
@@ -80,14 +81,19 @@ public class ControladorLogin {
     }
 
     @RequestMapping(path = "/home", method = RequestMethod.GET)
-    public ModelAndView irAHome() {
+    public ModelAndView irAHome(HttpServletRequest request) {
         ModelMap model = new ModelMap();
+        Usuario usuarioEncontrado=(Usuario)request.getSession().getAttribute("usuario");
+        String rol=usuarioEncontrado.getRol();
         List<Cuestionario> cuestionarios = servicioCuestionario.buscarTodo();
         Collections.shuffle(cuestionarios);
         List<Cuestionario> seleccionados = cuestionarios.stream()
                 .limit(4)
                 .collect(Collectors.toList());
         model.put("cuestionarios", seleccionados);
+        model.put("rol", rol);
+        model.put("nombre", usuarioEncontrado.getNombre());
+        model.put("puntaje",usuarioEncontrado.getPuntaje());
         return new ModelAndView("home", model);
     }
 

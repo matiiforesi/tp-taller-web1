@@ -18,12 +18,20 @@
 <body>
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-  <a class="navbar-brand" href="#">Mi Web</a>
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Mi Web</a>
+
+        <div class="d-flex ms-auto align-items-center text-white">
+            <h6 class="mb-0 me-3">Usuario: <span th:text="${nombre}">[nombre]</span></h6>
+            <h6 class="mb-0">Puntaje: <span th:text="${puntaje}">[puntaje]</span></h6>
+        </div>
+    </div>
 </nav>
+
 <main role="main" class="container w-100 h-100">
     <div class="container d-flex flex-column align-items-center gap-4">
 
-        <h1>Bienvenidos a Taller Web 1</h1>
+        <h1>Cuestionarios Sugeridos</h1>
 
         <!-- cuestionarios aleatorios -->
         <div class="d-flex flex-wrap justify-content-center gap-3">
@@ -43,8 +51,9 @@
                 <button type="submit" class="btn btn-primary">Ingresar</button>
             </form>
         </div>
-
+        <div th:if="${rol=='ADMIN'}">
         <a href="cuestionario/new" class="btn btn-lg btn-primary">Crear Cuestionario</a>
+        </div>
         <a href="login.html" class="btn btn-lg btn-danger">Cerrar sesión</a>
 
     </div>

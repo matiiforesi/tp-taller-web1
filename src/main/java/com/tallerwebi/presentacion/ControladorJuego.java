@@ -132,7 +132,7 @@ public class ControladorJuego {
         if (preguntasErradas == null) preguntasErradas = 0;
 
         boolean esCorrecta = servicioJuego.validarRespuesta(respuesta, idPregunta);
-        puntajeTotal = servicioJuego.obtenerPuntaje(idPregunta, respuesta);
+        puntajeTotal = servicioJuego.obtenerPuntaje(idPregunta, respuesta, timer);
 
         if (esCorrecta) preguntasCorrectas++;
         else preguntasErradas++;

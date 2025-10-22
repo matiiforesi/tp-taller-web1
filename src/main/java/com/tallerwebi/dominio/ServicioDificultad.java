@@ -9,6 +9,8 @@ public interface ServicioDificultad {
 	void guardar(Dificultad dificultad);
 
 	void modificar(Dificultad dificultad);
+
+    int calcularMultiplicador(Dificultad dificultad);
 }
 
 

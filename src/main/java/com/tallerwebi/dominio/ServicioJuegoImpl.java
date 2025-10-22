@@ -1,7 +1,5 @@
 package com.tallerwebi.dominio;
 
-import com.tallerwebi.infraestructura.RepositorioHistorialImpl;
-import com.tallerwebi.infraestructura.RepositorioUsuarioImpl;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -10,20 +8,22 @@ import javax.transaction.Transactional;
 @Transactional
 public class ServicioJuegoImpl implements ServicioJuego {
 
-    private final RepositorioUsuarioImpl repositorioUsuarioImpl;
-    private final RepositorioHistorialImpl repositorioHistorialImpl;
+    private final RepositorioUsuario repositorioUsuario;
+    private final RepositorioHistorial repositorioHistorial;
     private ServicioCuestionario servicioCuestionario;
     private ServicioPregunta servicioPregunta;
+    private ServicioDificultad servicioDificultad;
 
     private Integer puntajeTotal = 0;
     private Integer preguntasCorrectas = 0;
     private Integer preguntasErradas = 0;
 
-    public ServicioJuegoImpl(RepositorioUsuarioImpl repositorioUsuarioImpl, RepositorioHistorialImpl repositorioHistorialImpl, ServicioCuestionario servicioCuestionario, ServicioPregunta servicioPregunta) {
-        this.repositorioUsuarioImpl = repositorioUsuarioImpl;
-        this.repositorioHistorialImpl = repositorioHistorialImpl;
+    public ServicioJuegoImpl(RepositorioUsuario repositorioUsuario, RepositorioHistorial repositorioHistorial, ServicioCuestionario servicioCuestionario, ServicioPregunta servicioPregunta, ServicioDificultad servicioDificultad) {
+        this.repositorioUsuario = repositorioUsuario;
+        this.repositorioHistorial = repositorioHistorial;
         this.servicioCuestionario = servicioCuestionario;
         this.servicioPregunta = servicioPregunta;
+        this.servicioDificultad = servicioDificultad;
     }
 
     @Override
@@ -37,12 +37,26 @@ public class ServicioJuegoImpl implements ServicioJuego {
     }
 
     @Override
-    public Integer obtenerPuntaje(Long idPregunta, String respuesta) {
+    public Integer obtenerPuntaje(Long idPregunta, String respuesta, TimerPregunta timerPregunta) {
         Integer puntosGanados = 0;
 
+        Preguntas pregunta = servicioPregunta.obtenerPorId(idPregunta);
+
+        int mult = 1;
+        if (pregunta != null && pregunta.getDificultad() != null) {
+            mult = servicioDificultad.calcularMultiplicador(pregunta.getDificultad());
+        }
+
         if (validarRespuesta(respuesta, idPregunta)) {
-            puntosGanados = 100;
             preguntasCorrectas++;
+            int puntajeBase = 100;
+
+            int tiempoBonus = 0;
+            if (timerPregunta != null) {
+                tiempoBonus = timerPregunta.segundosRestantes().intValue() * 10;
+            }
+
+            puntosGanados = (puntajeBase + tiempoBonus) * mult;
         } else {
             preguntasErradas++;
         }
@@ -65,7 +79,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
     @Override
     public void actualizarPuntajeYCrearHistorial(Usuario jugador, Cuestionario cuestionario, int preguntasCorrectas, int preguntasErradas) {
         jugador.setPuntaje(jugador.getPuntaje() + this.puntajeTotal);
-        repositorioUsuarioImpl.modificar(jugador);
+        repositorioUsuario.modificar(jugador);
 
         HistorialCuestionario historialCuestionario = new HistorialCuestionario();
         historialCuestionario.setJugador(jugador);
@@ -76,7 +90,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
         historialCuestionario.setPreguntasCorrectas(preguntasCorrectas);
         historialCuestionario.setPreguntasErradas(preguntasErradas);
 
-        repositorioHistorialImpl.guardar(historialCuestionario);
+        repositorioHistorial.guardar(historialCuestionario);
 
         reiniciarPuntaje();
     }
@@ -87,6 +101,4 @@ public class ServicioJuegoImpl implements ServicioJuego {
         this.preguntasCorrectas = 0;
         this.preguntasErradas = 0;
     }
-
-
 }

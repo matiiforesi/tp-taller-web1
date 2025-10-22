@@ -1,4 +1,5 @@
 package com.tallerwebi.integracion;
+
 import com.tallerwebi.dominio.*;
 import com.tallerwebi.integracion.config.HibernateTestConfig;
 import com.tallerwebi.integracion.config.SpringWebTestConfig;
@@ -51,9 +52,9 @@ public class ControladorCuestionarioTest {
             pregunta.setIncorrect_answers(asList("Londres", "Madrid", "Roma"));
             respuesta.setResults(List.of(pregunta));
 
-            when(mock.buscarPreguntas(org.mockito.ArgumentMatchers.anyInt(), 
-                                    org.mockito.ArgumentMatchers.anyInt(), 
-                                    org.mockito.ArgumentMatchers.anyString()))
+            when(mock.buscarPreguntas(org.mockito.ArgumentMatchers.anyInt(),
+                    org.mockito.ArgumentMatchers.anyInt(),
+                    org.mockito.ArgumentMatchers.anyString()))
                     .thenReturn(respuesta);
             return mock;
         }
@@ -109,6 +110,7 @@ public class ControladorCuestionarioTest {
         assert mv != null;
         assertThat(mv.getViewName(), equalToIgnoringCase("cuestionario_form"));
     }
+
     @Test
     public void debeCrearCuestionarioYRedirigirALista() throws Exception {
         MvcResult result = this.mockMvc.perform(post("/cuestionario/new")

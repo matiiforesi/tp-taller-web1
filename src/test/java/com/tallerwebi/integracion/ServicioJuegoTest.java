@@ -1,8 +1,6 @@
 package com.tallerwebi.integracion;
 
 import com.tallerwebi.dominio.*;
-import com.tallerwebi.infraestructura.RepositorioHistorialImpl;
-import com.tallerwebi.infraestructura.RepositorioUsuarioImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -14,15 +12,16 @@ import static org.mockito.Mockito.mock;
 public class ServicioJuegoTest {
     // Que se pueda validar la respuesta
     // Que te devuelva si es incorrecta
-    private RepositorioUsuarioImpl repoUsuarioImpl = mock(RepositorioUsuarioImpl.class);
-    private RepositorioHistorialImpl repoHistorialImpl = mock(RepositorioHistorialImpl.class);
+    private RepositorioUsuario repoUsuario = mock(RepositorioUsuario.class);
+    private RepositorioHistorial repoHistorial = mock(RepositorioHistorial.class);
     private ServicioCuestionario servCuestionario = mock(ServicioCuestionario.class);
     private ServicioPregunta servPregunta = mock(ServicioPregunta.class);
-    private ServicioJuego servicioJuego = new ServicioJuegoImpl(repoUsuarioImpl, repoHistorialImpl, servCuestionario, servPregunta);
+    private ServicioDificultad servDificultad = mock(ServicioDificultad.class);
+
+    private ServicioJuego servicioJuego = new ServicioJuegoImpl(repoUsuario, repoHistorial, servCuestionario, servPregunta, servDificultad);
 
     @Test
     public void queSeValideLaRespuestaSiEsCorrecta() {
-
         givenCreacionPreguntas();
         Boolean obtenido = whenSeValideLaRespuestaSiEsCorrecta();
         thenValideLaRespuesta(obtenido);
@@ -39,7 +38,7 @@ public class ServicioJuegoTest {
     public void queObtengaPuntos() {
         givenCreacionPreguntas();
         Integer obtenido = whenAcumulaPuntaje("25 de mayo");
-        thenAcumulaPuntaje(100, obtenido);
+        thenAcumulaPuntaje(600, obtenido);
     }
 
     @Test
@@ -81,8 +80,9 @@ public class ServicioJuegoTest {
     }
 
     private Integer whenAcumulaPuntaje(String respuesta) {
+        TimerPregunta timer = new TimerPregunta(10);
         if (whenSeValideLaRespuestaSiEsCorrecta()) {
-            return servicioJuego.obtenerPuntaje(1L, respuesta);
+            return servicioJuego.obtenerPuntaje(1L, respuesta, timer);
         }
         return 0;
     }
@@ -101,7 +101,7 @@ public class ServicioJuegoTest {
         pregunta.setEnunciado("¿Cuando fue la revolucion de Mayo?");
         pregunta.setCategoria("Historia");
         Dificultad dificultad = new Dificultad();
-        dificultad.setNombre("Facil");
+        dificultad.setNombre("Dificil");
         pregunta.setDificultad(dificultad);
         pregunta.setRespuestaCorrecta("25 de mayo");
         pregunta.setRespuestaIncorrecta1("23 de Abril");
@@ -113,6 +113,7 @@ public class ServicioJuegoTest {
 
         Mockito.when(serv.buscar(2L)).thenReturn(c);*/
         Mockito.when(servPregunta.obtenerPorId(1L)).thenReturn(pregunta);
+        Mockito.when(servDificultad.calcularMultiplicador(Mockito.any())).thenReturn(3);
     }
 
     private Boolean whenSeValideLaRespuestaSiEsCorrecta() {

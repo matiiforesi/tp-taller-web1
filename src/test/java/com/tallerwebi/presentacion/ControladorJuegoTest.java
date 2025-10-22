@@ -1,8 +1,6 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.*;
-import com.tallerwebi.infraestructura.RepositorioHistorialImpl;
-import com.tallerwebi.infraestructura.RepositorioUsuarioImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,12 +17,13 @@ import static org.mockito.Mockito.when;
 
 public class ControladorJuegoTest {
 
-    private RepositorioUsuarioImpl repoUsuarioImpl = mock(RepositorioUsuarioImpl.class);
-    private RepositorioHistorialImpl repoHistorialImpl = mock(RepositorioHistorialImpl.class);
+    private RepositorioUsuario repoUsuario = mock(RepositorioUsuario.class);
+    private RepositorioHistorial repoHistorial = mock(RepositorioHistorial.class);
     private ServicioCuestionario servCuestionario = mock(ServicioCuestionario.class);
     private ServicioPregunta servPregunta = mock(ServicioPregunta.class);
+    private ServicioDificultad servDificultad = mock(ServicioDificultad.class);
 
-    private ServicioJuegoImpl servJuego = new ServicioJuegoImpl(repoUsuarioImpl, repoHistorialImpl, servCuestionario, servPregunta);
+    private ServicioJuegoImpl servJuego = new ServicioJuegoImpl(repoUsuario, repoHistorial, servCuestionario, servPregunta, servDificultad);
 
     private ControladorJuego controladorJuego = new ControladorJuego(servJuego, servPregunta);
 

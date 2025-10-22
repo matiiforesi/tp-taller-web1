@@ -3,7 +3,7 @@ package com.tallerwebi.dominio;
 public interface ServicioJuego {
     Boolean validarRespuesta(String respuesta, Long id);
 
-    Integer obtenerPuntaje(Long idPregunta, String respuesta);
+    Integer obtenerPuntaje(Long idPregunta, String respuesta, TimerPregunta timerPregunta);
 
     Preguntas obtenerPregunta(Cuestionario cuestionario, Integer indicePregunta);
 

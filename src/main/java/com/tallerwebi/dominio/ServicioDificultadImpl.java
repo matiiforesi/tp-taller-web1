@@ -35,6 +35,31 @@ public class ServicioDificultadImpl implements ServicioDificultad {
     public void modificar(Dificultad dificultad) {
         repositorioDificultad.modificar(dificultad);
     }
+
+    @Override
+    public int calcularMultiplicador(Dificultad dificultad) {
+        if (dificultad == null) {return 1;}
+
+        Integer mult = dificultad.getMultiplicadorDificultad();
+        if (mult != null && mult > 0) {return mult;}
+
+        String nombre = dificultad.getNombre();
+        if (nombre == null) {return 1;}
+
+        switch (nombre.trim().toLowerCase()) {
+            // case "facil":
+            case "easy":
+                return 1;
+            // case "medio":
+            case "medium":
+                return 2;
+            // case "dificil":
+            case "hard":
+                return 3;
+            default:
+                return 1;
+        }
+    }
 }
 
 

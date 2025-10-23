@@ -38,6 +38,7 @@ public class ControladorJuego {
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }
+       // servicioJuego.registrarIntento(usuario.getId(),cuestionario.getId());
 
         session.setAttribute("indicePregunta", 0);
         session.setAttribute("puntajeTotal", 0);
@@ -85,8 +86,11 @@ public class ControladorJuego {
             return prepararVista(cuestionario, nuevoIndice, timer, false, null, usuario,
                     puntajeTotal, preguntasCorrectas, preguntasErradas);
         } else {
-            servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas);
-
+           // servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas);
+            Integer puntajeTotalSesion= (Integer) session.getAttribute("puntajeTotal");
+            servicioJuego.setPuntajeTotal(puntajeTotalSesion);
+            Integer puntajePenalizado=servicioJuego.registrarIntento(usuario.getId(),cuestionario.getId());
+            servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas,puntajePenalizado);
             session.removeAttribute("puntajeTotal");
             session.removeAttribute("preguntasCorrectas");
             session.removeAttribute("preguntasErradas");
@@ -94,7 +98,7 @@ public class ControladorJuego {
             session.removeAttribute("idCuestionario");
 
             ModelMap model = new ModelMap();
-            model.put("puntajeTotal", puntajeTotal);
+            model.put("puntajeTotal", puntajePenalizado);
             model.put("preguntasCorrectas", preguntasCorrectas);
             model.put("preguntasErradas", preguntasErradas);
             model.put("cuestionario", cuestionario);
@@ -133,6 +137,8 @@ public class ControladorJuego {
 
         boolean esCorrecta = servicioJuego.validarRespuesta(respuesta, idPregunta);
         puntajeTotal = servicioJuego.obtenerPuntaje(idPregunta, respuesta, timer);
+        //servicioJuego.setPuntajeTotal(puntajeTotal);
+       // Integer puntajePenalizado=servicioJuego.calcularPenalizacion(usuario.getId(), cuestionario.getId());
 
         if (esCorrecta) preguntasCorrectas++;
         else preguntasErradas++;

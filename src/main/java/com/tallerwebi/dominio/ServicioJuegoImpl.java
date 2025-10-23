@@ -10,6 +10,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
 
     private final RepositorioUsuario repositorioUsuario;
     private final RepositorioHistorial repositorioHistorial;
+    private RepositorioIntento repositorioIntento;
     private ServicioCuestionario servicioCuestionario;
     private ServicioPregunta servicioPregunta;
     private ServicioDificultad servicioDificultad;
@@ -18,12 +19,13 @@ public class ServicioJuegoImpl implements ServicioJuego {
     private Integer preguntasCorrectas = 0;
     private Integer preguntasErradas = 0;
 
-    public ServicioJuegoImpl(RepositorioUsuario repositorioUsuario, RepositorioHistorial repositorioHistorial, ServicioCuestionario servicioCuestionario, ServicioPregunta servicioPregunta, ServicioDificultad servicioDificultad) {
+    public ServicioJuegoImpl(RepositorioUsuario repositorioUsuario, RepositorioHistorial repositorioHistorial, ServicioCuestionario servicioCuestionario, ServicioPregunta servicioPregunta, ServicioDificultad servicioDificultad, RepositorioIntento repositorioIntento) {
         this.repositorioUsuario = repositorioUsuario;
         this.repositorioHistorial = repositorioHistorial;
         this.servicioCuestionario = servicioCuestionario;
         this.servicioPregunta = servicioPregunta;
         this.servicioDificultad = servicioDificultad;
+        this.repositorioIntento = repositorioIntento;
     }
 
     @Override
@@ -77,8 +79,10 @@ public class ServicioJuegoImpl implements ServicioJuego {
     }
 
     @Override
-    public void actualizarPuntajeYCrearHistorial(Usuario jugador, Cuestionario cuestionario, int preguntasCorrectas, int preguntasErradas) {
-        jugador.setPuntaje(jugador.getPuntaje() + this.puntajeTotal);
+    public void actualizarPuntajeYCrearHistorial(Usuario jugador, Cuestionario cuestionario, int preguntasCorrectas, int preguntasErradas, Integer puntajePenalizado) {
+       // registrarIntento(jugador.getId(), cuestionario.getId());
+       // jugador.setPuntaje(jugador.getPuntaje() + this.puntajeTotal);
+        jugador.setPuntaje(jugador.getPuntaje() + puntajePenalizado);
         repositorioUsuario.modificar(jugador);
 
         HistorialCuestionario historialCuestionario = new HistorialCuestionario();
@@ -100,5 +104,38 @@ public class ServicioJuegoImpl implements ServicioJuego {
         this.puntajeTotal = 0;
         this.preguntasCorrectas = 0;
         this.preguntasErradas = 0;
+    }
+
+    @Override
+    public Integer registrarIntento(Long idUsuario, Long idCuestionario) {
+
+        Integer puntajePenalizado=calcularPenalizacion(idUsuario, idCuestionario);
+
+        IntentoCuestionario intentoCuestionario = new IntentoCuestionario();
+        Usuario usuario= repositorioUsuario.buscarPorId(idUsuario);
+        Cuestionario cuestionario= servicioCuestionario.buscar(idCuestionario);
+        intentoCuestionario.setUsuario(usuario);
+        intentoCuestionario.setCuestionario(cuestionario);
+        intentoCuestionario.setPuntaje((long) puntajePenalizado);
+
+        System.out.println("Puntaje total antes de penalizar: " + this.puntajeTotal);
+        System.out.println("Intento registrado: Usuario " + idUsuario + ", Cuestionario " + idCuestionario);
+       // System.out.println("Cantidad de reintentos " + reintentos);
+        System.out.println("Puntaje penalizado " + puntajePenalizado);
+
+        repositorioIntento.guardar(intentoCuestionario);
+
+        return puntajePenalizado;
+    }
+
+    @Override
+    public void setPuntajeTotal(Integer puntajeTotal) {
+        this.puntajeTotal = puntajeTotal;
+    }
+
+    @Override
+    public Integer calcularPenalizacion(Long idUsuario, Long idCuestionario) {
+        Integer reintentos=repositorioIntento.contarIntentos(idUsuario,idCuestionario);
+        return this.puntajeTotal/(1+reintentos);
     }
 }

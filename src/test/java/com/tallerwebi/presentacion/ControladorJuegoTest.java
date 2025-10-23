@@ -22,8 +22,9 @@ public class ControladorJuegoTest {
     private ServicioCuestionario servCuestionario = mock(ServicioCuestionario.class);
     private ServicioPregunta servPregunta = mock(ServicioPregunta.class);
     private ServicioDificultad servDificultad = mock(ServicioDificultad.class);
+    private RepositorioIntento repositorioIntento = mock(RepositorioIntento.class);
 
-    private ServicioJuegoImpl servJuego = new ServicioJuegoImpl(repoUsuario, repoHistorial, servCuestionario, servPregunta, servDificultad);
+    private ServicioJuegoImpl servJuego = new ServicioJuegoImpl(repoUsuario, repoHistorial, servCuestionario, servPregunta, servDificultad,repositorioIntento);
 
     private ControladorJuego controladorJuego = new ControladorJuego(servJuego, servPregunta);
 

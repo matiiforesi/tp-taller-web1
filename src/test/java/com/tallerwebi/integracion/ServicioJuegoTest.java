@@ -17,8 +17,9 @@ public class ServicioJuegoTest {
     private ServicioCuestionario servCuestionario = mock(ServicioCuestionario.class);
     private ServicioPregunta servPregunta = mock(ServicioPregunta.class);
     private ServicioDificultad servDificultad = mock(ServicioDificultad.class);
+    private RepositorioIntento repositorioIntento = mock(RepositorioIntento.class);
 
-    private ServicioJuego servicioJuego = new ServicioJuegoImpl(repoUsuario, repoHistorial, servCuestionario, servPregunta, servDificultad);
+    private ServicioJuego servicioJuego = new ServicioJuegoImpl(repoUsuario, repoHistorial, servCuestionario, servPregunta, servDificultad,repositorioIntento);
 
     @Test
     public void queSeValideLaRespuestaSiEsCorrecta() {

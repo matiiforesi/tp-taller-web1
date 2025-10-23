@@ -9,7 +9,14 @@ public interface ServicioJuego {
 
     Cuestionario obtenerCuestionario(Long id);
 
-    void actualizarPuntajeYCrearHistorial(Usuario jugador, Cuestionario cuestionario, int preguntasCorrectas, int preguntasIncorrectas);
+    void actualizarPuntajeYCrearHistorial(Usuario jugador, Cuestionario cuestionario, int preguntasCorrectas, int preguntasIncorrectas, Integer puntajePenalizado);
 
     void reiniciarPuntaje();
+
+    Integer registrarIntento(Long idUsuario, Long idCuestionario);
+
+    Integer calcularPenalizacion(Long idUsuario, Long idCuestionario);
+
+    void setPuntajeTotal(Integer puntajeTotal);
+
 }

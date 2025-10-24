@@ -15,17 +15,19 @@
 <div class="contenedor_general w-100">
 
     <div id="tiempoAgotadoCard" style="display: none;">
-        <div class="card" style="max-width: 400px; margin: 20px auto; padding: 20px; border: 2px solid red; background-color: #ffe6e6;">
-            <h3>⏰ Tiempo agotado</h3>
+        <div class="card"
+             style="max-width: 400px; margin: 20px auto; padding: 20px; border: 2px solid red; background-color: #ffe6e6;">
+            <h3>Tiempo agotado</h3>
             <p>Puntaje total: <span th:text="${puntajeTotal}"></span></p>
             <a th:href="@{/home}" class="btn btn-primary">Volver al home</a>
         </div>
     </div>
     <div id="contenedor-pregunta">
-        <div>Tiempo restante: <span id="timer" th:text="${tiempoRestante}"></span> segundos</div>
-<h2 th:text="${pregunta.enunciado}"></h2>
+        <div>⏰ Tiempo restante: <span id="timer" th:text="${tiempoRestante}"></span> segundos</div>
+        <div>❤️ Vidas restantes: <span th:text="${vidasRestantes}"></span></div>
+        <h2 th:text="${pregunta.enunciado}"></h2>
         <form th:if="${!respondida}" th:action="@{'/juego/' + ${cuestionario.id} + '/validar'}" method="post">
-            <input type="hidden" name="idPregunta" th:value="${pregunta.id}" />
+            <input type="hidden" name="idPregunta" th:value="${pregunta.id}"/>
 
             <div class="d-grid gap-3">
                 <button type="submit" name="respuesta" th:value="${opcion}"
@@ -35,19 +37,18 @@
                 </button>
             </div>
         </form>
-   <!--
-<form id="formulario" th:if="${!respondida}" th:action="@{'/juego/' + ${cuestionario.id} + '/validar'}" method="post">
-    <div th:each="opcion : ${opciones}">
-        <label>
-            <input type="radio" name="respuesta" th:value="${opcion}" required>
-            <span th:text="${opcion}"></span>
-        </label><br/>
-    </div>
-    <input type="hidden" name="idPregunta" th:value="${pregunta.id}" />
-    <input type="hidden" name="indicePregunta" th:value="${indicePregunta}">
-    <input class="btn btn-success" type="submit" value="Responder">
-</form>-->
-
+        <!--
+     <form id="formulario" th:if="${!respondida}" th:action="@{'/juego/' + ${cuestionario.id} + '/validar'}" method="post">
+         <div th:each="opcion : ${opciones}">
+             <label>
+                 <input type="radio" name="respuesta" th:value="${opcion}" required>
+                 <span th:text="${opcion}"></span>
+             </label><br/>
+         </div>
+         <input type="hidden" name="idPregunta" th:value="${pregunta.id}" />
+         <input type="hidden" name="indicePregunta" th:value="${indicePregunta}">
+         <input class="btn btn-success" type="submit" value="Responder">
+     </form>-->
         <div th:if="${respondida}">
             <div th:if="${esCorrecta}" style="color: green; font-weight: bold;">
                 ✅ ¡Respuesta correcta!
@@ -64,33 +65,32 @@
                     <!--<input type="hidden" name="indicePregunta" th:value="${indicePregunta}">-->
                     <button type="submit" class="btn btn-primary">Siguiente</button>
                 </form>
-               <!-- <a th:href="@{/home}" class="btn btn-primary">Volver al home</a> -->
+                <!-- <a th:href="@{/home}" class="btn btn-primary">Volver al home</a> -->
             </div>
-
-
         </div>
-</div>
+    </div>
 </div>
 
 <script th:inline="javascript">
     let tiempo = [[${tiempoRestante}]];
     const timerSpan = document.getElementById("timer");
-    let respondida=[[${respondida}]];
-    let card= document.getElementById("tiempoAgotadoCard");
-    let form=document.getElementById("contenedor-pregunta");
+    let respondida = [[${respondida}]];
+    let card = document.getElementById("tiempoAgotadoCard");
+    let form = document.getElementById("contenedor-pregunta");
     const interval = setInterval(() => {
 
-    if(respondida){
-         clearInterval(interval);
-           return}
-      tiempo--;
-      timerSpan.textContent = tiempo;
+        if (respondida) {
+            clearInterval(interval);
+            return
+        }
+        tiempo--;
+        timerSpan.textContent = tiempo;
 
-      if (tiempo <= 0) {
-        clearInterval(interval);
-        card.style.display="block";
-        form.style.display="none";
-      }
+        if (tiempo <= 0) {
+            clearInterval(interval);
+            card.style.display = "block";
+            form.style.display = "none";
+        }
     }, 1000);
 </script>
 </body>

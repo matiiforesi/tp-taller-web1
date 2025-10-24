@@ -13,8 +13,8 @@
 <body>
 <div class="card" style="width:20em">
     <h1>¡Partida Finalizada!</h1>
-    <p>Tu puntaje final es:</p>
-    <h2 th:text="${puntajeTotal}"></h2>
+    <p>Puntaje final: <span th:text="${puntajeTotal}"></span></p>
+    <p>Vidas restantes: <span th:text="${vidasRestantes}"></span></p>
     <a href="/spring/home" class="btn">Volver al inicio</a>
 </div>
 </body>

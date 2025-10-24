@@ -41,7 +41,7 @@ public class HistorialCuestionario {
 
     public Integer getPreguntasCorrectas() {return preguntasCorrectas;}
     public void setPreguntasCorrectas(Integer preguntasCorrectas) {this.preguntasCorrectas = preguntasCorrectas;}
-    
+
     public Integer getPreguntasErradas() {return preguntasErradas;}
     public void setPreguntasErradas(Integer preguntasErradas) {this.preguntasErradas = preguntasErradas;}
 

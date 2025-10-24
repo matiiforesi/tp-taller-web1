@@ -14,12 +14,12 @@ public class ServicioJuegoTest {
     // Que te devuelva si es incorrecta
     private RepositorioUsuario repoUsuario = mock(RepositorioUsuario.class);
     private RepositorioHistorial repoHistorial = mock(RepositorioHistorial.class);
+    private RepositorioIntento repoIntento = mock(RepositorioIntento.class);
     private ServicioCuestionario servCuestionario = mock(ServicioCuestionario.class);
     private ServicioPregunta servPregunta = mock(ServicioPregunta.class);
     private ServicioDificultad servDificultad = mock(ServicioDificultad.class);
-    private RepositorioIntento repositorioIntento = mock(RepositorioIntento.class);
 
-    private ServicioJuego servicioJuego = new ServicioJuegoImpl(repoUsuario, repoHistorial, servCuestionario, servPregunta, servDificultad,repositorioIntento);
+    private ServicioJuego servicioJuego = new ServicioJuegoImpl(repoUsuario, repoHistorial, repoIntento, servCuestionario, servPregunta, servDificultad);
 
     @Test
     public void queSeValideLaRespuestaSiEsCorrecta() {

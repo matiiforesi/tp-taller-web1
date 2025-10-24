@@ -10,22 +10,31 @@ public class ServicioJuegoImpl implements ServicioJuego {
 
     private final RepositorioUsuario repositorioUsuario;
     private final RepositorioHistorial repositorioHistorial;
-    private RepositorioIntento repositorioIntento;
-    private ServicioCuestionario servicioCuestionario;
-    private ServicioPregunta servicioPregunta;
-    private ServicioDificultad servicioDificultad;
+    private final RepositorioIntento repositorioIntento;
+    private final ServicioCuestionario servicioCuestionario;
+    private final ServicioPregunta servicioPregunta;
+    private final ServicioDificultad servicioDificultad;
 
     private Integer puntajeTotal = 0;
     private Integer preguntasCorrectas = 0;
     private Integer preguntasErradas = 0;
+    private Integer vidasRestantes = 0;
 
-    public ServicioJuegoImpl(RepositorioUsuario repositorioUsuario, RepositorioHistorial repositorioHistorial, ServicioCuestionario servicioCuestionario, ServicioPregunta servicioPregunta, ServicioDificultad servicioDificultad, RepositorioIntento repositorioIntento) {
+    public ServicioJuegoImpl(RepositorioUsuario repositorioUsuario, RepositorioHistorial repositorioHistorial, RepositorioIntento repositorioIntento, ServicioCuestionario servicioCuestionario, ServicioPregunta servicioPregunta, ServicioDificultad servicioDificultad) {
         this.repositorioUsuario = repositorioUsuario;
         this.repositorioHistorial = repositorioHistorial;
+        this.repositorioIntento = repositorioIntento;
         this.servicioCuestionario = servicioCuestionario;
         this.servicioPregunta = servicioPregunta;
         this.servicioDificultad = servicioDificultad;
-        this.repositorioIntento = repositorioIntento;
+    }
+
+    @Override
+    public void inicializarVidas(Cuestionario cuestionario) {
+        if (cuestionario.getVidas() == null) {
+            servicioCuestionario.asignarVidasSegunDificultad(cuestionario);
+        }
+        this.vidasRestantes = cuestionario.getVidas();
     }
 
     @Override
@@ -41,7 +50,6 @@ public class ServicioJuegoImpl implements ServicioJuego {
     @Override
     public Integer obtenerPuntaje(Long idPregunta, String respuesta, TimerPregunta timerPregunta) {
         Integer puntosGanados = 0;
-
         Preguntas pregunta = servicioPregunta.obtenerPorId(idPregunta);
 
         int mult = 1;
@@ -57,10 +65,10 @@ public class ServicioJuegoImpl implements ServicioJuego {
             if (timerPregunta != null) {
                 tiempoBonus = timerPregunta.segundosRestantes().intValue() * 10;
             }
-
             puntosGanados = (puntajeBase + tiempoBonus) * mult;
         } else {
             preguntasErradas++;
+            vidasRestantes--;
         }
 
         this.puntajeTotal += puntosGanados;
@@ -75,22 +83,23 @@ public class ServicioJuegoImpl implements ServicioJuego {
     @Override
     public Cuestionario obtenerCuestionario(Long id) {
         return servicioCuestionario.buscar(id);
-        //return servicioCuestionario.buscarTodo().get(0);
+        // return servicioCuestionario.buscarTodo().get(0);
     }
 
     @Override
     public void actualizarPuntajeYCrearHistorial(Usuario jugador, Cuestionario cuestionario, int preguntasCorrectas, int preguntasErradas, Integer puntajePenalizado) {
-       // registrarIntento(jugador.getId(), cuestionario.getId());
-       // jugador.setPuntaje(jugador.getPuntaje() + this.puntajeTotal);
-        jugador.setPuntaje(jugador.getPuntaje() + puntajePenalizado);
-        repositorioUsuario.modificar(jugador);
+        // registrarIntento(jugador.getId(), cuestionario.getId());
+        // jugador.setPuntaje(jugador.getPuntaje() + this.puntajeTotal);
+        Usuario usuarioPersistente = repositorioUsuario.buscarPorId(jugador.getId());
+        usuarioPersistente.setPuntaje(usuarioPersistente.getPuntaje() + puntajePenalizado);
+        repositorioUsuario.modificar(usuarioPersistente);
 
         HistorialCuestionario historialCuestionario = new HistorialCuestionario();
         historialCuestionario.setJugador(jugador);
         historialCuestionario.setNombreUsuario(jugador.getNombre());
         historialCuestionario.setNombreCuestionario(cuestionario.getNombre());
         historialCuestionario.setIdCuestionario(cuestionario.getId());
-        historialCuestionario.setPuntaje((long) this.puntajeTotal);
+        historialCuestionario.setPuntaje((long) puntajePenalizado);
         historialCuestionario.setPreguntasCorrectas(preguntasCorrectas);
         historialCuestionario.setPreguntasErradas(preguntasErradas);
 
@@ -107,35 +116,32 @@ public class ServicioJuegoImpl implements ServicioJuego {
     }
 
     @Override
-    public Integer registrarIntento(Long idUsuario, Long idCuestionario) {
+    public Integer registrarIntento(Long idUsuario, Long idCuestionario, Integer puntajePartida) {
+        Integer puntajePenalizado = calcularPenalizacion(idUsuario, idCuestionario, puntajePartida);
 
-        Integer puntajePenalizado=calcularPenalizacion(idUsuario, idCuestionario);
+        Usuario usuario = repositorioUsuario.buscarPorId(idUsuario);
+        Cuestionario cuestionario = servicioCuestionario.buscar(idCuestionario);
 
         IntentoCuestionario intentoCuestionario = new IntentoCuestionario();
-        Usuario usuario= repositorioUsuario.buscarPorId(idUsuario);
-        Cuestionario cuestionario= servicioCuestionario.buscar(idCuestionario);
         intentoCuestionario.setUsuario(usuario);
         intentoCuestionario.setCuestionario(cuestionario);
         intentoCuestionario.setPuntaje((long) puntajePenalizado);
 
-        System.out.println("Puntaje total antes de penalizar: " + this.puntajeTotal);
-        System.out.println("Intento registrado: Usuario " + idUsuario + ", Cuestionario " + idCuestionario);
-       // System.out.println("Cantidad de reintentos " + reintentos);
-        System.out.println("Puntaje penalizado " + puntajePenalizado);
+//        System.out.println("Puntaje total antes de penalizar: " + this.puntajeTotal);
+//        System.out.println("Intento registrado: Usuario " + idUsuario + ", Cuestionario " + idCuestionario);
+//        System.out.println("Cantidad de reintentos " + reintentos);
+//        System.out.println("Puntaje penalizado " + puntajePenalizado);
 
         repositorioIntento.guardar(intentoCuestionario);
-
         return puntajePenalizado;
     }
 
     @Override
-    public void setPuntajeTotal(Integer puntajeTotal) {
-        this.puntajeTotal = puntajeTotal;
-    }
+    public void setPuntajeTotal(Integer puntajeTotal) {this.puntajeTotal = puntajeTotal;}
 
     @Override
-    public Integer calcularPenalizacion(Long idUsuario, Long idCuestionario) {
-        Integer reintentos=repositorioIntento.contarIntentos(idUsuario,idCuestionario);
-        return this.puntajeTotal/(1+reintentos);
+    public Integer calcularPenalizacion(Long idUsuario, Long idCuestionario, Integer puntajePartida) {
+        Integer reintentos = repositorioIntento.contarIntentos(idUsuario, idCuestionario);
+        return puntajeTotal / (1 + reintentos);
     }
 }

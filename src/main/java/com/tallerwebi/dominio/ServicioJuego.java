@@ -1,6 +1,8 @@
 package com.tallerwebi.dominio;
 
 public interface ServicioJuego {
+    void inicializarVidas(Cuestionario cuestionario);
+
     Boolean validarRespuesta(String respuesta, Long id);
 
     Integer obtenerPuntaje(Long idPregunta, String respuesta, TimerPregunta timerPregunta);
@@ -13,9 +15,9 @@ public interface ServicioJuego {
 
     void reiniciarPuntaje();
 
-    Integer registrarIntento(Long idUsuario, Long idCuestionario);
+    Integer registrarIntento(Long idUsuario, Long idCuestionario, Integer puntajePartida);
 
-    Integer calcularPenalizacion(Long idUsuario, Long idCuestionario);
+    Integer calcularPenalizacion(Long idUsuario, Long idCuestionario, Integer puntajePartida);
 
     void setPuntajeTotal(Integer puntajeTotal);
 

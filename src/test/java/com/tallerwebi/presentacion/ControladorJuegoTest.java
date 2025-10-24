@@ -19,14 +19,14 @@ public class ControladorJuegoTest {
 
     private RepositorioUsuario repoUsuario = mock(RepositorioUsuario.class);
     private RepositorioHistorial repoHistorial = mock(RepositorioHistorial.class);
+    private RepositorioIntento repoIntento = mock(RepositorioIntento.class);
     private ServicioCuestionario servCuestionario = mock(ServicioCuestionario.class);
     private ServicioPregunta servPregunta = mock(ServicioPregunta.class);
     private ServicioDificultad servDificultad = mock(ServicioDificultad.class);
-    private RepositorioIntento repositorioIntento = mock(RepositorioIntento.class);
 
-    private ServicioJuegoImpl servJuego = new ServicioJuegoImpl(repoUsuario, repoHistorial, servCuestionario, servPregunta, servDificultad,repositorioIntento);
+    private ServicioJuegoImpl servJuego = new ServicioJuegoImpl(repoUsuario, repoHistorial, repoIntento, servCuestionario, servPregunta, servDificultad);
 
-    private ControladorJuego controladorJuego = new ControladorJuego(servJuego, servPregunta);
+    private ControladorJuego controladorJuego = new ControladorJuego(servJuego, servPregunta, servCuestionario);
 
     private Preguntas pregunta;
     private Cuestionario cuestionario = new Cuestionario();

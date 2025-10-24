@@ -17,4 +17,6 @@ public interface ServicioCuestionario {
     List<Cuestionario> buscarTodo();
 
     void crearCuestionario(String nombre, String descripcion, int cantidadPreguntas, int categoria, String dificultad);
+
+    void asignarVidasSegunDificultad(Cuestionario cuestionario);
 }

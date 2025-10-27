@@ -88,9 +88,9 @@ public class ControladorJuego {
         } else {
            // servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas);
             Integer puntajeTotalSesion= (Integer) session.getAttribute("puntajeTotal");
-            servicioJuego.setPuntajeTotal(puntajeTotalSesion);
-            Integer puntajePenalizado=servicioJuego.registrarIntento(usuario.getId(),cuestionario.getId());
-            servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas,puntajePenalizado);
+            //servicioJuego.setPuntajeTotal(puntajeTotalSesion);
+            servicioJuego.registrarIntento(usuario.getId(),cuestionario.getId());
+            servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas,puntajeTotalSesion);
             session.removeAttribute("puntajeTotal");
             session.removeAttribute("preguntasCorrectas");
             session.removeAttribute("preguntasErradas");
@@ -98,7 +98,7 @@ public class ControladorJuego {
             session.removeAttribute("idCuestionario");
 
             ModelMap model = new ModelMap();
-            model.put("puntajeTotal", puntajePenalizado);
+            model.put("puntajeTotal", puntajeTotalSesion);
             model.put("preguntasCorrectas", preguntasCorrectas);
             model.put("preguntasErradas", preguntasErradas);
             model.put("cuestionario", cuestionario);
@@ -137,9 +137,9 @@ public class ControladorJuego {
 
         boolean esCorrecta = servicioJuego.validarRespuesta(respuesta, idPregunta);
         puntajeTotal = servicioJuego.obtenerPuntaje(idPregunta, respuesta, timer);
-        //servicioJuego.setPuntajeTotal(puntajeTotal);
-       // Integer puntajePenalizado=servicioJuego.calcularPenalizacion(usuario.getId(), cuestionario.getId());
-
+        servicioJuego.setPuntajeTotal(puntajeTotal);
+       Integer puntajePenalizado=servicioJuego.calcularPenalizacion(usuario.getId(), cuestionario.getId());
+        puntajeTotal = puntajePenalizado;
         if (esCorrecta) preguntasCorrectas++;
         else preguntasErradas++;
 

@@ -1,9 +1,6 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.Cuestionario;
-import com.tallerwebi.dominio.ServicioCuestionario;
-import com.tallerwebi.dominio.ServicioLogin;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.*;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +21,8 @@ public class ControladorLogin {
     private ServicioLogin servicioLogin;
     @Autowired
     private ServicioCuestionario servicioCuestionario;
+    @Autowired
+    private ServicioAdmin servicioAdmin;
 
     @Autowired
     public ControladorLogin(ServicioLogin servicioLogin) {
@@ -85,6 +84,8 @@ public class ControladorLogin {
         ModelMap model = new ModelMap();
         Usuario usuarioEncontrado=(Usuario)request.getSession().getAttribute("usuario");
         String rol=usuarioEncontrado.getRol();
+        Integer cantidadUsuarios= servicioAdmin.contarUsuarios();
+        Integer cantidadCuestionarios= servicioAdmin.contarCuestionarios();
         List<Cuestionario> cuestionarios = servicioCuestionario.buscarTodo();
         Collections.shuffle(cuestionarios);
         List<Cuestionario> seleccionados = cuestionarios.stream()
@@ -94,6 +95,8 @@ public class ControladorLogin {
         model.put("rol", rol);
         model.put("nombre", usuarioEncontrado.getNombre());
         model.put("puntaje",usuarioEncontrado.getPuntaje());
+        model.put("cantidadUsuarios",cantidadUsuarios);
+        model.put("cantidadCuestionarios",cantidadCuestionarios);
         return new ModelAndView("home", model);
     }
 

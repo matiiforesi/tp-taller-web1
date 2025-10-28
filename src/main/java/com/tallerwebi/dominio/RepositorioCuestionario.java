@@ -10,4 +10,5 @@ public interface RepositorioCuestionario {
     List<Cuestionario> buscarPorCategoria(String categoria);
     List<Cuestionario> buscarPorDificultad(String dificultad);
     List<Cuestionario> buscarTodo();
+    Integer contarCuestionarios();
 }

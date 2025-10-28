@@ -59,4 +59,11 @@ public class RepositorioCuestionarioImpl implements RepositorioCuestionario {
             return session.createQuery("from Cuestionario", Cuestionario.class).list();
         }
     }
+
+    @Override
+    public Integer contarCuestionarios(){
+        Long cantidad=(Long)sessionFactory.getCurrentSession()
+                .createQuery("select count(*) from Cuestionario").uniqueResult();
+        return cantidad!=null?cantidad.intValue():0;
+    }
 }

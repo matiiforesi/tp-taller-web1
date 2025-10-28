@@ -17,8 +17,10 @@ public interface ServicioJuego {
 
     Integer registrarIntento(Long idUsuario, Long idCuestionario, Integer puntajePartida);
 
+    void setPuntajeTotal(Integer puntajeTotal);
+
     Integer calcularPenalizacion(Long idUsuario, Long idCuestionario, Integer puntajePartida);
 
-    void setPuntajeTotal(Integer puntajeTotal);
+//    Integer obtenerIntentosPrevios(Long idUsuario, Long idCuestionario);
 
 }

@@ -60,11 +60,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
         if (validarRespuesta(respuesta, idPregunta)) {
             preguntasCorrectas++;
             int puntajeBase = 100;
-
-            int tiempoBonus = 0;
-            if (timerPregunta != null) {
-                tiempoBonus = timerPregunta.segundosRestantes().intValue() * 10;
-            }
+            int tiempoBonus = (timerPregunta != null) ? timerPregunta.segundosRestantes().intValue() * 10 : 0;
             puntosGanados = (puntajeBase + tiempoBonus) * mult;
         } else {
             preguntasErradas++;
@@ -90,9 +86,9 @@ public class ServicioJuegoImpl implements ServicioJuego {
     public void actualizarPuntajeYCrearHistorial(Usuario jugador, Cuestionario cuestionario, int preguntasCorrectas, int preguntasErradas, Integer puntajePenalizado) {
         // registrarIntento(jugador.getId(), cuestionario.getId());
         // jugador.setPuntaje(jugador.getPuntaje() + this.puntajeTotal);
-        Usuario usuarioPersistente = repositorioUsuario.buscarPorId(jugador.getId());
-        usuarioPersistente.setPuntaje(usuarioPersistente.getPuntaje() + puntajePenalizado);
-        repositorioUsuario.modificar(usuarioPersistente);
+        Usuario usuarioPersistido = repositorioUsuario.buscarPorId(jugador.getId());
+        usuarioPersistido.setPuntaje(usuarioPersistido.getPuntaje() + puntajePenalizado);
+        repositorioUsuario.modificar(usuarioPersistido);
 
         HistorialCuestionario historialCuestionario = new HistorialCuestionario();
         historialCuestionario.setJugador(jugador);
@@ -142,6 +138,12 @@ public class ServicioJuegoImpl implements ServicioJuego {
     @Override
     public Integer calcularPenalizacion(Long idUsuario, Long idCuestionario, Integer puntajePartida) {
         Integer reintentos = repositorioIntento.contarIntentos(idUsuario, idCuestionario);
-        return puntajeTotal / (1 + reintentos);
+        if (reintentos == 0) {return puntajePartida;}
+        return puntajePartida / (1 + reintentos);
     }
+
+//    @Override
+//    public Integer obtenerIntentosPrevios(Long idUsuario, Long idCuestionario) {
+//        return repositorioIntento.contarIntentos(idUsuario, idCuestionario);
+//    }
 }

@@ -2,6 +2,7 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.Cuestionario;
 import com.tallerwebi.dominio.ServicioCuestionario;
+import com.tallerwebi.dominio.ServicioTrivia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,10 +12,12 @@ import org.springframework.web.bind.annotation.*;
 public class ControladorCuestionario {
 
     private final ServicioCuestionario servicioCuestionario;
+    private final ServicioTrivia servicioTrivia;
 
     @Autowired
-    public ControladorCuestionario(ServicioCuestionario servicioCuestionario) {
+    public ControladorCuestionario(ServicioCuestionario servicioCuestionario, ServicioTrivia servicioTrivia) {
         this.servicioCuestionario = servicioCuestionario;
+        this.servicioTrivia = servicioTrivia;
     }
 
     @GetMapping("/cuestionario/list")
@@ -26,6 +29,12 @@ public class ControladorCuestionario {
     @GetMapping("/cuestionario/new")
     public String mostrarForm(Model model) {
         model.addAttribute("cuestionario", new Cuestionario());
+
+        var respuestaCategorias = servicioTrivia.obtenerCategorias();
+        if (respuestaCategorias != null && respuestaCategorias.getTriviaCategories() != null) {
+            model.addAttribute("triviaCategories", respuestaCategorias.getTriviaCategories());
+        }
+        
         return "cuestionario_form";
     }
 

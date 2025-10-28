@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -59,6 +60,11 @@ public class ServicioDificultadImpl implements ServicioDificultad {
             default:
                 return 1;
         }
+    }
+
+    @Override
+    public List<Dificultad> obtenerTodas() {
+        return repositorioDificultad.buscarTodas();
     }
 }
 

@@ -8,6 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,8 @@ public class ControladorLogin {
     private ServicioCuestionario servicioCuestionario;
     @Autowired
     private ServicioAdmin servicioAdmin;
+    @Autowired
+    private ServicioDificultad servicioDificultad;
 
     @Autowired
     public ControladorLogin(ServicioLogin servicioLogin) {
@@ -80,23 +83,48 @@ public class ControladorLogin {
     }
 
     @RequestMapping(path = "/home", method = RequestMethod.GET)
-    public ModelAndView irAHome(HttpServletRequest request) {
+    public ModelAndView irAHome(
+            HttpServletRequest request,
+            @RequestParam(required = false) String dificultad,
+            @RequestParam(required = false) String categoria) {
         ModelMap model = new ModelMap();
         Usuario usuarioEncontrado = (Usuario) request.getSession().getAttribute("usuario");
         String rol = usuarioEncontrado.getRol();
-        Integer cantidadUsuarios=servicioAdmin.contarUsuarios();
-        Integer cantidadCuestionarios=servicioAdmin.contarCuestionarios();
-        List<Cuestionario> cuestionarios = servicioCuestionario.buscarTodo();
-        Collections.shuffle(cuestionarios);
-        List<Cuestionario> seleccionados = cuestionarios.stream()
+        Integer cantidadUsuarios = servicioAdmin.contarUsuarios();
+        Integer cantidadCuestionarios = servicioAdmin.contarCuestionarios();
+
+        List<Dificultad> dificultades = servicioDificultad.obtenerTodas();
+        List<String> categorias = servicioCuestionario.obtenerTodasLasCategorias();
+
+        // Cuestionarios random
+        List<Cuestionario> todosCuestionarios = servicioCuestionario.buscarTodo();
+        Collections.shuffle(todosCuestionarios);
+        List<Cuestionario> cuestionariosSugeridos = todosCuestionarios.stream()
                 .limit(4)
                 .collect(Collectors.toList());
-        model.put("cuestionarios", seleccionados);
+
+        // Filtro Cuestionarios
+        List<Cuestionario> cuestionariosFiltrados = null;
+        boolean showFiltered = request.getParameterMap().containsKey("dificultad") || request.getParameterMap().containsKey("categoria");
+        if (showFiltered) {
+            String dificultadFilter = (dificultad != null && dificultad.isEmpty()) ? null : dificultad;
+            String categoriaFilter = (categoria != null && categoria.isEmpty()) ? null : categoria;
+            if (dificultadFilter == null && categoriaFilter == null) {
+                cuestionariosFiltrados = todosCuestionarios;
+            } else {
+                cuestionariosFiltrados = servicioCuestionario.filtrarPorDificultadYCategoria(dificultadFilter, categoriaFilter);
+            }
+        }
+
+        model.put("cuestionarios", cuestionariosSugeridos);
+        model.put("cuestionariosFiltrados", cuestionariosFiltrados);
         model.put("rol", rol);
         model.put("nombre", usuarioEncontrado.getNombre());
         model.put("puntaje", usuarioEncontrado.getPuntaje());
         model.put("cantidadUsuarios", cantidadUsuarios);
         model.put("cantidadCuestionarios", cantidadCuestionarios);
+        model.put("dificultades", dificultades);
+        model.put("categorias", categorias);
         return new ModelAndView("home", model);
     }
 

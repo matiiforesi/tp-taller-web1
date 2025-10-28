@@ -23,4 +23,16 @@ public class ServicioTriviaImpl implements ServicioTrivia {
             return null;
         }
     }
+
+    @Override
+    public RespuestaCategorias obtenerCategorias() {
+        String url = "https://opentdb.com/api_category.php";
+        try {
+            String json = restTemplate.getForObject(url, String.class);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, RespuestaCategorias.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

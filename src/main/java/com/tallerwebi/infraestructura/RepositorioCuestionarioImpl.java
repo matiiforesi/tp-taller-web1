@@ -2,6 +2,7 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.Cuestionario;
 import com.tallerwebi.dominio.RepositorioCuestionario;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -50,6 +51,7 @@ public class RepositorioCuestionarioImpl implements RepositorioCuestionario {
         return session.createCriteria(Cuestionario.class)
                 .createAlias("dificultad", "dif")
                 .add(Restrictions.eq("dif.nombre", dificultad))
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                 .list();
     }
 
@@ -65,5 +67,29 @@ public class RepositorioCuestionarioImpl implements RepositorioCuestionario {
         Long cantidad=(Long)sessionFactory.getCurrentSession()
                 .createQuery("select count(*) from Cuestionario").uniqueResult();
         return cantidad!=null?cantidad.intValue():0;
+    }
+
+    @Override
+    public List<Cuestionario> filtrarPorDificultadYCategoria(String dificultad, String categoria) {
+        final Session session = sessionFactory.getCurrentSession();
+        Criteria criteria = session.createCriteria(Cuestionario.class);
+
+        if (dificultad != null && !dificultad.isEmpty()) {
+            criteria.createAlias("dificultad", "dif")
+                    .add(Restrictions.eq("dif.nombre", dificultad));
+        }
+
+        if (categoria != null && !categoria.isEmpty()) {
+            criteria.add(Restrictions.eq("categoria", categoria));
+        }
+
+        return criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+    }
+
+    @Override
+    public List<String> obtenerTodasLasCategorias() {
+        final Session session = sessionFactory.getCurrentSession();
+        List<String> categorias = session.createQuery("SELECT DISTINCT categoria FROM Cuestionario ORDER BY categoria").list();
+        return categorias;
     }
 }

@@ -45,11 +45,48 @@
             </div>
         </div>
 
-        <div class="card p-3" style="gap:5px; width:30em">
-            <form th:action="@{/iniciar}" method="get" class="d-flex flex-column gap-3">
-                <input type="number" name="idCuestionario" placeholder="ID del cuestionario" required class="form-control">
-                <button type="submit" class="btn btn-primary">Ingresar</button>
+        <div class="card p-3" style="width:30em">
+            <h5 class="mb-3">Filtrar Cuestionarios</h5>
+            <form th:action="@{/home}" method="get" class="d-flex flex-column gap-3">
+                <div>
+                    <label for="dificultad" class="form-label">Dificultad:</label>
+                    <select name="dificultad" id="dificultad" class="form-select">
+                        <option value="">Todas</option>
+                        <option th:each="dif : ${dificultades}" 
+                                th:value="${dif.nombre}" 
+                                th:selected="${param.dificultad != null && param.dificultad[0] == dif.nombre}"
+                                th:text="${dif.nombre}">Easy</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="categoria" class="form-label">Categoría:</label>
+                    <select name="categoria" id="categoria" class="form-select">
+                        <option value="">Todas</option>
+                        <option th:each="cat : ${categorias}" 
+                                th:value="${cat}" 
+                                th:selected="${param.categoria != null && param.categoria[0] == cat}"
+                                th:text="${cat}">Historia</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Filtrar</button>
             </form>
+        </div>
+        <div th:if="${cuestionariosFiltrados != null && !cuestionariosFiltrados.isEmpty()}" class="w-100">
+            <h2 class="mb-3">Resultados de Búsqueda</h2>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <div th:each="cuestionario : ${cuestionariosFiltrados}" class="card text-center p-3" style="width: 14rem;">
+                    <h5 th:text="${cuestionario.nombre}">Nombre del cuestionario</h5>
+                    <p th:text="${cuestionario.descripcion}">Descripción</p>
+                    <p><strong th:text="${cuestionario.categoria}">Categoría</strong></p>
+                    <a th:href="@{/iniciar?(idCuestionario=${cuestionario.id})}" class="btn btn-primary">
+                        Ingresar
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div th:if="${cuestionariosFiltrados != null && cuestionariosFiltrados.isEmpty()}" class="alert alert-info" role="alert">
+            No se encontraron cuestionarios con los filtros seleccionados.
         </div>
         <div th:if="${rol=='ADMIN'}">
         <a href="cuestionario/new" class="btn btn-lg btn-primary">Crear Cuestionario</a>

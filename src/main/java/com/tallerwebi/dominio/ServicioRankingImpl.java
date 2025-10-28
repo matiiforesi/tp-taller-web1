@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.infraestructura.RepositorioHistorialImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +25,25 @@ public class ServicioRankingImpl implements ServicioRanking {
         return repositorioHistorial.buscarRankingGeneral();
     }
 
+    // individual por intento, solo vista perfil?
     @Override
     public List<HistorialCuestionario> obtenerRankingCuestionarioPorNombre(String nombreCuestionario) {
         return repositorioHistorial.buscarRankingCuestionarioPorNombre(nombreCuestionario);
     }
 
+    // individual por intento, solo vista perfil?
     @Override
     public List<HistorialCuestionario> obtenerRankingCuestionarioPorId(Long id) {
         return repositorioHistorial.buscarRankingCuestionarioPorId(id);
+    }
+
+    @Override
+    public List<Object[]> obtenerRankingCuestionarioAgregadoPorId(Long idCuestionario) {
+        return ((RepositorioHistorialImpl) repositorioHistorial).buscarRankingCuestionarioAgregadoPorId(idCuestionario);
+    }
+
+    @Override
+    public List<Object[]> obtenerRankingCuestionarioAgregadoPorNombre(String nombreCuestionario) {
+        return repositorioHistorial.buscarRankingCuestionarioAgregadoPorNombre(nombreCuestionario);
     }
 }

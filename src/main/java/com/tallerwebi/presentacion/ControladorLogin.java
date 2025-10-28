@@ -83,8 +83,8 @@ public class ControladorLogin {
     @RequestMapping(path = "/home", method = RequestMethod.GET)
     public ModelAndView irAHome(HttpServletRequest request) {
         ModelMap model = new ModelMap();
-        Usuario usuarioEncontrado=(Usuario)request.getSession().getAttribute("usuario");
-        String rol=usuarioEncontrado.getRol();
+        Usuario usuarioEncontrado = (Usuario) request.getSession().getAttribute("usuario");
+        String rol = usuarioEncontrado.getRol();
         List<Cuestionario> cuestionarios = servicioCuestionario.buscarTodo();
         Collections.shuffle(cuestionarios);
         List<Cuestionario> seleccionados = cuestionarios.stream()
@@ -93,7 +93,7 @@ public class ControladorLogin {
         model.put("cuestionarios", seleccionados);
         model.put("rol", rol);
         model.put("nombre", usuarioEncontrado.getNombre());
-        model.put("puntaje",usuarioEncontrado.getPuntaje());
+        model.put("puntaje", usuarioEncontrado.getPuntaje());
         return new ModelAndView("home", model);
     }
 

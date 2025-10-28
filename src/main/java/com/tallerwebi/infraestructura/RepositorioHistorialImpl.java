@@ -47,10 +47,10 @@ public class RepositorioHistorialImpl implements RepositorioHistorial {
                         "join HistorialCuestionario h on h.jugador.id = u.id " +
                         "group by u.id " +
                         "order by sum (h.puntaje) desc",
-                Usuario.class
-        ).list();
+                Usuario.class).list();
     }
 
+    // individual por intento, solo vista perfil?
     @Override
     public List<HistorialCuestionario> buscarRankingCuestionarioPorNombre(String nombreCuestionario) {
         final Session session = sessionFactory.getCurrentSession();
@@ -62,6 +62,7 @@ public class RepositorioHistorialImpl implements RepositorioHistorial {
         ).setParameter("nombreCuestionario", nombreCuestionario).list();
     }
 
+    // individual por intento, solo vista perfil?
     @Override
     public List<HistorialCuestionario> buscarRankingCuestionarioPorId(Long idCuestionario) {
         final Session session = sessionFactory.getCurrentSession();
@@ -71,6 +72,30 @@ public class RepositorioHistorialImpl implements RepositorioHistorial {
                         "order by h.puntaje desc",
                 HistorialCuestionario.class
         ).setParameter("idCuestionario", idCuestionario).list();
+    }
+
+    @Override
+    public List<Object[]> buscarRankingCuestionarioAgregadoPorId(Long idCuestionario) {
+        final Session session = sessionFactory.getCurrentSession();
+        return session.createQuery(
+                "select h.jugador.id, h.nombreUsuario, sum(h.puntaje), sum(h.preguntasCorrectas), sum(h.preguntasErradas), count(h) " +
+                        "from HistorialCuestionario h " +
+                        "where h.idCuestionario = :idCuestionario " +
+                        "group by h.jugador.id, h.nombreUsuario " +
+                        "order by sum(h.puntaje) desc", Object[].class)
+                .setParameter("idCuestionario", idCuestionario).list();
+    }
+
+    @Override
+    public List<Object[]> buscarRankingCuestionarioAgregadoPorNombre(String nombreCuestionario) {
+        final Session session = sessionFactory.getCurrentSession();
+        return session.createQuery(
+                        "select h.jugador.id, h.nombreUsuario, sum(h.puntaje), sum(h.preguntasCorrectas), sum(h.preguntasErradas), count(h) " +
+                                "from HistorialCuestionario h " +
+                                "where h.nombreCuestionario = :nombreCuestionario " +
+                                "group by h.jugador.id, h.nombreUsuario " +
+                                "order by sum(h.puntaje) desc", Object[].class)
+                .setParameter("nombreCuestionario", nombreCuestionario).list();
     }
 
 }

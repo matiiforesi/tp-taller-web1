@@ -66,13 +66,14 @@ public class ControladorRankingTest {
     }
 
     private void givenRankingFiltradoPorNombre(String nombreCuestionario) {
-        HistorialCuestionario h1 = new HistorialCuestionario();
-        h1.setNombreUsuario("Matias");
-        h1.setPuntaje(70L);
-        // h1.setPreguntasCorrectas(7);
-        // h1.setPreguntasErradas(3);
-        when(servicioRanking.obtenerRankingCuestionarioPorNombre(nombreCuestionario))
-                .thenReturn(Collections.singletonList(h1));
+//        HistorialCuestionario h1 = new HistorialCuestionario();
+//        h1.setNombreUsuario("Matias");
+//        h1.setPuntaje(70L);
+//        h1.setPreguntasCorrectas(7);
+//        h1.setPreguntasErradas(3);
+        Object[] fila = new Object[]{"Matias", 70L, 7, 3, 2};
+        when(servicioRanking.obtenerRankingCuestionarioAgregadoPorNombre(nombreCuestionario))
+                .thenReturn(Collections.singletonList(fila));
     }
 
     private ModelAndView whenObtieneNombreCuestionario(String nombreCuestionario) {
@@ -80,31 +81,37 @@ public class ControladorRankingTest {
     }
 
     private void thenRenderizaVistaRankingFiltradoPorNombre(ModelAndView mav, String nombreCuestionario) {
-        verify(servicioRanking, times(1)).obtenerRankingCuestionarioPorNombre(nombreCuestionario);
-        // assertEquals("ranking", mav.getViewName());
-        List<HistorialCuestionario> lista = (List<HistorialCuestionario>) mav.getModel().get("rankingCuestionario");
+//        verify(servicioRanking, times(1)).obtenerRankingCuestionarioPorNombre(nombreCuestionario);
+        verify(servicioRanking, times(1)).obtenerRankingCuestionarioAgregadoPorNombre(nombreCuestionario);
+//        assertEquals("ranking", mav.getViewName());
+//        List<HistorialCuestionario> lista = (List<HistorialCuestionario>) mav.getModel().get("rankingCuestionario");
+        List<Object[]> lista = (List<Object[]>) mav.getModel().get("rankingCuestionario");
         assertEquals(1, lista.size());
-        assertEquals("Matias", lista.get(0).getNombreUsuario());
+//        assertEquals("Matias", lista.get(0).getNombreUsuario());
+        assertEquals("Matias", lista.get(0)[0]);
+        assertEquals(70L, lista.get(0)[1]);
+        assertEquals(7, lista.get(0)[2]);
+        assertEquals(3, lista.get(0)[3]);
+        assertEquals(2, lista.get(0)[4]);
         assertEquals(nombreCuestionario, mav.getModel().get("nombreCuestionario"));
     }
 
     @Test
     public void queSeLlameAlServicioYDevuelvaRankingFiltradoPorId() {
         Long idCuestionario = 1L;
-
         givenRankingFiltradoPorId(idCuestionario);
         ModelAndView mav = whenObtieneIdCuestionario(idCuestionario);
         thenSeRenderizaVistaRankingFiltradoPorId(mav, idCuestionario);
     }
 
     private void givenRankingFiltradoPorId(Long idCuestionario) {
-        HistorialCuestionario h1 = new HistorialCuestionario();
-        h1.setNombreUsuario("Damian");
-        h1.setNombreCuestionario("Deportes");
-        h1.setPuntaje(40L);
-
-        when(servicioRanking.obtenerRankingCuestionarioPorId(idCuestionario))
-                .thenReturn(Collections.singletonList(h1));
+//        HistorialCuestionario h1 = new HistorialCuestionario();
+//        h1.setNombreUsuario("Damian");
+//        h1.setNombreCuestionario("Deportes");
+//        h1.setPuntaje(40L);
+        Object[] fila = new Object[]{"Damian", 40L, 4, 6, 1};
+        when(servicioRanking.obtenerRankingCuestionarioAgregadoPorId(idCuestionario))
+                .thenReturn(Collections.singletonList(fila));
     }
 
     private ModelAndView whenObtieneIdCuestionario(Long idCuestionario) {
@@ -112,11 +119,17 @@ public class ControladorRankingTest {
     }
 
     private void thenSeRenderizaVistaRankingFiltradoPorId(ModelAndView mav, Long idCuestionario) {
-        verify(servicioRanking, times(1)).obtenerRankingCuestionarioPorId(idCuestionario);
-        List<HistorialCuestionario> lista = (List<HistorialCuestionario>) mav.getModel().get("rankingCuestionario");
+//        verify(servicioRanking, times(1)).obtenerRankingCuestionarioPorId(idCuestionario);
+        verify(servicioRanking, times(1)).obtenerRankingCuestionarioAgregadoPorId(idCuestionario);
+//        List<HistorialCuestionario> lista = (List<HistorialCuestionario>) mav.getModel().get("rankingCuestionario");
+        List<Object[]> lista = (List<Object[]>) mav.getModel().get("rankingCuestionario");
         assertEquals(1, lista.size());
-        assertEquals("Damian", lista.get(0).getNombreUsuario());
-        assertEquals("Deportes", mav.getModel().get("nombreCuestionario"));
+//        assertEquals("Damian", lista.get(0).getNombreUsuario());
+        assertEquals("Damian", lista.get(0)[0]);
+        assertEquals(40L, lista.get(0)[1]);
+        assertEquals(4, lista.get(0)[2]);
+        assertEquals(6, lista.get(0)[3]);
+        assertEquals(1, lista.get(0)[4]);
         assertEquals(idCuestionario, mav.getModel().get("idCuestionario"));
     }
 
@@ -130,13 +143,14 @@ public class ControladorRankingTest {
     }
 
     private void givenServicioSinJugadores(String nombreCuestionario) {
-        when(servicioRanking.obtenerRankingCuestionarioPorNombre(nombreCuestionario))
+        when(servicioRanking.obtenerRankingCuestionarioAgregadoPorNombre(nombreCuestionario))
                 .thenReturn(Collections.emptyList());
     }
 
     private void thenElModeloDeRankingEstaVacio(ModelAndView mav, String nombreCuestionario) {
-        verify(servicioRanking, times(1)).obtenerRankingCuestionarioPorNombre(nombreCuestionario);
-        List<HistorialCuestionario> lista = (List<HistorialCuestionario>) mav.getModel().get("rankingCuestionario");
+        verify(servicioRanking, times(1)).obtenerRankingCuestionarioAgregadoPorNombre(nombreCuestionario);
+//        List<HistorialCuestionario> lista = (List<HistorialCuestionario>) mav.getModel().get("rankingCuestionario");
+        List<Object[]> lista = (List<Object[]>) mav.getModel().get("rankingCuestionario");
         assertTrue(lista.isEmpty());
     }
 }

@@ -16,4 +16,7 @@ public interface RepositorioHistorial {
 
     List<HistorialCuestionario> buscarRankingCuestionarioPorId(Long idCuestionario);
 
+    List<Object[]> buscarRankingCuestionarioAgregadoPorId(Long idCuestionario);
+
+    List<Object[]> buscarRankingCuestionarioAgregadoPorNombre(String nombreCuestionario);
 }

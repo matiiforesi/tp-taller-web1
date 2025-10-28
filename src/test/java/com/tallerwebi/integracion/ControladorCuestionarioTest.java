@@ -23,7 +23,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = {SpringWebTestConfig.class, HibernateTestConfig.class})
+@ContextConfiguration(classes = {SpringWebTestConfig.class, HibernateTestConfig.class, ControladorCuestionarioTest.TestConfig.class})
 public class ControladorCuestionarioTest {
 
     @Configuration
@@ -56,6 +56,24 @@ public class ControladorCuestionarioTest {
                     org.mockito.ArgumentMatchers.anyInt(),
                     org.mockito.ArgumentMatchers.anyString()))
                     .thenReturn(respuesta);
+
+            RespuestaCategorias respuestaCategorias = new RespuestaCategorias();
+            TriviaCategory categoria1 = new TriviaCategory();
+            categoria1.setId(9);
+            categoria1.setName("General Knowledge");
+            
+            TriviaCategory categoria2 = new TriviaCategory();
+            categoria2.setId(22);
+            categoria2.setName("Geography");
+            
+            TriviaCategory categoria3 = new TriviaCategory();
+            categoria3.setId(23);
+            categoria3.setName("History");
+            
+            respuestaCategorias.setTriviaCategories(asList(categoria1, categoria2, categoria3));
+
+            when(mock.obtenerCategorias()).thenReturn(respuestaCategorias);
+
             return mock;
         }
     }
@@ -109,6 +127,27 @@ public class ControladorCuestionarioTest {
         ModelAndView mv = result.getModelAndView();
         assert mv != null;
         assertThat(mv.getViewName(), equalToIgnoringCase("cuestionario_form"));
+        assertThat(mv.getModel().containsKey("cuestionario"), is(true));
+    }
+
+    @Test
+    public void debeMostrarFormularioConCategorias() throws Exception {
+        MvcResult result = this.mockMvc.perform(get("/cuestionario/new"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        ModelAndView mv = result.getModelAndView();
+        assert mv != null;
+        assertThat(mv.getViewName(), equalToIgnoringCase("cuestionario_form"));
+        assertThat(mv.getModel().containsKey("triviaCategories"), is(true));
+        assertThat(mv.getModel().get("triviaCategories"), is(notNullValue()));
+        
+        @SuppressWarnings("unchecked")
+        List<TriviaCategory> categorias = (List<TriviaCategory>) mv.getModel().get("triviaCategories");
+        assertThat(categorias.size(), is(3));
+        assertThat(categorias.get(0).getName(), equalToIgnoringCase("General Knowledge"));
+        assertThat(categorias.get(1).getName(), equalToIgnoringCase("Geography"));
+        assertThat(categorias.get(2).getName(), equalToIgnoringCase("History"));
     }
 
     @Test

@@ -8,6 +8,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class RepositorioDificultadImpl implements RepositorioDificultad {
 
@@ -42,6 +44,12 @@ public class RepositorioDificultadImpl implements RepositorioDificultad {
 	@Override
 	public void modificar(Dificultad dificultad) {
 		sessionFactory.getCurrentSession().update(dificultad);
+	}
+
+	@Override
+	public List<Dificultad> buscarTodas() {
+		final Session session = sessionFactory.getCurrentSession();
+		return session.createQuery("from Dificultad ORDER BY id").list();
 	}
 }
 

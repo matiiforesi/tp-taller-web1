@@ -1,5 +1,7 @@
 package com.tallerwebi.dominio;
 
+import java.util.List;
+
 public interface ServicioDificultad {
 
 	Dificultad obtenerPorNombre(String nombre);
@@ -11,6 +13,8 @@ public interface ServicioDificultad {
 	void modificar(Dificultad dificultad);
 
     int calcularMultiplicador(Dificultad dificultad);
+    
+    List<Dificultad> obtenerTodas();
 }
 
 

@@ -62,7 +62,9 @@ public class ServicioCuestionarioImpl implements ServicioCuestionario {
         Cuestionario nuevoCuestionario = new Cuestionario();
         nuevoCuestionario.setNombre(nombre);
         nuevoCuestionario.setDescripcion(descripcion);
-        nuevoCuestionario.setCategoria(String.valueOf(categoria));
+        if (!preguntas.isEmpty()) {
+            nuevoCuestionario.setCategoria(preguntas.get(0).getCategoria());
+        }
         nuevoCuestionario.setDificultad(obtenerDificultadEntidad(dificultad));
         for (Preguntas p : preguntas) {
             p.setCuestionario(nuevoCuestionario);
@@ -120,9 +122,19 @@ public class ServicioCuestionarioImpl implements ServicioCuestionario {
                 cuestionario.setVidas(3);
                 break;
             default:
-                cuestionario.setVidas(5);
-                break;
+            cuestionario.setVidas(5);
+            break;
         }
+    }
+
+    @Override
+    public List<Cuestionario> filtrarPorDificultadYCategoria(String dificultad, String categoria) {
+        return repositorioCuestionario.filtrarPorDificultadYCategoria(dificultad, categoria);
+    }
+
+    @Override
+    public List<String> obtenerTodasLasCategorias() {
+        return repositorioCuestionario.obtenerTodasLasCategorias();
     }
 }
 

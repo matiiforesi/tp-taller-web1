@@ -6,17 +6,21 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Collections;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class ServicioRankingTest {
 
-    private RepositorioHistorial repositorioHistorial = mock(RepositorioHistorial.class);
-    private ServicioRankingImpl servicioRanking = new ServicioRankingImpl(mock(RepositorioUsuario.class), repositorioHistorial);
+    private RepositorioHistorial repoHistorial = mock(RepositorioHistorial.class);
+    private RepositorioUsuario repoUsuario = mock(RepositorioUsuario.class);
+
+    private ServicioRankingImpl servicioRanking = new ServicioRankingImpl(repoUsuario, repoHistorial);
 
     @BeforeEach
     void setUp() {
-        Mockito.reset(repositorioHistorial);
+        Mockito.reset(repoHistorial);
     }
 
     @Test
@@ -27,15 +31,15 @@ public class ServicioRankingTest {
     }
 
     private void givenRepoConRankingGeneralVacio() {
-        when(repositorioHistorial.buscarRankingGeneral()).thenReturn(Collections.emptyList());
+        when(repoHistorial.buscarRankingGeneral()).thenReturn(Collections.emptyList());
     }
 
-    private void whenObtenerRankingGeneral() {
-        servicioRanking.obtenerRankingGeneral();
+    private List<Usuario> whenObtenerRankingGeneral() {
+        return servicioRanking.obtenerRankingGeneral();
     }
 
     private void thenSeLlamaABuscarRankingGeneral() {
-        verify(repositorioHistorial, times(1)).buscarRankingGeneral();
+        verify(repoHistorial, times(1)).buscarRankingGeneral();
     }
 
     @Test
@@ -48,7 +52,7 @@ public class ServicioRankingTest {
     }
 
     private void givenRepoConRankingPorNombreVacio(String nombreCuestionario) {
-        when(repositorioHistorial.buscarRankingCuestionarioPorNombre(nombreCuestionario))
+        when(repoHistorial.buscarRankingCuestionarioPorNombre(nombreCuestionario))
                 .thenReturn(Collections.emptyList());
     }
 
@@ -57,7 +61,7 @@ public class ServicioRankingTest {
     }
 
     private void thenSeLlamaABuscarRankingCuestionarioPorNombre(String nombreCuestionario) {
-        verify(repositorioHistorial, times(1)).buscarRankingCuestionarioPorNombre(nombreCuestionario);
+        verify(repoHistorial, times(1)).buscarRankingCuestionarioPorNombre(nombreCuestionario);
     }
 
     @Test
@@ -70,7 +74,7 @@ public class ServicioRankingTest {
     }
 
     private void givenRepoConRankingCuestionarioPorIdVacio(Long idCuestionario) {
-        when(repositorioHistorial.buscarRankingCuestionarioPorId(idCuestionario)).thenReturn(Collections.emptyList());
+        when(repoHistorial.buscarRankingCuestionarioPorId(idCuestionario)).thenReturn(Collections.emptyList());
     }
 
     private void whenObtenerRankingCuestionarioPorId(Long idCuestionario) {
@@ -78,6 +82,25 @@ public class ServicioRankingTest {
     }
 
     private void thenSeLlamaABuscarRankingCuestionarioPorId(Long idCuestionario) {
-        verify(repositorioHistorial, times(1)).buscarRankingCuestionarioPorId(idCuestionario);
+        verify(repoHistorial, times(1)).buscarRankingCuestionarioPorId(idCuestionario);
+    }
+
+    @Test
+    public void queDevuelvaListVacioSiNoHayIntentosRegistrados() {
+        givenRepoSinIntentosRegistrados();
+        List<Usuario> ranking = whenObtenerRankingGeneral();
+        thenRankingVacio(ranking);
+    }
+
+    private void givenRepoSinIntentosRegistrados() {
+        when(repoHistorial.buscarRankingGeneral()).thenReturn(Collections.emptyList());
+    }
+
+    private List<Usuario> whenObtieneRankingGeneral() {
+        return servicioRanking.obtenerRankingGeneral();
+    }
+
+    private void thenRankingVacio(List<Usuario> ranking) {
+        assertEquals(0, ranking.size());
     }
 }

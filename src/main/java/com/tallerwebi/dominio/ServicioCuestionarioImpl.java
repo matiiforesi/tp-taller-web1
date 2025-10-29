@@ -137,5 +137,3 @@ public class ServicioCuestionarioImpl implements ServicioCuestionario {
         return repositorioCuestionario.obtenerTodasLasCategorias();
     }
 }
-
-

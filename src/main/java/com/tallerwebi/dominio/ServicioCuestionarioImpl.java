@@ -125,5 +125,3 @@ public class ServicioCuestionarioImpl implements ServicioCuestionario {
         }
     }
 }
-
-

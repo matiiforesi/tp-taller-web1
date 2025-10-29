@@ -25,13 +25,11 @@ public class ServicioRankingImpl implements ServicioRanking {
         return repositorioHistorial.buscarRankingGeneral();
     }
 
-    // individual por intento, solo vista perfil?
     @Override
     public List<HistorialCuestionario> obtenerRankingCuestionarioPorNombre(String nombreCuestionario) {
         return repositorioHistorial.buscarRankingCuestionarioPorNombre(nombreCuestionario);
     }
 
-    // individual por intento, solo vista perfil?
     @Override
     public List<HistorialCuestionario> obtenerRankingCuestionarioPorId(Long id) {
         return repositorioHistorial.buscarRankingCuestionarioPorId(id);
@@ -39,7 +37,7 @@ public class ServicioRankingImpl implements ServicioRanking {
 
     @Override
     public List<Object[]> obtenerRankingCuestionarioAgregadoPorId(Long idCuestionario) {
-        return ((RepositorioHistorialImpl) repositorioHistorial).buscarRankingCuestionarioAgregadoPorId(idCuestionario);
+        return repositorioHistorial.buscarRankingCuestionarioAgregadoPorId(idCuestionario);
     }
 
     @Override

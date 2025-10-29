@@ -50,7 +50,6 @@ public class RepositorioHistorialImpl implements RepositorioHistorial {
                 Usuario.class).list();
     }
 
-    // individual por intento, solo vista perfil?
     @Override
     public List<HistorialCuestionario> buscarRankingCuestionarioPorNombre(String nombreCuestionario) {
         final Session session = sessionFactory.getCurrentSession();
@@ -62,7 +61,6 @@ public class RepositorioHistorialImpl implements RepositorioHistorial {
         ).setParameter("nombreCuestionario", nombreCuestionario).list();
     }
 
-    // individual por intento, solo vista perfil?
     @Override
     public List<HistorialCuestionario> buscarRankingCuestionarioPorId(Long idCuestionario) {
         final Session session = sessionFactory.getCurrentSession();
@@ -97,5 +95,4 @@ public class RepositorioHistorialImpl implements RepositorioHistorial {
                                 "order by sum(h.puntaje) desc", Object[].class)
                 .setParameter("nombreCuestionario", nombreCuestionario).list();
     }
-
 }

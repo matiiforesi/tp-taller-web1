@@ -40,5 +40,3 @@ public class Dificultad {
         this.multiplicadorDificultad = multiplicadorDificultad;
     }
 }
-
-

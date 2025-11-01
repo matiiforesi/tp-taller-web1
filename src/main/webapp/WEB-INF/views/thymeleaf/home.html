@@ -21,12 +21,22 @@
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Mi Web</a>
 
-        <div class="d-flex ms-auto align-items-center text-white">
-            <h6 class="mb-0 me-3">Usuario: <span th:text="${nombre}">[nombre]</span></h6>
-            <h6 class="mb-0">Puntaje: <span th:text="${puntaje}">[puntaje]</span></h6>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item me-3 text-white">
+                    <h6 class="mb-0">Usuario: <span th:text="${nombre}">[nombre]</span></h6>
+                </li>
+                <li class="nav-item me-3 text-white">
+                    <h6 class="mb-0">Puntaje: <span th:text="${puntaje}">[puntaje]</span></h6>
+                </li>
+                <li class="nav-item">
+                    <a href="login.html" class="btn btn-danger btn-sm">Cerrar sesión</a>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>
+
 
 <main role="main" class="container w-100 h-100">
     <div class="container d-flex flex-column align-items-center gap-4">
@@ -72,7 +82,9 @@
             </form>
         </div>
         <div th:if="${cuestionariosFiltrados != null && !cuestionariosFiltrados.isEmpty()}" class="w-100">
+            <div class="d-flex justify-content-center mb-4">
             <h2 class="mb-3">Resultados de Búsqueda</h2>
+            </div>
             <div class="d-flex flex-wrap justify-content-center gap-3">
                 <div th:each="cuestionario : ${cuestionariosFiltrados}" class="card text-center p-3" style="width: 14rem;">
                     <h5 th:text="${cuestionario.nombre}">Nombre del cuestionario</h5>
@@ -88,10 +100,13 @@
         <div th:if="${cuestionariosFiltrados != null && cuestionariosFiltrados.isEmpty()}" class="alert alert-info" role="alert">
             No se encontraron cuestionarios con los filtros seleccionados.
         </div>
-        <div th:if="${rol=='ADMIN'}">
-        <a href="cuestionario/new" class="btn btn-lg btn-primary">Crear Cuestionario</a>
-            <div class="container mt-4">
-                <div class="row justify-content-center">
+
+            <div th:if="${rol=='ADMIN'}" class="container mt-4">
+                <div class="d-flex justify-content-center mb-4">
+                <a href="cuestionario/new" class="btn btn-lg btn-primary justify-content-center p-1">Crear Cuestionario</a>
+                </div>
+
+                    <div class="row justify-content-center">
                     <!-- Usuarios -->
                     <div class="col-sm-6 mb-3">
                         <div class="border rounded p-3 text-center bg-light">
@@ -115,7 +130,6 @@
             </div>
 
         </div>
-        <a href="login.html" class="btn btn-lg btn-danger">Cerrar sesión</a>
 
     </div>
 </main>

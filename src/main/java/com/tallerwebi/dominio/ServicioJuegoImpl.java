@@ -14,19 +14,21 @@ public class ServicioJuegoImpl implements ServicioJuego {
     private final ServicioCuestionario servicioCuestionario;
     private final ServicioPregunta servicioPregunta;
     private final ServicioDificultad servicioDificultad;
+    private final ServicioConfigJuego servicioConfigJuego;
 
     private Integer puntajeTotal = 0;
     private Integer preguntasCorrectas = 0;
     private Integer preguntasErradas = 0;
     private Integer vidasRestantes = 0;
 
-    public ServicioJuegoImpl(RepositorioUsuario repositorioUsuario, RepositorioHistorial repositorioHistorial, RepositorioIntento repositorioIntento, ServicioCuestionario servicioCuestionario, ServicioPregunta servicioPregunta, ServicioDificultad servicioDificultad) {
+    public ServicioJuegoImpl(RepositorioUsuario repositorioUsuario, RepositorioHistorial repositorioHistorial, RepositorioIntento repositorioIntento, ServicioCuestionario servicioCuestionario, ServicioPregunta servicioPregunta, ServicioDificultad servicioDificultad, ServicioConfigJuego servicioConfigJuego) {
         this.repositorioUsuario = repositorioUsuario;
         this.repositorioHistorial = repositorioHistorial;
         this.repositorioIntento = repositorioIntento;
         this.servicioCuestionario = servicioCuestionario;
         this.servicioPregunta = servicioPregunta;
         this.servicioDificultad = servicioDificultad;
+        this.servicioConfigJuego = servicioConfigJuego;
     }
 
     @Override
@@ -51,24 +53,30 @@ public class ServicioJuegoImpl implements ServicioJuego {
     public Integer obtenerPuntaje(Long idPregunta, String respuesta, TimerPregunta timerPregunta) {
         Integer puntosGanados = 0;
         Preguntas pregunta = servicioPregunta.obtenerPorId(idPregunta);
+        Integer puntajeBase= this.servicioConfigJuego.getInt("puntaje.base",100);
+        Integer bonificacionTiempo= this.servicioConfigJuego.getInt("bonificacion.tiempo",10);
+        Integer penalizacionVida= this.servicioConfigJuego.getInt("penalizacion.vida",1);
 
         int mult = 1;
+
         if (pregunta != null && pregunta.getDificultad() != null) {
             mult = servicioDificultad.calcularMultiplicador(pregunta.getDificultad());
         }
 
         if (validarRespuesta(respuesta, idPregunta)) {
             preguntasCorrectas++;
-            int puntajeBase = 100;
-            int tiempoBonus = (timerPregunta != null) ? timerPregunta.segundosRestantes().intValue() * 10 : 0;
+           // int puntajeBase = 100;
+            int tiempoBonus = (timerPregunta != null) ? timerPregunta.segundosRestantes().intValue() * bonificacionTiempo : 0;
             puntosGanados = (puntajeBase + tiempoBonus) * mult;
         } else {
             preguntasErradas++;
-            vidasRestantes--;
+           // vidasRestantes--;
+            vidasRestantes -= penalizacionVida;
         }
 
         this.puntajeTotal += puntosGanados;
         return this.puntajeTotal;
+
     }
 
     @Override

@@ -21,8 +21,9 @@ public class ServicioJuegoTest {
     private ServicioCuestionario servCuestionario = mock(ServicioCuestionario.class);
     private ServicioPregunta servPregunta = mock(ServicioPregunta.class);
     private ServicioDificultad servDificultad = mock(ServicioDificultad.class);
+    private ServicioConfigJuego servConfigJuego = mock(ServicioConfigJuego.class);
 
-    private ServicioJuego servicioJuego = new ServicioJuegoImpl(repoUsuario, repoHistorial, repoIntento, servCuestionario, servPregunta, servDificultad);
+    private ServicioJuego servicioJuego = new ServicioJuegoImpl(repoUsuario, repoHistorial, repoIntento, servCuestionario, servPregunta, servDificultad, servConfigJuego);
 
     private RepositorioCuestionario repoCuestionario = mock(RepositorioCuestionario.class);
 

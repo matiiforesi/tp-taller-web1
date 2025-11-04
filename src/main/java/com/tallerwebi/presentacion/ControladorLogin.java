@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -87,6 +88,12 @@ public class ControladorLogin {
             HttpServletRequest request,
             @RequestParam(required = false) String dificultad,
             @RequestParam(required = false) String categoria) {
+
+        HttpSession session = request.getSession();
+        if(session==null || session.getAttribute("usuario")==null){
+            return new ModelAndView("redirect:/login");
+        }
+
         ModelMap model = new ModelMap();
         Usuario usuarioEncontrado = (Usuario) request.getSession().getAttribute("usuario");
         String rol = usuarioEncontrado.getRol();

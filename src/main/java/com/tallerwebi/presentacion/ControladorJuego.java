@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +31,9 @@ public class ControladorJuego {
     @RequestMapping("/iniciar")
     public ModelAndView iniciarPorFormulario(@RequestParam("idCuestionario") Long idCuestionario, HttpSession session) {
         Cuestionario cuestionario = servicioJuego.obtenerCuestionario(idCuestionario);
+        List<Preguntas>preguntasMezcladas= new ArrayList<>(cuestionario.getPreguntas());
+        Collections.shuffle(preguntasMezcladas);
+        cuestionario.setPreguntas(preguntasMezcladas);
 
         if (cuestionario == null || cuestionario.getPreguntas().isEmpty()) {
             ModelMap errorModel = new ModelMap();
@@ -50,6 +54,7 @@ public class ControladorJuego {
 //        int intentosPrevios = servicioJuego.obtenerIntentosPrevios(usuario.getId(), idCuestionario);
 //        session.setAttribute("intentosPrevios", intentosPrevios);
 
+        session.setAttribute("preguntasMezcladas",preguntasMezcladas);
         session.setAttribute("indicePregunta", 0);
         session.setAttribute("puntajeTotal", 0);
         session.setAttribute("preguntasCorrectas", 0);
@@ -83,6 +88,8 @@ public class ControladorJuego {
         if (vidasRestantes == null) vidasRestantes = servicioJuego.obtenerCuestionario(idCuestionario).getVidas();
 
         Cuestionario cuestionario = servicioJuego.obtenerCuestionario(idCuestionario);
+        List<Preguntas>preguntasMezcladas= (List<Preguntas>)session.getAttribute("preguntasMezcladas");
+        cuestionario.setPreguntas(preguntasMezcladas);
 
         if (timer == null) timer = new TimerPregunta(10);
         else timer.reiniciar();
@@ -126,6 +133,8 @@ public class ControladorJuego {
                                         @RequestParam String respuesta,
                                         HttpSession session) {
         Cuestionario cuestionario = servicioJuego.obtenerCuestionario(idCuestionario);
+        List<Preguntas>preguntasMezcladas=(List<Preguntas>)session.getAttribute("preguntasMezcladas");
+        cuestionario.setPreguntas(preguntasMezcladas);
         TimerPregunta timer = (TimerPregunta) session.getAttribute("timer");
 
         if (timer == null || timer.tiempoAgotado()) {

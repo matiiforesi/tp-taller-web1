@@ -1,6 +1,5 @@
 package com.tallerwebi.dominio;
 
-import com.tallerwebi.infraestructura.RepositorioHistorialImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,27 +20,27 @@ public class ServicioRankingImpl implements ServicioRanking {
     }
 
     @Override
-    public List<Usuario> obtenerRankingGeneral() {
+    public List<Object[]> obtenerRankingGeneral() {
         return repositorioHistorial.buscarRankingGeneral();
     }
 
+//    @Override
+//    public List<HistorialCuestionario> obtenerRankingCuestionarioPorNombre(String nombreCuestionario) {
+//        return repositorioHistorial.buscarRankingCuestionarioPorNombre(nombreCuestionario);
+//    }
+//
+//    @Override
+//    public List<HistorialCuestionario> obtenerRankingCuestionarioPorId(Long id) {
+//        return repositorioHistorial.buscarRankingCuestionarioPorId(id);
+//    }
+
     @Override
-    public List<HistorialCuestionario> obtenerRankingCuestionarioPorNombre(String nombreCuestionario) {
+    public List<Object[]> obtenerRankingCuestionarioPorId(Long idCuestionario) {
+        return repositorioHistorial.buscarRankingCuestionarioPorId(idCuestionario);
+    }
+
+    @Override
+    public List<Object[]> obtenerRankingCuestionarioPorNombre(String nombreCuestionario) {
         return repositorioHistorial.buscarRankingCuestionarioPorNombre(nombreCuestionario);
-    }
-
-    @Override
-    public List<HistorialCuestionario> obtenerRankingCuestionarioPorId(Long id) {
-        return repositorioHistorial.buscarRankingCuestionarioPorId(id);
-    }
-
-    @Override
-    public List<Object[]> obtenerRankingCuestionarioAgregadoPorId(Long idCuestionario) {
-        return repositorioHistorial.buscarRankingCuestionarioAgregadoPorId(idCuestionario);
-    }
-
-    @Override
-    public List<Object[]> obtenerRankingCuestionarioAgregadoPorNombre(String nombreCuestionario) {
-        return repositorioHistorial.buscarRankingCuestionarioAgregadoPorNombre(nombreCuestionario);
     }
 }

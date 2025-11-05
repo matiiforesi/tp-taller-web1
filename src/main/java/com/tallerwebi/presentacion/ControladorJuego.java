@@ -105,20 +105,20 @@ public class ControladorJuego {
             // servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas);
             Integer puntajeTotalSesion = (Integer) session.getAttribute("puntajeTotal");
             int monedasCuestionario = (int) Math.floor(puntajeTotalSesion * 0.1);
-            //servicioJuego.setPuntajeTotal(puntajeTotalSesion);
+            // servicioJuego.setPuntajeTotal(puntajeTotalSesion);
             servicioJuego.registrarIntento(usuario.getId(), cuestionario.getId(), puntajeTotalSesion);
             servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas, puntajeTotalSesion);
 
             servicioJuego.asignarMonedas(usuario, puntajeTotalSesion);
+
+            usuario.setPuntaje(usuario.getPuntaje() + puntajeTotalSesion);
+            session.setAttribute("usuario", usuario);
 
             session.removeAttribute("puntajeTotal");
             session.removeAttribute("preguntasCorrectas");
             session.removeAttribute("preguntasErradas");
             session.removeAttribute("indicePregunta");
             session.removeAttribute("idCuestionario");
-
-            usuario.setPuntaje(usuario.getPuntaje() + puntajeTotalSesion);
-            session.setAttribute("usuario", usuario);
 
             ModelMap model = new ModelMap();
             model.put("puntajeTotal", puntajeTotalSesion);

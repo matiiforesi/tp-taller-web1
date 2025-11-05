@@ -40,47 +40,56 @@ public class RepositorioHistorialImpl implements RepositorioHistorial {
     }
 
     @Override
-    public List<Usuario> buscarRankingGeneral() {
-        final Session session = sessionFactory.getCurrentSession();
-        return session.createQuery(
-                "select u " +
-                        "from Usuario u " +
-                        "join HistorialCuestionario h on h.jugador.id = u.id " +
-                        "group by u.id " +
-                        "order by sum (h.puntaje) desc",
-                Usuario.class).list();
-    }
-
-    @Override
-    public List<HistorialCuestionario> buscarRankingCuestionarioPorNombre(String nombreCuestionario) {
+    public List<Object[]> buscarRankingGeneral() {
         final Session session = sessionFactory.getCurrentSession();
 //        return session.createQuery(
-//                "from HistorialCuestionario h " +
-//                        "where h.nombreCuestionario = :nombreCuestionario " +
-//                        "order by h.puntaje desc",
-//                HistorialCuestionario.class
-//        ).setParameter("nombreCuestionario", nombreCuestionario).list();
-        return session.createCriteria(HistorialCuestionario.class)
-                .add(Restrictions.eq("nombreCuestionario", nombreCuestionario))
-                .addOrder(Order.desc("puntaje")).list();
+//                "select u " +
+//                        "from Usuario u " +
+//                        "join HistorialCuestionario h on h.jugador.id = u.id " +
+//                        "group by u.id " +
+//                        "order by sum (h.puntaje) desc",
+//                Usuario.class).list();
+        return session.createCriteria(HistorialCuestionario.class, "h")
+                .createAlias("h.jugador", "u")
+                .setProjection(Projections.projectionList()
+                        .add(Projections.groupProperty("u.id"))
+                        .add(Projections.groupProperty("u.nombre"))
+                        .add(Projections.sum("h.puntaje").as("puntajeTotal"))
+                )
+                .addOrder(Order.desc("puntajeTotal"))
+                .list();
     }
 
-    @Override
-    public List<HistorialCuestionario> buscarRankingCuestionarioPorId(Long idCuestionario) {
-        final Session session = sessionFactory.getCurrentSession();
-//        return session.createQuery(
-//                "from HistorialCuestionario h " +
-//                        "where h.idCuestionario = :idCuestionario " +
-//                        "order by h.puntaje desc",
-//                HistorialCuestionario.class
-//        ).setParameter("idCuestionario", idCuestionario).list();
-        return session.createCriteria(HistorialCuestionario.class)
-                .add(Restrictions.eq("idCuestionario", idCuestionario))
-                .addOrder(Order.desc("puntaje")).list();
-    }
+//    @Override
+//    public List<HistorialCuestionario> buscarRankingCuestionarioPorNombre(String nombreCuestionario) {
+//        final Session session = sessionFactory.getCurrentSession();
+////        return session.createQuery(
+////                "from HistorialCuestionario h " +
+////                        "where h.nombreCuestionario = :nombreCuestionario " +
+////                        "order by h.puntaje desc",
+////                HistorialCuestionario.class
+////        ).setParameter("nombreCuestionario", nombreCuestionario).list();
+//        return session.createCriteria(HistorialCuestionario.class)
+//                .add(Restrictions.eq("nombreCuestionario", nombreCuestionario))
+//                .addOrder(Order.desc("puntaje")).list();
+//    }
+
+//    @Override
+//    public List<HistorialCuestionario> buscarRankingCuestionarioPorId(Long idCuestionario) {
+//        final Session session = sessionFactory.getCurrentSession();
+////        return session.createQuery(
+////                "from HistorialCuestionario h " +
+////                        "where h.idCuestionario = :idCuestionario " +
+////                        "order by h.puntaje desc",
+////                HistorialCuestionario.class
+////        ).setParameter("idCuestionario", idCuestionario).list();
+//        return session.createCriteria(HistorialCuestionario.class)
+//                .add(Restrictions.eq("idCuestionario", idCuestionario))
+//                .addOrder(Order.desc("puntaje")).list();
+//    }
 
     @Override
-    public List<Object[]> buscarRankingCuestionarioAgregadoPorId(Long idCuestionario) {
+    public List<Object[]> buscarRankingCuestionarioPorId(Long idCuestionario) {
         final Session session = sessionFactory.getCurrentSession();
 //        return session.createQuery(
 //                "select h.jugador.id, h.nombreUsuario, sum(h.puntaje), sum(h.preguntasCorrectas), sum(h.preguntasErradas), count(h) " +
@@ -102,7 +111,7 @@ public class RepositorioHistorialImpl implements RepositorioHistorial {
     }
 
     @Override
-    public List<Object[]> buscarRankingCuestionarioAgregadoPorNombre(String nombreCuestionario) {
+    public List<Object[]> buscarRankingCuestionarioPorNombre(String nombreCuestionario) {
         final Session session = sessionFactory.getCurrentSession();
 //        return session.createQuery(
 //                        "select h.jugador.id, h.nombreUsuario, sum(h.puntaje), sum(h.preguntasCorrectas), sum(h.preguntasErradas), count(h) " +

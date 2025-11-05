@@ -34,7 +34,7 @@ public class ServicioRankingTest {
         when(repoHistorial.buscarRankingGeneral()).thenReturn(Collections.emptyList());
     }
 
-    private List<Usuario> whenObtenerRankingGeneral() {
+    private List<Object[]> whenObtenerRankingGeneral() {
         return servicioRanking.obtenerRankingGeneral();
     }
 
@@ -88,7 +88,7 @@ public class ServicioRankingTest {
     @Test
     public void queDevuelvaListVacioSiNoHayIntentosRegistrados() {
         givenRepoSinIntentosRegistrados();
-        List<Usuario> ranking = whenObtenerRankingGeneral();
+        List<Object[]> ranking = whenObtenerRankingGeneral();
         thenRankingVacio(ranking);
     }
 
@@ -96,11 +96,11 @@ public class ServicioRankingTest {
         when(repoHistorial.buscarRankingGeneral()).thenReturn(Collections.emptyList());
     }
 
-    private List<Usuario> whenObtieneRankingGeneral() {
+    private List<Object[]> whenObtieneRankingGeneral() {
         return servicioRanking.obtenerRankingGeneral();
     }
 
-    private void thenRankingVacio(List<Usuario> ranking) {
+    private void thenRankingVacio(List<Object[]> ranking) {
         assertEquals(0, ranking.size());
     }
 }

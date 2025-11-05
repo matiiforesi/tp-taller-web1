@@ -23,7 +23,7 @@ public class ControladorRanking {
 
     @RequestMapping("/ranking")
     public ModelAndView mostrarRankingGeneral() {
-        List<Usuario> ranking = servicioRanking.obtenerRankingGeneral();
+        List<Object[]> ranking = servicioRanking.obtenerRankingGeneral();
         ModelMap model = new ModelMap();
         model.addAttribute("rankingGeneral", ranking);
         return new ModelAndView("ranking", model);
@@ -38,9 +38,9 @@ public class ControladorRanking {
 //        List<HistorialCuestionario> ranking;
 
         if (nombreCuestionario != null) {
-            ranking = servicioRanking.obtenerRankingCuestionarioAgregadoPorNombre(nombreCuestionario);
+            ranking = servicioRanking.obtenerRankingCuestionarioPorNombre(nombreCuestionario);
         } else if (idCuestionario != null) {
-            ranking = servicioRanking.obtenerRankingCuestionarioAgregadoPorId(idCuestionario);
+            ranking = servicioRanking.obtenerRankingCuestionarioPorId(idCuestionario);
         } else {
             ranking = List.of();
         }

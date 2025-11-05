@@ -60,9 +60,9 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="usuario : ${rankingGeneral}">
-            <td th:text="${usuario.nombre}">Nombre</td>
-            <td th:text="${usuario.puntaje}">Puntaje</td>
+        <tr th:each="fila : ${rankingGeneral}">
+            <td th:text="${fila[1]}">Nombre</td>
+            <td th:text="${fila[2]}">Puntaje</td>
         </tr>
         </tbody>
     </table>

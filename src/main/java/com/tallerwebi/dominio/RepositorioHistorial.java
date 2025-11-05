@@ -10,13 +10,13 @@ public interface RepositorioHistorial {
 
     void modificar(HistorialCuestionario historialCuestionario);
 
-    List<Usuario> buscarRankingGeneral();
+    List<Object[]> buscarRankingGeneral();
 
-    List<HistorialCuestionario> buscarRankingCuestionarioPorNombre(String nombreCuestionario);
+//    List<HistorialCuestionario> buscarRankingCuestionarioPorNombre(String nombreCuestionario);
 
-    List<HistorialCuestionario> buscarRankingCuestionarioPorId(Long idCuestionario);
+//    List<HistorialCuestionario> buscarRankingCuestionarioPorId(Long idCuestionario);
 
-    List<Object[]> buscarRankingCuestionarioAgregadoPorId(Long idCuestionario);
+    List<Object[]> buscarRankingCuestionarioPorId(Long idCuestionario);
 
-    List<Object[]> buscarRankingCuestionarioAgregadoPorNombre(String nombreCuestionario);
+    List<Object[]> buscarRankingCuestionarioPorNombre(String nombreCuestionario);
 }

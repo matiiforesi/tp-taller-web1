@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Controller
-@SessionAttributes({"idCuestionario", "indicePregunta", "puntajeTotal", "preguntasCorrectas", "preguntasErradas", "vidasRestantes", "intentosPrevios", "usuario"})
+@SessionAttributes({"idCuestionario", "indicePregunta", "puntajeTotal", "preguntasCorrectas", "preguntasErradas", "vidasRestantes", "usuario"})
 public class ControladorJuego {
 
     private final ServicioJuego servicioJuego;
@@ -31,7 +31,7 @@ public class ControladorJuego {
     @RequestMapping("/iniciar")
     public ModelAndView iniciarPorFormulario(@RequestParam("idCuestionario") Long idCuestionario, HttpSession session) {
         Cuestionario cuestionario = servicioJuego.obtenerCuestionario(idCuestionario);
-        List<Preguntas>preguntasMezcladas= new ArrayList<>(cuestionario.getPreguntas());
+        List<Preguntas> preguntasMezcladas = new ArrayList<>(cuestionario.getPreguntas());
         Collections.shuffle(preguntasMezcladas);
         cuestionario.setPreguntas(preguntasMezcladas);
 
@@ -54,7 +54,7 @@ public class ControladorJuego {
 //        int intentosPrevios = servicioJuego.obtenerIntentosPrevios(usuario.getId(), idCuestionario);
 //        session.setAttribute("intentosPrevios", intentosPrevios);
 
-        session.setAttribute("preguntasMezcladas",preguntasMezcladas);
+        session.setAttribute("preguntasMezcladas", preguntasMezcladas);
         session.setAttribute("indicePregunta", 0);
         session.setAttribute("puntajeTotal", 0);
         session.setAttribute("preguntasCorrectas", 0);
@@ -88,7 +88,7 @@ public class ControladorJuego {
         if (vidasRestantes == null) vidasRestantes = servicioJuego.obtenerCuestionario(idCuestionario).getVidas();
 
         Cuestionario cuestionario = servicioJuego.obtenerCuestionario(idCuestionario);
-        List<Preguntas>preguntasMezcladas= (List<Preguntas>)session.getAttribute("preguntasMezcladas");
+        List<Preguntas> preguntasMezcladas = (List<Preguntas>) session.getAttribute("preguntasMezcladas");
         cuestionario.setPreguntas(preguntasMezcladas);
 
         if (timer == null) timer = new TimerPregunta(10);
@@ -104,9 +104,13 @@ public class ControladorJuego {
         } else {
             // servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas);
             Integer puntajeTotalSesion = (Integer) session.getAttribute("puntajeTotal");
+            int monedasCuestionario = (int) Math.floor(puntajeTotalSesion * 0.1);
             //servicioJuego.setPuntajeTotal(puntajeTotalSesion);
             servicioJuego.registrarIntento(usuario.getId(), cuestionario.getId(), puntajeTotalSesion);
             servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas, puntajeTotalSesion);
+
+            servicioJuego.asignarMonedas(usuario, puntajeTotalSesion);
+
             session.removeAttribute("puntajeTotal");
             session.removeAttribute("preguntasCorrectas");
             session.removeAttribute("preguntasErradas");
@@ -120,6 +124,7 @@ public class ControladorJuego {
             model.put("puntajeTotal", puntajeTotalSesion);
             model.put("preguntasCorrectas", preguntasCorrectas);
             model.put("preguntasErradas", preguntasErradas);
+            model.put("monedasCuestionario", monedasCuestionario);
             model.put("cuestionario", cuestionario);
             model.put("usuario", usuario);
 
@@ -133,15 +138,64 @@ public class ControladorJuego {
                                         @RequestParam String respuesta,
                                         HttpSession session) {
         Cuestionario cuestionario = servicioJuego.obtenerCuestionario(idCuestionario);
-        List<Preguntas>preguntasMezcladas=(List<Preguntas>)session.getAttribute("preguntasMezcladas");
+        List<Preguntas> preguntasMezcladas = (List<Preguntas>) session.getAttribute("preguntasMezcladas");
         cuestionario.setPreguntas(preguntasMezcladas);
         TimerPregunta timer = (TimerPregunta) session.getAttribute("timer");
 
         if (timer == null || timer.tiempoAgotado()) {
-            ModelMap errorModel = new ModelMap();
-            errorModel.put("mensaje", "Tiempo agotado");
-            errorModel.put("idCuestionario", idCuestionario);
-            return new ModelAndView("tiempo-agotado", errorModel);
+//            ModelMap errorModel = new ModelMap();
+//            errorModel.put("mensaje", "Tiempo agotado");
+//            errorModel.put("idCuestionario", idCuestionario);
+//            return new ModelAndView("tiempo-agotado", errorModel);
+            Integer indicePregunta = (Integer) session.getAttribute("indicePregunta");
+            Integer puntajeTotal = (Integer) session.getAttribute("puntajeTotal");
+            Integer preguntasErradas = (Integer) session.getAttribute("preguntasErradas");
+            Integer preguntasCorrectas = (Integer) session.getAttribute("preguntasCorrectas");
+            Integer vidasRestantes = (Integer) session.getAttribute("vidasRestantes");
+            Usuario usuario = (Usuario) session.getAttribute("usuario");
+
+            if (indicePregunta == null) indicePregunta = 0;
+            if (puntajeTotal == null) puntajeTotal = 0;
+            if (preguntasErradas == null) preguntasErradas = 0;
+            if (preguntasCorrectas == null) preguntasCorrectas = 0;
+            if (vidasRestantes == null) vidasRestantes = cuestionario.getVidas();
+
+            vidasRestantes--;
+            preguntasErradas++;
+
+            if (vidasRestantes <= 0) {
+                int monedasCuestionario = (int) Math.floor(puntajeTotal * 0.1);
+
+                servicioJuego.registrarIntento(usuario.getId(), idCuestionario, puntajeTotal);
+                servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas, puntajeTotal);
+                servicioJuego.asignarMonedas(usuario, puntajeTotal);
+
+                usuario.setPuntaje(usuario.getPuntaje() + puntajeTotal);
+                session.setAttribute("usuario", usuario);
+
+                ModelMap model = new ModelMap();
+                model.put("mensaje", "Te quedaste sin vidas");
+                model.put("puntajeTotal", puntajeTotal);
+                model.put("preguntasCorrectas", preguntasCorrectas);
+                model.put("preguntasErradas", preguntasErradas);
+                model.put("vidasRestantes", 0);
+                model.put("monedasCuestionario", monedasCuestionario);
+                model.put("cuestionario", cuestionario);
+                model.put("usuario", usuario);
+
+                session.invalidate();
+                return new ModelAndView("final_partida", model);
+            }
+
+            session.setAttribute("vidasRestantes", vidasRestantes);
+            session.setAttribute("preguntasErradas", preguntasErradas);
+            session.setAttribute("puntajeTotal", puntajeTotal);
+            session.setAttribute("respondida", false);
+
+            timer.reiniciar();
+            session.setAttribute("timer", timer);
+
+            return new ModelAndView("redirect:../siguiente");
         }
 
         Integer indicePregunta = (Integer) session.getAttribute("indicePregunta");
@@ -179,6 +233,7 @@ public class ControladorJuego {
         session.setAttribute("respondida", true);
 
         if (vidasRestantes <= 0) {
+            int monedasCuestionario = (int) Math.floor(puntajeTotal * 0.1);
 //            int intentosPrevios = (Integer) session.getAttribute("intentosPrevios");
 //            Integer puntajePenalizado = (intentosPrevios == 0) ? puntajeTotal : puntajeTotal / (1 + intentosPrevios);
 //
@@ -187,6 +242,7 @@ public class ControladorJuego {
 //            Integer puntajePenalizado = servicioJuego.calcularPenalizacion(usuario.getId(), idCuestionario, puntajeTotal);
             servicioJuego.registrarIntento(usuario.getId(), idCuestionario, puntajeTotal);
             servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas, vidasRestantes);
+            servicioJuego.asignarMonedas(usuario, puntajeTotal);
 
             usuario.setPuntaje(usuario.getPuntaje() + puntajePenalizado);
             session.setAttribute("usuario", usuario);
@@ -197,6 +253,7 @@ public class ControladorJuego {
             model.put("preguntasCorrectas", preguntasCorrectas);
             model.put("preguntasErradas", preguntasErradas);
             model.put("vidasRestantes", 0);
+            model.put("monedasCuestionario", monedasCuestionario);
             model.put("cuestionario", cuestionario);
             model.put("usuario", usuario);
 
@@ -207,7 +264,6 @@ public class ControladorJuego {
 //            session.removeAttribute("idCuestionario");
 //            session.removeAttribute("vidasRestantes");
             session.invalidate();
-
             return new ModelAndView("final_partida", model);
         }
 

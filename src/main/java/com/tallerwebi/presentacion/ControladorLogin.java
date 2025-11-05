@@ -132,6 +132,8 @@ public class ControladorLogin {
         model.put("cantidadCuestionarios", cantidadCuestionarios);
         model.put("dificultades", dificultades);
         model.put("categorias", categorias);
+
+        model.put("usuario", usuarioEncontrado);
         return new ModelAndView("home", model);
     }
 
@@ -140,4 +142,3 @@ public class ControladorLogin {
         return new ModelAndView("redirect:/login");
     }
 }
-

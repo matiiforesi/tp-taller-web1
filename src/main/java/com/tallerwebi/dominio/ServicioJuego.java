@@ -1,6 +1,8 @@
 package com.tallerwebi.dominio;
 
 public interface ServicioJuego {
+    void asignarMonedas(Usuario jugador, Integer puntaje);
+
     void inicializarVidas(Cuestionario cuestionario);
 
     Boolean validarRespuesta(String respuesta, Long id);

@@ -18,6 +18,7 @@ public class Usuario {
 
     private String nombre = "";
     private Long puntaje = 0L;
+    private Long monedas = 0L;
 
     public Long getId() {
         return id;
@@ -64,4 +65,7 @@ public class Usuario {
 
     public Long getPuntaje() {return puntaje;}
     public void setPuntaje(Long puntaje) {this.puntaje = puntaje;}
+
+    public Long getMonedas() {return monedas;}
+    public void setMonedas(Long monedas) {this.monedas = monedas;}
 }

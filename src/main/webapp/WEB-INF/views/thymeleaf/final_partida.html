@@ -12,12 +12,13 @@
 </head>
 <body>
 <div class="d-flex justify-content-center align-items-center vh-100">
-<div class="card p-5" style="width:20em">
-    <h1>¡Partida Finalizada!</h1>
-    <p>Puntaje final: <span th:text="${puntajeTotal}"></span></p>
-    <p>Vidas restantes: <span th:text="${vidasRestantes}"></span></p>
-    <a href="/spring/home" class="btn btn-primary">Volver al inicio</a>
-</div>
+    <div class="card p-5" style="width:20em">
+        <h1>¡Partida Finalizada!</h1>
+        <p>Puntaje final: <span th:text="${puntajeTotal}"></span></p>
+        <p>Vidas restantes: <span th:text="${vidasRestantes}"></span></p>
+        <p>Monedas ganadas: <span th:text="${monedasCuestionario}"></span></p>
+        <a href="/spring/home" class="btn btn-primary">Volver al inicio</a>
+    </div>
 </div>
 </body>
 </html>

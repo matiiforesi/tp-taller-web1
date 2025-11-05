@@ -5,8 +5,7 @@
     <title>Pregunta</title>
     <!-- Boostrap core css -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-
-    <!-- custom style -->
+    <!-- Custom style -->
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
     <link rel="stylesheet" th:href="@{/css/pregunta.css}">
 </head>
@@ -14,19 +13,24 @@
 
 <div class="contenedor_general w-100">
 
-    <div id="tiempoAgotadoCard" style="display: none;">
-        <div class="card"
-             style="max-width: 400px; margin: 20px auto; padding: 20px; border: 2px solid red; background-color: #ffe6e6;">
-            <h3>Tiempo agotado</h3>
-            <p>Puntaje total: <span th:text="${puntajeTotal}"></span></p>
-            <a th:href="@{/home}" class="btn btn-primary">Volver al home</a>
-        </div>
-    </div>
+    <!--    <div id="tiempoAgotadoCard" style="display: none;">-->
+    <!--        <div class="card"-->
+    <!--             style="max-width: 400px; margin: 20px auto; padding: 20px; border: 2px solid red; background-color: #ffe6e6;">-->
+    <!--            <h3>Tiempo agotado</h3>-->
+    <!--            <p>Puntaje total: <span th:text="${puntajeTotal}"></span></p>-->
+    <!--            <a th:href="@{/home}" class="btn btn-primary">Volver al home</a>-->
+    <!--        </div>-->
+    <!--    </div>-->
     <div id="contenedor-pregunta">
         <div>⏰ Tiempo restante: <span id="timer" th:text="${tiempoRestante}"></span> segundos</div>
-        <div>❤️ Vidas restantes: <span th:text="${vidasRestantes}"></span></div>
+        <div>❤️ Vidas restantes: <span th:text="${vidasRestantes}"></div>
+        <div>💰 Monedas ganadas: <span th:text="${monedas}"></span></div>
+
         <h2 th:text="${pregunta.enunciado}"></h2>
-        <form th:if="${!respondida}" th:action="@{'/juego/' + ${cuestionario.id} + '/validar'}" method="post">
+
+        <form id="formulario" th:if="${!respondida}"
+              th:action="@{'/juego/' + ${cuestionario.id} + '/validar'}"
+              method="post">
             <input type="hidden" name="idPregunta" th:value="${pregunta.id}"/>
 
             <div class="d-grid gap-3">
@@ -49,6 +53,7 @@
          <input type="hidden" name="indicePregunta" th:value="${indicePregunta}">
          <input class="btn btn-success" type="submit" value="Responder">
      </form>-->
+        <!--Respuestas-->
         <div th:if="${respondida}">
             <div th:if="${esCorrecta}" style="color: green; font-weight: bold;">
                 ✅ ¡Respuesta correcta!
@@ -58,6 +63,7 @@
                     <button type="submit" class="btn btn-primary">Siguiente</button>
                 </form>
             </div>
+
             <div th:if="${!esCorrecta}" style="color: red; font-weight: bold;">
                 ❌ Respuesta incorrecta.
                 <p>Puntaje Total <span th:text="${puntajeTotal}"></span></p>
@@ -74,24 +80,69 @@
 <script th:inline="javascript">
     let tiempo = [[${tiempoRestante}]];
     const timerSpan = document.getElementById("timer");
-    let respondida = [[${respondida}]];
-    let card = document.getElementById("tiempoAgotadoCard");
-    let form = document.getElementById("contenedor-pregunta");
-    const interval = setInterval(() => {
+    const form = document.getElementById("formulario");
+    const respondida = [[${respondida}]];
+    const idCuestionario = [[${cuestionario.id}]];
+    const idPregunta = [[${pregunta.id}]];
 
-        if (respondida) {
-            clearInterval(interval);
-            return
-        }
-        tiempo--;
-        timerSpan.textContent = tiempo;
+    if (!respondida) {
+        const interval = setInterval(() => {
+            tiempo--;
+            timerSpan.textContent = tiempo;
 
-        if (tiempo <= 0) {
-            clearInterval(interval);
-            card.style.display = "block";
-            form.style.display = "none";
-        }
-    }, 1000);
+            if (tiempo <= 0) {
+                clearInterval(interval);
+
+                if (form) form.style.display = "none";
+
+                const aviso = document.createElement("div");
+                aviso.className = "card text-center animate__animated animate__fadeIn";
+                aviso.style.cssText = `
+                    max-width: 450px;
+                    margin: 40px auto;
+                    padding: 25px;
+                    border: 2px solid #dc3545;
+                    background-color: #ffe6e6;
+                    box-shadow: 0 0 10px rgba(0,0,0,0.25);
+                `;
+                aviso.innerHTML = `
+                    <h3 style="color: #d9534f;">⏰ Tiempo agotado</h3>
+                    <p>Tu respuesta no fue enviada a tiempo.</p>
+                    <p id="contador-redir">Pasando a la siguiente pregunta en <b>3</b> segundos...</p>
+                `;
+                document.getElementById("contenedor-pregunta").appendChild(aviso);
+
+                const data = new FormData();
+                data.append("idPregunta", idPregunta);
+                data.append("respuesta", "");
+
+                let segundos = 3;
+                const contadorSpan = aviso.querySelector("#contador-redir b");
+
+                const countdown = setInterval(() => {
+                    segundos--;
+                    contadorSpan.textContent = segundos;
+
+                    if (segundos <= 0) {
+                        clearInterval(countdown);
+
+                        fetch(`/spring/juego/${idCuestionario}/validar`, {
+                            method: "POST",
+                            body: data
+                        })
+                            .then(() => {
+                                window.location.href = "/spring/siguiente";
+                            })
+                            .catch(err => {
+                                console.error("Error al validar automáticamente:", err);
+                                window.location.href = "/spring/siguiente";
+                            });
+                    }
+                }, 1000);
+            }
+        }, 1000);
+    }
 </script>
+
 </body>
 </html>

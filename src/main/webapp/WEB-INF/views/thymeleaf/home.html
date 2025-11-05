@@ -1,26 +1,22 @@
 <!DOCTYPE HTML>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Taller Web I</title>
 
-  <title>Taller Web I</title>
+    <!-- Boostrap core css -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
 
-  <!-- Boostrap core css -->
-  <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-
-  <!-- custom style -->
+    <!-- Custom style -->
     <link rel="stylesheet" th:href="@{/css/colores.css}">
-  <link rel="stylesheet" th:href="@{/css/main.css}"/>
-
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 
 <body>
-
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Mi Web</a>
-
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item me-3 text-white">
@@ -28,6 +24,9 @@
                 </li>
                 <li class="nav-item me-3 text-white">
                     <h6 class="mb-0">Puntaje: <span th:text="${puntaje}">[puntaje]</span></h6>
+                </li>
+                <li class="nav-item me-3 text-white">
+                    <h6 class="mb-0">Monedas: <span th:text="${usuario.monedas}">[monedas]</span></h6>
                 </li>
                 <li class="nav-item">
                     <a href="login.html" class="btn btn-danger btn-sm">Cerrar sesión</a>
@@ -37,13 +36,12 @@
     </div>
 </nav>
 
-
 <main role="main" class="container w-100 h-100">
     <div class="container d-flex flex-column align-items-center gap-4">
 
         <h1>Cuestionarios Sugeridos</h1>
 
-        <!-- cuestionarios aleatorios -->
+        <!-- Cuestionarios aleatorios -->
         <div class="d-flex flex-wrap justify-content-center gap-3">
             <div th:each="cuestionario : ${cuestionarios}" class="card text-center p-3" style="width: 14rem;">
                 <h5 th:text="${cuestionario.nombre}">Nombre del cuestionario</h5>
@@ -62,8 +60,8 @@
                     <label for="dificultad" class="form-label">Dificultad:</label>
                     <select name="dificultad" id="dificultad" class="form-select">
                         <option value="">Todas</option>
-                        <option th:each="dif : ${dificultades}" 
-                                th:value="${dif.nombre}" 
+                        <option th:each="dif : ${dificultades}"
+                                th:value="${dif.nombre}"
                                 th:selected="${param.dificultad != null && param.dificultad[0] == dif.nombre}"
                                 th:text="${dif.nombre}">Easy</option>
                     </select>
@@ -72,8 +70,8 @@
                     <label for="categoria" class="form-label">Categoría:</label>
                     <select name="categoria" id="categoria" class="form-select">
                         <option value="">Todas</option>
-                        <option th:each="cat : ${categorias}" 
-                                th:value="${cat}" 
+                        <option th:each="cat : ${categorias}"
+                                th:value="${cat}"
                                 th:selected="${param.categoria != null && param.categoria[0] == cat}"
                                 th:text="${cat}">Historia</option>
                     </select>
@@ -81,9 +79,10 @@
                 <button type="submit" class="btn btn-primary">Filtrar</button>
             </form>
         </div>
+
         <div th:if="${cuestionariosFiltrados != null && !cuestionariosFiltrados.isEmpty()}" class="w-100">
             <div class="d-flex justify-content-center mb-4">
-            <h2 class="mb-3">Resultados de Búsqueda</h2>
+                <h2 class="mb-3">Resultados de Búsqueda</h2>
             </div>
             <div class="d-flex flex-wrap justify-content-center gap-3">
                 <div th:each="cuestionario : ${cuestionariosFiltrados}" class="card text-center p-3" style="width: 14rem;">
@@ -96,41 +95,39 @@
                 </div>
             </div>
         </div>
-        
+
         <div th:if="${cuestionariosFiltrados != null && cuestionariosFiltrados.isEmpty()}" class="alert alert-info" role="alert">
             No se encontraron cuestionarios con los filtros seleccionados.
         </div>
 
-            <div th:if="${rol=='ADMIN'}" class="container mt-4">
-                <div class="d-flex justify-content-center mb-4">
+        <div th:if="${rol=='ADMIN'}" class="container mt-4">
+            <div class="d-flex justify-content-center mb-4">
                 <a href="cuestionario/new" class="btn btn-lg btn-primary justify-content-center p-1">Crear Cuestionario</a>
+            </div>
+
+            <div class="row justify-content-center">
+                <!-- Usuarios -->
+                <div class="col-sm-6 mb-3">
+                    <div class="border rounded p-3 text-center bg-light">
+                        <h5 class="mb-2">Usuarios</h5>
+                        <h3 class="text-primary">
+                            <span th:text="${cantidadUsuarios}">0</span>
+                        </h3>
+                    </div>
                 </div>
 
-                    <div class="row justify-content-center">
-                    <!-- Usuarios -->
-                    <div class="col-sm-6 mb-3">
-                        <div class="border rounded p-3 text-center bg-light">
-                            <h5 class="mb-2">Usuarios</h5>
-                            <h3 class="text-primary">
-                                <span th:text="${cantidadUsuarios}">0</span>
-                            </h3>
-                        </div>
-                    </div>
-
-                    <!-- Cuestionarios -->
-                    <div class="col-sm-6 mb-3">
-                        <div class="border rounded p-3 text-center bg-light">
-                            <h5 class="mb-2">Cuestionarios</h5>
-                            <h3 class="text-success">
-                                <span th:text="${cantidadCuestionarios}">0</span>
-                            </h3>
-                        </div>
+                <!-- Cuestionarios -->
+                <div class="col-sm-6 mb-3">
+                    <div class="border rounded p-3 text-center bg-light">
+                        <h5 class="mb-2">Cuestionarios</h5>
+                        <h3 class="text-success">
+                            <span th:text="${cantidadCuestionarios}">0</span>
+                        </h3>
                     </div>
                 </div>
             </div>
-
         </div>
-
+    </div>
     </div>
 </main>
 

@@ -32,6 +32,15 @@ public class ServicioJuegoImpl implements ServicioJuego {
     }
 
     @Override
+    public void asignarMonedas(Usuario jugador, Integer puntaje) {
+        if (jugador.getMonedas() == null) jugador.setMonedas(0L);
+
+        Long monedasGanadas = (long) (puntaje * 0.1);
+        jugador.setMonedas(jugador.getMonedas() + monedasGanadas);
+        repositorioUsuario.modificar(jugador);
+    }
+
+    @Override
     public void inicializarVidas(Cuestionario cuestionario) {
         if (cuestionario.getVidas() == null) {
             servicioCuestionario.asignarVidasSegunDificultad(cuestionario);
@@ -65,18 +74,17 @@ public class ServicioJuegoImpl implements ServicioJuego {
 
         if (validarRespuesta(respuesta, idPregunta)) {
             preguntasCorrectas++;
-           // int puntajeBase = 100;
+            // int puntajeBase = 100;
             int tiempoBonus = (timerPregunta != null) ? timerPregunta.segundosRestantes().intValue() * bonificacionTiempo : 0;
             puntosGanados = (puntajeBase + tiempoBonus) * mult;
         } else {
             preguntasErradas++;
-           // vidasRestantes--;
+            // vidasRestantes--;
             vidasRestantes -= penalizacionVida;
         }
 
         this.puntajeTotal += puntosGanados;
         return this.puntajeTotal;
-
     }
 
     @Override
@@ -96,6 +104,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
         // jugador.setPuntaje(jugador.getPuntaje() + this.puntajeTotal);
         Usuario usuarioPersistido = repositorioUsuario.buscarPorId(jugador.getId());
         usuarioPersistido.setPuntaje(usuarioPersistido.getPuntaje() + puntajePenalizado);
+        asignarMonedas(usuarioPersistido, puntajePenalizado);
         repositorioUsuario.modificar(usuarioPersistido);
 
         HistorialCuestionario historialCuestionario = new HistorialCuestionario();

@@ -53,6 +53,10 @@ public class ServicioJuegoTest {
         Mockito.when(serv.buscar(2L)).thenReturn(c);*/
         Mockito.when(servPregunta.obtenerPorId(1L)).thenReturn(pregunta);
         Mockito.when(servDificultad.calcularMultiplicador(Mockito.any())).thenReturn(3);
+        Mockito.when(servConfigJuego.getInt("puntaje.base", 100)).thenReturn(100);
+        Mockito.when(servConfigJuego.getInt("bonificacion.tiempo", 10)).thenReturn(10);
+        Mockito.when(servConfigJuego.getInt("penalizacion.vida", 1)).thenReturn(1);
+
     }
 
     private Boolean whenSeValideLaRespuestaSiEsCorrecta() {
@@ -138,6 +142,9 @@ public class ServicioJuegoTest {
         TimerPregunta timer = new TimerPregunta(10);
 
         when(servPregunta.obtenerPorId(3L)).thenReturn(pregunta);
+        Mockito.when(servConfigJuego.getInt("puntaje.base", 100)).thenReturn(100);
+        Mockito.when(servConfigJuego.getInt("bonificacion.tiempo", 10)).thenReturn(10);
+        Mockito.when(servConfigJuego.getInt("penalizacion.vida", 1)).thenReturn(1);
         servicioJuego.inicializarVidas(cuestionarioMock);
 
         Integer puntajeTotal = servicioJuego.obtenerPuntaje(3L, "Incorrecta", timer);

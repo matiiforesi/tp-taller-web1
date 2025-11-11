@@ -57,6 +57,8 @@ public class ServicioDificultadImpl implements ServicioDificultad {
             // case "dificil":
             case "hard":
                 return 3;
+            case "multi":
+                return 2;
             default:
                 return 1;
         }

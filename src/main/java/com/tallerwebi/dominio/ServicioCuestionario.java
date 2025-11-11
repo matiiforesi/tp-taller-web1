@@ -23,4 +23,8 @@ public interface ServicioCuestionario {
     List<Cuestionario> filtrarPorDificultadYCategoria(String dificultad, String categoria);
 
     List<String> obtenerTodasLasCategorias();
+
+    List<Cuestionario> obtenerCuestionariosSugeridos(int limite);
+
+    List<Cuestionario> obtenerCuestionariosFiltrados(String dificultad, String categoria);
 }

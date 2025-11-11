@@ -97,10 +97,10 @@ public class ControladorJuego {
 
         int nuevoIndice = indicePregunta + 1;
 
-        if (vidasRestantes <= 0 || nuevoIndice < cuestionario.getPreguntas().size()) {
+        if (vidasRestantes > 0 && nuevoIndice < cuestionario.getPreguntas().size()) {
             session.setAttribute("indicePregunta", nuevoIndice);
             return prepararVista(cuestionario, nuevoIndice, timer, false, null, usuario,
-                    puntajeTotal, preguntasCorrectas, preguntasErradas, cuestionario.getVidas());
+                    puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes);
         } else {
             // servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas);
             Integer puntajeTotalSesion = (Integer) session.getAttribute("puntajeTotal");
@@ -136,6 +136,7 @@ public class ControladorJuego {
     public ModelAndView validarPregunta(@PathVariable("idCuestionario") Long idCuestionario,
                                         @RequestParam Long idPregunta,
                                         @RequestParam String respuesta,
+                                        @RequestParam(required = false) String tiempoAgotado,
                                         HttpSession session) {
         Cuestionario cuestionario = servicioJuego.obtenerCuestionario(idCuestionario);
         List<Preguntas> preguntasMezcladas = (List<Preguntas>) session.getAttribute("preguntasMezcladas");
@@ -211,6 +212,11 @@ public class ControladorJuego {
         if (preguntasErradas == null) preguntasErradas = 0;
         if (vidasRestantes == null) vidasRestantes = cuestionario.getVidas();
 
+        if ("true".equals(tiempoAgotado)) {
+            vidasRestantes--;
+            preguntasErradas++;
+        }
+
         boolean esCorrecta = servicioJuego.validarRespuesta(respuesta, idPregunta);
         puntajeTotal = servicioJuego.obtenerPuntaje(idPregunta, respuesta, timer);
         servicioJuego.setPuntajeTotal(puntajeTotal);
@@ -241,7 +247,7 @@ public class ControladorJuego {
 //            servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas, puntajePenalizado);
 //            Integer puntajePenalizado = servicioJuego.calcularPenalizacion(usuario.getId(), idCuestionario, puntajeTotal);
             servicioJuego.registrarIntento(usuario.getId(), idCuestionario, puntajeTotal);
-            servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas, vidasRestantes);
+            servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas, puntajePenalizado);
             servicioJuego.asignarMonedas(usuario, puntajeTotal);
 
             usuario.setPuntaje(usuario.getPuntaje() + puntajePenalizado);
@@ -314,6 +320,9 @@ public class ControladorJuego {
         model.put("tiempoRestante", timer.segundosRestantes());
         model.put("idCuestionario", cuestionario.getId());
         model.put("vidasRestantes", vidasRestantes);
+
+        int monedasCuestionario = (int) Math.floor(puntajeTotal * 0.1);
+        model.put("monedas", monedasCuestionario);
 
         return new ModelAndView("pregunta", model);
     }

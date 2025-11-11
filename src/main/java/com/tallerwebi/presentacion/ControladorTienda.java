@@ -30,6 +30,8 @@ public class ControladorTienda {
         ModelMap model = new ModelMap();
         List<Item> items= servicioItem.obtenerTodos();
         Usuario usuario = (Usuario) session.getAttribute("usuario");
+        Long idUsuario = usuario.getId();
+        session.setAttribute("idUsuario", idUsuario);
         model.put("items", items);
         model.put("usuario", usuario);
 
@@ -38,10 +40,11 @@ public class ControladorTienda {
     @RequestMapping("/comprar")
     public ModelAndView mostrarCompra(HttpSession session, @RequestParam Long idUsuario,@RequestParam Long idItem) {
         ModelMap model = new ModelMap();
-        /*Usuario usuarioActualizado= servicioCompra.obtenerUsuarioActualizado(idUsuario);
-        session.setAttribute("usuario",usuarioActualizado);*/
-       // Usuario usuario = (Usuario) session.getAttribute("usuario");
+        //Usuario usuario = (Usuario) session.getAttribute("usuario");
         Boolean exito=servicioCompra.comprarItem(idUsuario,idItem);
+       Usuario usuarioActualizado= servicioCompra.obtenerUsuarioActualizado(idUsuario);
+       session.setAttribute("usuario",usuarioActualizado);
+
         if(exito){
             model.put("mensaje","¡Compra exitosa!");
         }else{

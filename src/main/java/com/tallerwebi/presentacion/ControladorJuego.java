@@ -111,7 +111,7 @@ public class ControladorJuego {
 
             servicioJuego.asignarMonedas(usuario, puntajeTotalSesion);
 
-            usuario.setPuntaje(usuario.getPuntaje() + puntajeTotalSesion);
+            //usuario.setPuntaje(usuario.getPuntaje() + puntajeTotalSesion);
             session.setAttribute("usuario", usuario);
 
             session.removeAttribute("puntajeTotal");

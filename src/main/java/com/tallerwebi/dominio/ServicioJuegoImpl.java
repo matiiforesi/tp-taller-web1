@@ -102,10 +102,10 @@ public class ServicioJuegoImpl implements ServicioJuego {
     public void actualizarPuntajeYCrearHistorial(Usuario jugador, Cuestionario cuestionario, int preguntasCorrectas, int preguntasErradas, Integer puntajePenalizado) {
         // registrarIntento(jugador.getId(), cuestionario.getId());
         // jugador.setPuntaje(jugador.getPuntaje() + this.puntajeTotal);
-        Usuario usuarioPersistido = repositorioUsuario.buscarPorId(jugador.getId());
-        usuarioPersistido.setPuntaje(usuarioPersistido.getPuntaje() + puntajePenalizado);
-        asignarMonedas(usuarioPersistido, puntajePenalizado);
-        repositorioUsuario.modificar(usuarioPersistido);
+        //Usuario usuarioPersistido = repositorioUsuario.buscarPorId(jugador.getId());
+        jugador.setPuntaje(jugador.getPuntaje() + puntajePenalizado);
+       // asignarMonedas(jugador, puntajePenalizado);
+        repositorioUsuario.modificar(jugador);
 
         HistorialCuestionario historialCuestionario = new HistorialCuestionario();
         historialCuestionario.setJugador(jugador);

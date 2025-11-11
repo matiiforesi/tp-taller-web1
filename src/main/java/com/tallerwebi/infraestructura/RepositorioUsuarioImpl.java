@@ -42,6 +42,8 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
 
     @Override
     public void modificar(Usuario usuario) {
+
+        System.out.println("puntaje repo= " + usuario.getPuntaje());
         sessionFactory.getCurrentSession().update(usuario);
     }
 
@@ -54,5 +56,14 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
         Long cantidad= (Long)sessionFactory.getCurrentSession().
                 createQuery("SELECT COUNT(u) FROM Usuario u").uniqueResult();
         return cantidad!=null ? cantidad.intValue():0;
+    }
+
+    @Override
+    public void actualizarMonedas(Long idUsuario, Long nuevasMonedas) {
+        sessionFactory.getCurrentSession()
+                .createQuery("UPDATE Usuario SET monedas = :monedas WHERE id = :id")
+                .setParameter("monedas", nuevasMonedas)
+                .setParameter("id", idUsuario)
+                .executeUpdate();
     }
 }

@@ -135,7 +135,7 @@ public class ControladorLogin {
         model.put("categorias", categorias);
         model.put("monedas",usuarioEncontrado.getMonedas());
 
-
+System.out.println("puntaje del comienzo= " + usuarioEncontrado.getPuntaje());
         return new ModelAndView("home", model);
     }
 

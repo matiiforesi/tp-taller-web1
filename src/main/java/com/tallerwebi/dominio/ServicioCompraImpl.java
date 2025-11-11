@@ -21,11 +21,13 @@ public class ServicioCompraImpl implements ServicioCompra {
     @Override
     public Boolean comprarItem(Long idUsuario, Long idItem) {
         Usuario usuario= this.repositorioUsuario.buscarPorId(idUsuario);
+        System.out.println("puntaje inicial= " + usuario.getPuntaje());
         Item item= this.repositorioItem.obtenerPorId(idItem);
 
         if(usuario.getMonedas()>=item.getPrecio()) {
             usuario.setMonedas(usuario.getMonedas()-item.getPrecio());
-            repositorioUsuario.guardar(usuario);
+            System.out.println("puntaje= " + usuario.getPuntaje());
+            repositorioUsuario.modificar(usuario);
 
             CompraItem compra = new CompraItem();
             compra.setUsuario(usuario);
@@ -39,6 +41,11 @@ public class ServicioCompraImpl implements ServicioCompra {
 
     @Override
     public Usuario obtenerUsuarioActualizado(Long idUsuario) {
-        return repositorioUsuario.buscarPorId(idUsuario);
+        Usuario usuario = repositorioUsuario.buscarPorId(idUsuario);
+        System.out.println("Usuario actualizado:");
+        System.out.println("Monedas: " + usuario.getMonedas());
+        System.out.println("Puntaje: " + usuario.getPuntaje());
+        return usuario;
+
     }
 }

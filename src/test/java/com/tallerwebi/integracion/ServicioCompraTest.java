@@ -41,6 +41,7 @@ public class ServicioCompraTest {
 
     private void thenUsuarioCompro(Boolean obtenido) {
         assertTrue(obtenido);
+        assertEquals(1000L,usuario.getPuntaje());
         assertEquals(0,usuario.getMonedas());
     }
 
@@ -55,6 +56,7 @@ public class ServicioCompraTest {
         usuario.setId(1L);
         usuario.setNombre("Mateo");
         usuario.setMonedas(100L);
+        usuario.setPuntaje(1000L);
 
 
         item.setId(1L);

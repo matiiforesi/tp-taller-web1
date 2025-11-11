@@ -26,7 +26,7 @@
                     <h6 class="mb-0">Puntaje: <span th:text="${puntaje}">[puntaje]</span></h6>
                 </li>
                 <li class="nav-item me-3 text-white">
-                    <h6 class="mb-0">Monedas: <span th:text="${usuario.monedas}">[monedas]</span></h6>
+                    <h6 class="mb-0">Monedas: <span th:text="${monedas}">[monedas]</span></h6>
                 </li>
                 <li class="nav-item">
                     <a href="login.html" class="btn btn-danger btn-sm">Cerrar sesión</a>
@@ -38,7 +38,7 @@
 
 <main role="main" class="container w-100 h-100">
     <div class="container d-flex flex-column align-items-center gap-4">
-
+    <a th:href="@{/tienda}" class="btn btn-primary">Ir a Tienda</a>
         <h1>Cuestionarios Sugeridos</h1>
 
         <!-- Cuestionarios aleatorios -->

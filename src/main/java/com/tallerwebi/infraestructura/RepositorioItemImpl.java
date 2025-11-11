@@ -7,6 +7,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class RepositorioItemImpl implements RepositorioItem {
 
@@ -28,5 +30,11 @@ public class RepositorioItemImpl implements RepositorioItem {
     public Item obtenerPorId(Long id) {
         return (Item)this.sessionFactory.getCurrentSession().createCriteria(Item.class)
                 .add(Restrictions.eq("id",id)).uniqueResult();
+    }
+
+    @Override
+    public List<Item> obtenerTodos() {
+        return (List<Item>) sessionFactory.getCurrentSession().createCriteria(Item.class)
+                .list();
     }
 }

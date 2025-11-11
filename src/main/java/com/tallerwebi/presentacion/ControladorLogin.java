@@ -123,6 +123,7 @@ public class ControladorLogin {
             }
         }
 
+        model.put("usuario", usuarioEncontrado);
         model.put("cuestionarios", cuestionariosSugeridos);
         model.put("cuestionariosFiltrados", cuestionariosFiltrados);
         model.put("rol", rol);
@@ -132,8 +133,9 @@ public class ControladorLogin {
         model.put("cantidadCuestionarios", cantidadCuestionarios);
         model.put("dificultades", dificultades);
         model.put("categorias", categorias);
+        model.put("monedas",usuarioEncontrado.getMonedas());
 
-        model.put("usuario", usuarioEncontrado);
+
         return new ModelAndView("home", model);
     }
 

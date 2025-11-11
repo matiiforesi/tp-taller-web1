@@ -2,7 +2,7 @@ package com.tallerwebi.dominio;
 
 import java.util.List;
 
-public interface RepositorioItem {
+public interface ServicioItem {
     void guardar(Item item);
     void actualizar(Item item);
     Item obtenerPorId(Long id);

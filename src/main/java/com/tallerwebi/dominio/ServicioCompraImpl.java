@@ -25,6 +25,7 @@ public class ServicioCompraImpl implements ServicioCompra {
 
         if(usuario.getMonedas()>=item.getPrecio()) {
             usuario.setMonedas(usuario.getMonedas()-item.getPrecio());
+            repositorioUsuario.guardar(usuario);
 
             CompraItem compra = new CompraItem();
             compra.setUsuario(usuario);
@@ -34,5 +35,10 @@ public class ServicioCompraImpl implements ServicioCompra {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Usuario obtenerUsuarioActualizado(Long idUsuario) {
+        return repositorioUsuario.buscarPorId(idUsuario);
     }
 }

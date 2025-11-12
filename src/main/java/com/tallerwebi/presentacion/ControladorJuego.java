@@ -130,14 +130,14 @@ public class ControladorJuego {
     public ModelAndView validarPregunta(@PathVariable("idCuestionario") Long idCuestionario,
                                         @RequestParam Long idPregunta,
                                         @RequestParam String respuesta,
-                                        @RequestParam String tiempoAgotado,
+                                        @RequestParam(required = false) String tiempoAgotado,
                                         HttpSession session) {
         Cuestionario cuestionario = servicioJuego.obtenerCuestionario(idCuestionario);
         List<Preguntas> preguntasMezcladas = (List<Preguntas>) session.getAttribute("preguntasMezcladas");
         cuestionario.setPreguntas(preguntasMezcladas);
         TimerPregunta timer = (TimerPregunta) session.getAttribute("timer");
 
-        if (tiempoAgotado.equals("true")) {
+        if ("true".equals(tiempoAgotado)) {
             Integer indicePregunta = (Integer) session.getAttribute("indicePregunta");
             Integer puntajeTotal = (Integer) session.getAttribute("puntajeTotal");
             Integer preguntasErradas = (Integer) session.getAttribute("preguntasErradas");

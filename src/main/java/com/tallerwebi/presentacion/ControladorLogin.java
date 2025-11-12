@@ -103,12 +103,7 @@ public class ControladorLogin {
 
         List<Cuestionario> cuestionariosSugeridos = servicioCuestionario.obtenerCuestionariosSugeridos(4);
 
-        // todo: mover a service
-        List<Cuestionario> cuestionariosFiltrados = null;
-        boolean showFiltered = request.getParameterMap().containsKey("dificultad") || request.getParameterMap().containsKey("categoria");
-        if (showFiltered) {
-            cuestionariosFiltrados = servicioCuestionario.obtenerCuestionariosFiltrados(dificultad, categoria);
-        }
+        List<Cuestionario> cuestionariosFiltrados = servicioCuestionario.obtenerCuestionariosFiltrados(request, dificultad, categoria);
 
         model.put("usuario", usuarioEncontrado);
         model.put("cuestionarios", cuestionariosSugeridos);

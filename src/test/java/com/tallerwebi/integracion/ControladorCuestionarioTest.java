@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -142,6 +143,7 @@ public class ControladorCuestionarioTest {
     }
 
     @Test
+    @Transactional
     public void debeRetornarListaDeCuestionarios() throws Exception {
         MvcResult result = this.mockMvc.perform(get("/cuestionario/list"))
                 .andExpect(status().isOk())
@@ -154,6 +156,7 @@ public class ControladorCuestionarioTest {
     }
 
     @Test
+    @Transactional
     public void debeMostrarFormularioNuevoCuestionario() throws Exception {
         MvcResult result = this.mockMvc.perform(get("/cuestionario/new"))
                 .andExpect(status().isOk())
@@ -166,6 +169,7 @@ public class ControladorCuestionarioTest {
     }
 
     @Test
+    @Transactional
     public void debeMostrarFormularioConCategorias() throws Exception {
         MvcResult result = this.mockMvc.perform(get("/cuestionario/new"))
                 .andExpect(status().isOk())
@@ -186,6 +190,7 @@ public class ControladorCuestionarioTest {
     }
 
     @Test
+    @Transactional
     public void debeCrearCuestionarioYRedirigirALista() throws Exception {
         MvcResult result = this.mockMvc.perform(post("/cuestionario/new")
                         .param("nombre", "Historia Argentina")
@@ -202,6 +207,7 @@ public class ControladorCuestionarioTest {
     }
 
     @Test
+    @Transactional
     public void debeCrearCuestionarioConDificultadMulti() throws Exception {
         MvcResult result = this.mockMvc.perform(post("/cuestionario/new")
                         .param("nombre", "Trivia Multi Dificultad")
@@ -218,6 +224,7 @@ public class ControladorCuestionarioTest {
     }
 
     @Test
+    @Transactional
     public void debeCrearCuestionarioConDificultadMultiCaseInsensitive() throws Exception {
         MvcResult result = this.mockMvc.perform(post("/cuestionario/new")
                         .param("nombre", "Trivia Multi")

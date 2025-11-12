@@ -3,6 +3,7 @@ package com.tallerwebi.dominio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
@@ -152,14 +153,17 @@ public class ServicioCuestionarioImpl implements ServicioCuestionario {
     }
 
     @Override
-    public List<Cuestionario> obtenerCuestionariosFiltrados(String dificultad, String categoria) {
-        String dificultadFilter = (dificultad != null && dificultad.isEmpty()) ? null : dificultad;
-        String categoriaFilter = (categoria != null && categoria.isEmpty()) ? null : categoria;
-        
-        if (dificultadFilter == null && categoriaFilter == null) {
-            return repositorioCuestionario.buscarTodo();
-        } else {
-            return repositorioCuestionario.filtrarPorDificultadYCategoria(dificultadFilter, categoriaFilter);
-        }
+    public List<Cuestionario> obtenerCuestionariosFiltrados(HttpServletRequest request, String dificultad, String categoria) {
+        boolean showFiltered = request.getParameterMap().containsKey("dificultad") || request.getParameterMap().containsKey("categoria");
+        if (showFiltered) {
+            String dificultadFilter = (dificultad != null && dificultad.isEmpty()) ? null : dificultad;
+            String categoriaFilter = (categoria != null && categoria.isEmpty()) ? null : categoria;
+
+            if (dificultadFilter == null && categoriaFilter == null) {
+                return repositorioCuestionario.buscarTodo();
+            } else {
+                return repositorioCuestionario.filtrarPorDificultadYCategoria(dificultadFilter, categoriaFilter);
+            }
+        } else return null;
     }
 }

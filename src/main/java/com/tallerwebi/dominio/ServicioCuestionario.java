@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface ServicioCuestionario {
@@ -26,5 +27,5 @@ public interface ServicioCuestionario {
 
     List<Cuestionario> obtenerCuestionariosSugeridos(int limite);
 
-    List<Cuestionario> obtenerCuestionariosFiltrados(String dificultad, String categoria);
+    List<Cuestionario> obtenerCuestionariosFiltrados(HttpServletRequest request, String dificultad, String categoria);
 }

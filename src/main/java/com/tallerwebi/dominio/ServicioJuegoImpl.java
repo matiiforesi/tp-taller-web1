@@ -3,6 +3,10 @@ package com.tallerwebi.dominio;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -15,13 +19,14 @@ public class ServicioJuegoImpl implements ServicioJuego {
     private final ServicioPregunta servicioPregunta;
     private final ServicioDificultad servicioDificultad;
     private final ServicioConfigJuego servicioConfigJuego;
+    private final RepositorioCompraItem repositorioCompraItem;
 
     private Integer puntajeTotal = 0;
     private Integer preguntasCorrectas = 0;
     private Integer preguntasErradas = 0;
     private Integer vidasRestantes = 0;
 
-    public ServicioJuegoImpl(RepositorioUsuario repositorioUsuario, RepositorioHistorial repositorioHistorial, RepositorioIntento repositorioIntento, ServicioCuestionario servicioCuestionario, ServicioPregunta servicioPregunta, ServicioDificultad servicioDificultad, ServicioConfigJuego servicioConfigJuego) {
+    public ServicioJuegoImpl(RepositorioCompraItem repositorioCompraItem,RepositorioUsuario repositorioUsuario, RepositorioHistorial repositorioHistorial, RepositorioIntento repositorioIntento, ServicioCuestionario servicioCuestionario, ServicioPregunta servicioPregunta, ServicioDificultad servicioDificultad, ServicioConfigJuego servicioConfigJuego) {
         this.repositorioUsuario = repositorioUsuario;
         this.repositorioHistorial = repositorioHistorial;
         this.repositorioIntento = repositorioIntento;
@@ -29,6 +34,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
         this.servicioPregunta = servicioPregunta;
         this.servicioDificultad = servicioDificultad;
         this.servicioConfigJuego = servicioConfigJuego;
+        this.repositorioCompraItem = repositorioCompraItem;
     }
 
     @Override
@@ -157,6 +163,109 @@ public class ServicioJuegoImpl implements ServicioJuego {
         Integer reintentos = repositorioIntento.contarIntentos(idUsuario, idCuestionario);
         if (reintentos == 0) {return puntajePartida;}
         return puntajePartida / (1 + reintentos);
+    }
+
+    @Override
+    public Boolean tieneTrampasDisponibles(Long idUsuario, TIPO_ITEMS tipo) {
+       List<CompraItem> trampas= repositorioCompraItem.obtenerComprasPorUsuario(idUsuario);
+        for (CompraItem compraItem : trampas) {
+            if(compraItem.getItem().getTipoItem()==tipo && Boolean.FALSE.equals(compraItem.getUsado())){
+                return true;
+           }
+       }
+        return false;
+    }
+
+    @Override
+    public void usarTrampa(Long idUsuario, TIPO_ITEMS tipo) {
+        List<CompraItem>items= repositorioCompraItem.obtenerComprasPorUsuario(idUsuario);
+
+        for (CompraItem compraItem : items) {
+            if(compraItem.getItem().getTipoItem()==tipo && Boolean.FALSE.equals(compraItem.getUsado())){
+                compraItem.setUsado(true);
+                repositorioCompraItem.guardar(compraItem);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public Integer obtenerPuntajeConTrampa(Long idPregunta, String respuesta, TimerPregunta timerPregunta, Long idUsuario, TIPO_ITEMS trampaActivada) {
+        Integer puntosGanados = 0;
+        Preguntas pregunta = servicioPregunta.obtenerPorId(idPregunta);
+        Integer puntajeBase = servicioConfigJuego.getInt("puntaje.base", 100);
+        Integer bonificacionTiempo = servicioConfigJuego.getInt("bonificacion.tiempo", 10);
+        Integer penalizacionVida = servicioConfigJuego.getInt("penalizacion.vida", 1);
+
+        int mult = (pregunta != null && pregunta.getDificultad() != null)
+                ? servicioDificultad.calcularMultiplicador(pregunta.getDificultad())
+                : 1;
+
+        boolean esCorrecta = validarRespuesta(respuesta, idPregunta);
+
+        if (esCorrecta) {
+            preguntasCorrectas++;
+            int tiempoBonus = (timerPregunta != null) ? timerPregunta.segundosRestantes().intValue() * bonificacionTiempo : 0;
+            puntosGanados = (puntajeBase + tiempoBonus) * mult;
+
+            if (trampaActivada == TIPO_ITEMS.DUPLICAR_PUNTAJE && tieneTrampasDisponibles(idUsuario, TIPO_ITEMS.DUPLICAR_PUNTAJE)) {
+                puntosGanados *= 2;
+                usarTrampa(idUsuario, TIPO_ITEMS.DUPLICAR_PUNTAJE);
+            }
+        } else {
+            preguntasErradas++;
+            vidasRestantes -= penalizacionVida;
+        }
+
+        this.puntajeTotal += puntosGanados;
+        return this.puntajeTotal;
+
+    }
+
+    @Override
+    public List<Item> obtenerTrampasDisponibles(Long idUsuario) {
+
+        List<CompraItem>compra= repositorioCompraItem.obtenerComprasPorUsuario(idUsuario);
+        List<Item>disponibles= new ArrayList<Item>();
+        for (CompraItem compraItem : compra) {
+            if(Boolean.FALSE.equals(compraItem.getUsado())){
+                Item item=compraItem.getItem();
+                disponibles.add(item);
+
+            }
+        }
+        return disponibles;
+    }
+
+    @Override
+    public List<String> obtenerOpcionesFiltradas(Preguntas pregunta, Long idUsuario, TIPO_ITEMS trampaActivada) {
+        List<String> opciones = new ArrayList<>();
+
+        opciones.add(pregunta.getRespuestaCorrecta());
+        opciones.add(pregunta.getRespuestaIncorrecta1());
+        opciones.add(pregunta.getRespuestaIncorrecta2());
+        opciones.add(pregunta.getRespuestaIncorrecta3());
+
+        if (trampaActivada == TIPO_ITEMS.ELIMINAR_DOS_INCORRECTAS &&
+                tieneTrampasDisponibles(idUsuario, TIPO_ITEMS.ELIMINAR_DOS_INCORRECTAS)) {
+
+            usarTrampa(idUsuario, TIPO_ITEMS.ELIMINAR_DOS_INCORRECTAS);
+
+            List<String> incorrectas = opciones.stream()
+                    .filter(op -> !op.equals(pregunta.getRespuestaCorrecta()))
+                    .collect(Collectors.toList());
+
+            Collections.shuffle(incorrectas);
+            opciones = new ArrayList<>();
+            opciones.add(pregunta.getRespuestaCorrecta());
+            opciones.add(incorrectas.get(0)); // dejar solo una incorrecta
+        }
+
+        Collections.shuffle(opciones);
+        System.out.println("Trampa activada: " + trampaActivada);
+
+        return opciones;
+
     }
 
 //    @Override

@@ -6,8 +6,10 @@ import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Timer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class ServicioJuegoTest {
@@ -22,8 +24,9 @@ public class ServicioJuegoTest {
     private ServicioPregunta servPregunta = mock(ServicioPregunta.class);
     private ServicioDificultad servDificultad = mock(ServicioDificultad.class);
     private ServicioConfigJuego servConfigJuego = mock(ServicioConfigJuego.class);
+    private RepositorioCompraItem repositorioCompraItem = mock(RepositorioCompraItem.class);
 
-    private ServicioJuego servicioJuego = new ServicioJuegoImpl(repoUsuario, repoHistorial, repoIntento, servCuestionario, servPregunta, servDificultad, servConfigJuego);
+    private ServicioJuego servicioJuego = new ServicioJuegoImpl(repositorioCompraItem,repoUsuario, repoHistorial, repoIntento, servCuestionario, servPregunta, servDificultad, servConfigJuego);
 
     private RepositorioCuestionario repoCuestionario = mock(RepositorioCuestionario.class);
 
@@ -95,6 +98,63 @@ public class ServicioJuegoTest {
         Integer obtenido = whenAcumulaPuntaje("23 de Abril");
         thenAcumulaPuntaje(0, obtenido);
     }
+    @Test
+    public void queDupliqueElPuntajeSiTieneTrampaDuplicarPuntaje(){
+        Preguntas pregunta = new Preguntas();
+        pregunta.setId(1L);
+        pregunta.setRespuestaCorrecta("Correcta");
+        Dificultad dificultad = new Dificultad();
+        dificultad.setNombre("Media");
+        pregunta.setDificultad(dificultad);
+
+        Item trampa=new Item();
+        trampa.setTipoItem(TIPO_ITEMS.DUPLICAR_PUNTAJE);
+
+        CompraItem compra=new CompraItem();
+        compra.setItem(trampa);
+        compra.setUsado(false);
+
+        when(servPregunta.obtenerPorId(1L)).thenReturn(pregunta);
+        when(servDificultad.calcularMultiplicador(dificultad)).thenReturn(2);
+        when(servConfigJuego.getInt("puntaje.base", 100)).thenReturn(100);
+        when(servConfigJuego.getInt("bonificacion.tiempo", 10)).thenReturn(10);
+        when(servConfigJuego.getInt("penalizacion.vida", 1)).thenReturn(1);
+        when(repositorioCompraItem.obtenerComprasPorUsuario(1L)).thenReturn(List.of(compra));
+
+        TimerPregunta timer = new TimerPregunta(5);
+
+        Integer puntaje= servicioJuego.obtenerPuntajeConTrampa(1L,"Correcta",timer,1L,trampa.getTipoItem());
+
+        Integer esperado=(100+50)*2*2;
+        assertEquals(esperado,puntaje);
+        assertTrue(compra.getUsado());
+    }
+    
+    @Test
+    public void queSeEliminenDosOpcionesIncorrectasSiTieneTrampa() {
+        Preguntas pregunta = new Preguntas();
+        pregunta.setRespuestaCorrecta("Correcta");
+        pregunta.setRespuestaIncorrecta1("Incorrecta1");
+        pregunta.setRespuestaIncorrecta2("Incorrecta2");
+        pregunta.setRespuestaIncorrecta3("Incorrecta3");
+
+        Item trampa = new Item();
+        trampa.setTipoItem(TIPO_ITEMS.ELIMINAR_DOS_INCORRECTAS);
+
+        CompraItem compra = new CompraItem();
+        compra.setItem(trampa);
+        compra.setUsado(false);
+
+        when(repositorioCompraItem.obtenerComprasPorUsuario(1L)).thenReturn(List.of(compra));
+
+        List<String> opciones = servicioJuego.obtenerOpcionesFiltradas(pregunta, 1L, TIPO_ITEMS.ELIMINAR_DOS_INCORRECTAS);
+
+        assertEquals(2, opciones.size());
+        assertTrue(opciones.contains("Correcta"));
+        assertTrue(compra.getUsado());
+    }
+
+
 
     private void thenAcumulaPuntaje(Integer esperado, Integer puntaje) {
         assertEquals(esperado, puntaje);

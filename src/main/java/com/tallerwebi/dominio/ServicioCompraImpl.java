@@ -32,6 +32,7 @@ public class ServicioCompraImpl implements ServicioCompra {
             CompraItem compra = new CompraItem();
             compra.setUsuario(usuario);
             compra.setItem(item);
+            compra.setUsado(false);
             this.repositorioCompraItem.guardar(compra);
 
             return true;

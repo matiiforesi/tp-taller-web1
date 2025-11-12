@@ -14,7 +14,7 @@ public class CompraItem {
     @JoinColumn(name = "id_item", nullable = false)
     private Item item;
 
-    private Boolean usado;
+    private Boolean usado=false;
 
     public Long getId() {
         return id;

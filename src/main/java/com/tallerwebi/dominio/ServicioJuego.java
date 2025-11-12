@@ -1,5 +1,7 @@
 package com.tallerwebi.dominio;
 
+import java.util.List;
+
 public interface ServicioJuego {
     void asignarMonedas(Usuario jugador, Integer puntaje);
 
@@ -24,5 +26,9 @@ public interface ServicioJuego {
     Integer calcularPenalizacion(Long idUsuario, Long idCuestionario, Integer puntajePartida);
 
 //    Integer obtenerIntentosPrevios(Long idUsuario, Long idCuestionario);
-
+    Boolean tieneTrampasDisponibles(Long idUsuario,TIPO_ITEMS tipo);
+    void usarTrampa(Long idUsuario,TIPO_ITEMS tipo);
+    Integer obtenerPuntajeConTrampa(Long idPregunta, String respuesta, TimerPregunta timerPregunta, Long idUsuario,TIPO_ITEMS tipo);
+    List<Item> obtenerTrampasDisponibles(Long idUsuario);
+    List<String>obtenerOpcionesFiltradas(Preguntas pregunta, Long idUsuario, TIPO_ITEMS tipo);
 }

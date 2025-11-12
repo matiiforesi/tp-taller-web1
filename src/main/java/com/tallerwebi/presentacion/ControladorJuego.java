@@ -42,6 +42,9 @@ public class ControladorJuego {
         }
 
         Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return new ModelAndView("redirect:/login");
+        }
 
         servicioJuego.reiniciarPuntaje();
         servicioJuego.inicializarVidas(cuestionario);

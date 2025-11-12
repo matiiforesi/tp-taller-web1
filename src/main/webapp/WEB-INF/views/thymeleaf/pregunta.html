@@ -24,6 +24,14 @@
               th:action="@{'/juego/' + ${cuestionario.id} + '/validar'}"
               method="post">
             <input type="hidden" name="idPregunta" th:value="${pregunta.id}"/>
+            <div class="mb-3">
+                <label for="trampaActivada" class="form-label">¿Querés usar una trampa?</label>
+                <select name="trampaActivada" id="trampaActivada" class="form-select">
+                    <option value="">Sin trampa</option>
+                    <option value="DUPLICAR_PUNTAJE" th:selected="${trampaUsada == 'DUPLICAR_PUNTAJE'}">Duplicar puntaje</option>
+                    <option value="ELIMINAR_DOS_INCORRECTAS" th:selected="${trampaUsada == 'ELIMINAR_DOS_INCORRECTAS'}">Eliminar dos incorrectas</option>
+                </select>
+            </div>
 
             <div class="d-grid gap-3">
                 <button type="submit" name="respuesta" th:value="${opcion}"
@@ -41,6 +49,16 @@
                  style="color: orange; font-weight: bold; border: 2px solid orange; padding: 20px; border-radius: 8px; background-color: #fff3cd;">
                 ¡Se agotó el tiempo!
                 <p>Puntaje Total: <span th:text="${puntajeTotal}"></span></p>
+            <div th:if="${trampaUsada == 'DUPLICAR_PUNTAJE'}">
+                🧨 ¡Usaste la trampa de duplicar puntaje!
+            </div>
+            <div th:if="${trampaUsada == 'ELIMINAR_DOS_INCORRECTAS'}">
+                🧨 ¡Usaste la trampa de eliminar dos opciones incorrectas!
+            </div>
+
+            <div th:if="${esCorrecta}" style="color: green; font-weight: bold;">
+                ✅ ¡Respuesta correcta!
+                <p>Puntaje Total <span th:text="${puntajeTotal}"></span></p>
                 <form th:action="@{/siguiente}" method="post">
                     <button type="submit" class="btn btn-warning">Siguiente</button>
                 </form>
@@ -115,6 +133,44 @@
             }
         }, 1000);
     }
+    document.getElementById("trampaActivada").addEventListener("change", async function () {
+    const tipoTrampa = this.value;
+    if (tipoTrampa === "ELIMINAR_DOS_INCORRECTAS") {
+        const idPregunta = document.querySelector("input[name='idPregunta']").value;
+        const idUsuario = [[${usuario.id}]];
+
+        const response = await fetch("/spring/juego/opciones-filtradas", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+                idPregunta: idPregunta,
+                idUsuario: idUsuario,
+                trampaActivada: tipoTrampa
+            })
+        });
+
+        const opciones = await response.json();
+        const contenedor = document.querySelector(".d-grid");
+        contenedor.innerHTML = "";
+
+        opciones.forEach(opcion => {
+            const button = document.createElement("button");
+            button.type = "submit";
+            button.name = "respuesta";
+            button.value = opcion;
+            button.className = "btn btn-outline-primary btn-lg";
+            button.innerHTML = `<span>${opcion}</span>`;
+            contenedor.appendChild(button);
+        });
+
+
+        const mensaje = document.createElement("div");
+        mensaje.className = "alert alert-warning mt-3";
+        mensaje.innerHTML = "🧨 Se eliminaron dos opciones incorrectas.";
+        document.getElementById("contenedor-pregunta").appendChild(mensaje);
+    }
+});
+
 </script>
 
 </body>

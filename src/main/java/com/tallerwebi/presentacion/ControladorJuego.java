@@ -64,6 +64,7 @@ public class ControladorJuego {
 
         return prepararVista(cuestionario, 0, timer, false, null, usuario,
                 0, 0, 0, cuestionario.getVidas(), false);
+        return prepararVista(cuestionario, 0, timer, false, null, usuario, 0, 0, 0, cuestionario.getVidas(),session);
     }
 
     @RequestMapping("/siguiente")
@@ -97,6 +98,7 @@ public class ControladorJuego {
             session.setAttribute("indicePregunta", nuevoIndice);
             return prepararVista(cuestionario, nuevoIndice, timer, false, null, usuario,
                     puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, false);
+                    puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes,session);
         } else {
             Integer puntajeTotalSesion = (Integer) session.getAttribute("puntajeTotal");
             int monedasCuestionario = (int) Math.floor(puntajeTotalSesion * 0.1);
@@ -113,6 +115,7 @@ public class ControladorJuego {
             session.removeAttribute("preguntasErradas");
             session.removeAttribute("indicePregunta");
             session.removeAttribute("idCuestionario");
+            session.removeAttribute("trampaActivada");
 
             ModelMap model = new ModelMap();
             model.put("puntajeTotal", puntajeTotalSesion);
@@ -131,11 +134,15 @@ public class ControladorJuego {
                                         @RequestParam Long idPregunta,
                                         @RequestParam String respuesta,
                                         @RequestParam(required = false) String tiempoAgotado,
+                                        @RequestParam(required = false) String trampaActivada,
                                         HttpSession session) {
         Cuestionario cuestionario = servicioJuego.obtenerCuestionario(idCuestionario);
         List<Preguntas> preguntasMezcladas = (List<Preguntas>) session.getAttribute("preguntasMezcladas");
         cuestionario.setPreguntas(preguntasMezcladas);
         TimerPregunta timer = (TimerPregunta) session.getAttribute("timer");
+        TIPO_ITEMS trampa = (trampaActivada != null && !trampaActivada.isEmpty())
+                ? TIPO_ITEMS.valueOf(trampaActivada)
+                : null;
 
         if ("true".equals(tiempoAgotado)) {
             Integer indicePregunta = (Integer) session.getAttribute("indicePregunta");
@@ -185,6 +192,17 @@ public class ControladorJuego {
 
             return prepararVista(cuestionario, indicePregunta, timer, true, false, usuario,
                     puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, true);
+            session.setAttribute("vidasRestantes", vidasRestantes);
+            session.setAttribute("preguntasErradas", preguntasErradas);
+            session.setAttribute("puntajeTotal", puntajeTotal);
+            session.setAttribute("respondida", false);
+            session.setAttribute("trampaUsada", trampaActivada);
+
+
+            timer.reiniciar();
+            session.setAttribute("timer", timer);
+
+            return new ModelAndView("redirect:../siguiente");
         }
 
         Integer indicePregunta = (Integer) session.getAttribute("indicePregunta");
@@ -203,6 +221,7 @@ public class ControladorJuego {
         boolean esCorrecta = servicioJuego.validarRespuesta(respuesta, idPregunta);
 
         puntajeTotal = servicioJuego.obtenerPuntaje(idPregunta, respuesta, timer);
+        puntajeTotal = servicioJuego.obtenerPuntajeConTrampa(idPregunta, respuesta, timer, usuario.getId(), trampa);
         servicioJuego.setPuntajeTotal(puntajeTotal);
 
         Integer puntajePenalizado = servicioJuego.calcularPenalizacion(usuario.getId(), cuestionario.getId(), puntajeTotal);
@@ -220,6 +239,7 @@ public class ControladorJuego {
         session.setAttribute("preguntasErradas", preguntasErradas);
         session.setAttribute("vidasRestantes", vidasRestantes);
         session.setAttribute("respondida", true);
+        session.setAttribute("trampaUsada", trampaActivada);
 
         if (vidasRestantes <= 0) {
             int monedasCuestionario = (int) Math.floor(puntajeTotal * 0.1);
@@ -244,9 +264,9 @@ public class ControladorJuego {
             session.invalidate();
             return new ModelAndView("final_partida", model);
         }
-
         return prepararVista(cuestionario, indicePregunta, timer, true, esCorrecta, usuario,
                 puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, false);
+                puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes,session);
     }
 
 //    @RequestMapping("/tiempo-agotado")
@@ -256,6 +276,17 @@ public class ControladorJuego {
 //        model.put("idCuestionario", idCuestionario);
 //        return new ModelAndView("tiempo-agotado", model);
 //    }
+
+    @RequestMapping(value = "/juego/opciones-filtradas", method = RequestMethod.POST)
+    @ResponseBody
+    public List<String> obtenerOpcionesFiltradas(@RequestParam Long idPregunta,
+                                                 @RequestParam Long idUsuario,
+                                                 @RequestParam String trampaActivada) {
+        TIPO_ITEMS trampa = TIPO_ITEMS.valueOf(trampaActivada);
+        Preguntas pregunta = servicioPregunta.obtenerPorId(idPregunta);
+        return servicioJuego.obtenerOpcionesFiltradas(pregunta, idUsuario, trampa);
+    }
+
 
     private ModelAndView prepararVista(Cuestionario cuestionario,
                                        Integer indice,
@@ -268,17 +299,27 @@ public class ControladorJuego {
                                        Integer preguntasErradas,
                                        Integer vidasRestantes,
                                        Boolean tiempoAgotado) {
+                                       Integer vidasRestantes,HttpSession session) {
 
         ModelMap model = new ModelMap();
         Preguntas pregunta = servicioJuego.obtenerPregunta(cuestionario, indice);
 
-        List<String> opciones = Arrays.asList(
+        /*List<String> opciones = Arrays.asList(
                 pregunta.getRespuestaCorrecta(),
                 pregunta.getRespuestaIncorrecta1(),
                 pregunta.getRespuestaIncorrecta2(),
                 pregunta.getRespuestaIncorrecta3()
         );
-        Collections.shuffle(opciones);
+        Collections.shuffle(opciones);*/
+        String trampaStr = (String) session.getAttribute("trampaUsada");
+        TIPO_ITEMS trampaActivada = (trampaStr != null && !trampaStr.isEmpty())
+                ? TIPO_ITEMS.valueOf(trampaStr)
+                : null;
+
+        List<String> opciones = servicioJuego.obtenerOpcionesFiltradas(pregunta, usuario.getId(), trampaActivada);
+        model.put("trampaUsada", trampaStr);
+        session.removeAttribute("trampaUsada");
+
 
         model.put("cuestionario", cuestionario);
         model.put("pregunta", pregunta);

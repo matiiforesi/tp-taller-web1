@@ -62,12 +62,10 @@ public class ControladorJuego {
         session.setAttribute("timer", timer);
         session.setAttribute("respondida", false);
 
-<<<<<<< Updated upstream
-        return prepararVista(cuestionario, 0, timer, false, null, usuario,
-                0, 0, 0, cuestionario.getVidas(), false);
-=======
-        return prepararVista(cuestionario, 0, timer, false, null, usuario, 0, 0, 0, cuestionario.getVidas(),session);
->>>>>>> Stashed changes
+
+
+        return prepararVista(cuestionario, 0, timer, false, null, usuario, 0, 0, 0, cuestionario.getVidas(),false,session);
+
     }
 
     @RequestMapping("/siguiente")
@@ -100,8 +98,8 @@ public class ControladorJuego {
         if (vidasRestantes > 0 && nuevoIndice < cuestionario.getPreguntas().size()) {
             session.setAttribute("indicePregunta", nuevoIndice);
             return prepararVista(cuestionario, nuevoIndice, timer, false, null, usuario,
-                    puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, false);
-                    puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes,session);
+                    puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, false,session);
+
         } else {
             Integer puntajeTotalSesion = (Integer) session.getAttribute("puntajeTotal");
             int monedasCuestionario = (int) Math.floor(puntajeTotalSesion * 0.1);
@@ -168,6 +166,7 @@ public class ControladorJuego {
             session.setAttribute("preguntasErradas", preguntasErradas);
             session.setAttribute("puntajeTotal", puntajeTotal);
             session.setAttribute("respondida", true);
+            session.setAttribute("trampaUsada", trampaActivada);
 
             if (vidasRestantes <= 0) {
                 int monedasCuestionario = (int) Math.floor(puntajeTotal * 0.1);
@@ -192,20 +191,19 @@ public class ControladorJuego {
                 session.invalidate();
                 return new ModelAndView("final_partida", model);
             }
-
-            return prepararVista(cuestionario, indicePregunta, timer, true, false, usuario,
-                    puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, true);
-            session.setAttribute("vidasRestantes", vidasRestantes);
+          /*  session.setAttribute("vidasRestantes", vidasRestantes);
             session.setAttribute("preguntasErradas", preguntasErradas);
             session.setAttribute("puntajeTotal", puntajeTotal);
-            session.setAttribute("respondida", false);
-            session.setAttribute("trampaUsada", trampaActivada);
+            session.setAttribute("respondida", false);*/
+
 
 
             timer.reiniciar();
             session.setAttribute("timer", timer);
 
-            return new ModelAndView("redirect:../siguiente");
+            return prepararVista(cuestionario, indicePregunta, timer, true, false, usuario,
+                    puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, true,session);
+
         }
 
         Integer indicePregunta = (Integer) session.getAttribute("indicePregunta");
@@ -223,7 +221,6 @@ public class ControladorJuego {
 
         boolean esCorrecta = servicioJuego.validarRespuesta(respuesta, idPregunta);
 
-        puntajeTotal = servicioJuego.obtenerPuntaje(idPregunta, respuesta, timer);
         puntajeTotal = servicioJuego.obtenerPuntajeConTrampa(idPregunta, respuesta, timer, usuario.getId(), trampa);
         servicioJuego.setPuntajeTotal(puntajeTotal);
 
@@ -268,8 +265,9 @@ public class ControladorJuego {
             return new ModelAndView("final_partida", model);
         }
         return prepararVista(cuestionario, indicePregunta, timer, true, esCorrecta, usuario,
-                puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, false);
-                puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes,session);
+
+                puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, false,session);
+
     }
 
 //    @RequestMapping("/tiempo-agotado")
@@ -300,9 +298,10 @@ public class ControladorJuego {
                                        Integer puntajeTotal,
                                        Integer preguntasCorrectas,
                                        Integer preguntasErradas,
+
                                        Integer vidasRestantes,
-                                       Boolean tiempoAgotado) {
-                                       Integer vidasRestantes,HttpSession session) {
+                                       Boolean tiempoAgotado,HttpSession session) {
+
 
         ModelMap model = new ModelMap();
         Preguntas pregunta = servicioJuego.obtenerPregunta(cuestionario, indice);

@@ -49,6 +49,10 @@
                  style="color: orange; font-weight: bold; border: 2px solid orange; padding: 20px; border-radius: 8px; background-color: #fff3cd;">
                 ¡Se agotó el tiempo!
                 <p>Puntaje Total: <span th:text="${puntajeTotal}"></span></p>
+                <form th:action="@{/siguiente}" method="post">
+                    <button type="submit" class="btn btn-warning">Siguiente</button>
+                </form>
+            </div>
             <div th:if="${trampaUsada == 'DUPLICAR_PUNTAJE'}">
                 🧨 ¡Usaste la trampa de duplicar puntaje!
             </div>
@@ -56,13 +60,13 @@
                 🧨 ¡Usaste la trampa de eliminar dos opciones incorrectas!
             </div>
 
-            <div th:if="${esCorrecta}" style="color: green; font-weight: bold;">
+           <!-- <div th:if="${esCorrecta}" style="color: green; font-weight: bold;">
                 ✅ ¡Respuesta correcta!
                 <p>Puntaje Total <span th:text="${puntajeTotal}"></span></p>
                 <form th:action="@{/siguiente}" method="post">
                     <button type="submit" class="btn btn-warning">Siguiente</button>
                 </form>
-            </div>
+            </div>-->
 
             <!-- Respuesta correcta -->
             <div th:if="${!tiempoAgotado and esCorrecta}"

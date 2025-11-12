@@ -62,9 +62,12 @@ public class ControladorJuego {
         session.setAttribute("timer", timer);
         session.setAttribute("respondida", false);
 
+<<<<<<< Updated upstream
         return prepararVista(cuestionario, 0, timer, false, null, usuario,
                 0, 0, 0, cuestionario.getVidas(), false);
+=======
         return prepararVista(cuestionario, 0, timer, false, null, usuario, 0, 0, 0, cuestionario.getVidas(),session);
+>>>>>>> Stashed changes
     }
 
     @RequestMapping("/siguiente")

@@ -13,9 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class ControladorLogin {
@@ -103,25 +101,9 @@ public class ControladorLogin {
         List<Dificultad> dificultades = servicioDificultad.obtenerTodas();
         List<String> categorias = servicioCuestionario.obtenerTodasLasCategorias();
 
-        // Cuestionarios random
-        List<Cuestionario> todosCuestionarios = servicioCuestionario.buscarTodo();
-        Collections.shuffle(todosCuestionarios);
-        List<Cuestionario> cuestionariosSugeridos = todosCuestionarios.stream()
-                .limit(4)
-                .collect(Collectors.toList());
+        List<Cuestionario> cuestionariosSugeridos = servicioCuestionario.obtenerCuestionariosSugeridos(4);
 
-        // Filtro Cuestionarios
-        List<Cuestionario> cuestionariosFiltrados = null;
-        boolean showFiltered = request.getParameterMap().containsKey("dificultad") || request.getParameterMap().containsKey("categoria");
-        if (showFiltered) {
-            String dificultadFilter = (dificultad != null && dificultad.isEmpty()) ? null : dificultad;
-            String categoriaFilter = (categoria != null && categoria.isEmpty()) ? null : categoria;
-            if (dificultadFilter == null && categoriaFilter == null) {
-                cuestionariosFiltrados = todosCuestionarios;
-            } else {
-                cuestionariosFiltrados = servicioCuestionario.filtrarPorDificultadYCategoria(dificultadFilter, categoriaFilter);
-            }
-        }
+        List<Cuestionario> cuestionariosFiltrados = servicioCuestionario.obtenerCuestionariosFiltrados(request, dificultad, categoria);
 
         model.put("usuario", usuarioEncontrado);
         model.put("cuestionarios", cuestionariosSugeridos);

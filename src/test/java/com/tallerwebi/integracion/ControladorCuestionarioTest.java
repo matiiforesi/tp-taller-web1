@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -52,10 +53,41 @@ public class ControladorCuestionarioTest {
             pregunta.setIncorrect_answers(asList("Londres", "Madrid", "Roma"));
             respuesta.setResults(List.of(pregunta));
 
+            RespuestaTrivia respuestaMulti = new RespuestaTrivia();
+            PreguntaTrivia preguntaEasy = new PreguntaTrivia();
+            preguntaEasy.setQuestion("Easy question");
+            preguntaEasy.setCorrect_answer("Easy answer");
+            preguntaEasy.setCategory("Geography");
+            preguntaEasy.setDifficulty("easy");
+            preguntaEasy.setIncorrect_answers(asList("Wrong1", "Wrong2", "Wrong3"));
+
+            PreguntaTrivia preguntaMedium = new PreguntaTrivia();
+            preguntaMedium.setQuestion("Medium question");
+            preguntaMedium.setCorrect_answer("Medium answer");
+            preguntaMedium.setCategory("Geography");
+            preguntaMedium.setDifficulty("medium");
+            preguntaMedium.setIncorrect_answers(asList("Wrong1", "Wrong2", "Wrong3"));
+
+            PreguntaTrivia preguntaHard = new PreguntaTrivia();
+            preguntaHard.setQuestion("Hard question");
+            preguntaHard.setCorrect_answer("Hard answer");
+            preguntaHard.setCategory("Geography");
+            preguntaHard.setDifficulty("hard");
+            preguntaHard.setIncorrect_answers(asList("Wrong1", "Wrong2", "Wrong3"));
+
+            respuestaMulti.setResults(asList(preguntaEasy, preguntaMedium, preguntaHard));
+
             when(mock.buscarPreguntas(org.mockito.ArgumentMatchers.anyInt(),
                     org.mockito.ArgumentMatchers.anyInt(),
-                    org.mockito.ArgumentMatchers.anyString()))
+                    org.mockito.ArgumentMatchers.argThat(arg -> 
+                        arg != null && !arg.equalsIgnoreCase("multi"))))
                     .thenReturn(respuesta);
+
+            when(mock.buscarPreguntas(org.mockito.ArgumentMatchers.anyInt(),
+                    org.mockito.ArgumentMatchers.anyInt(),
+                    org.mockito.ArgumentMatchers.argThat(arg -> 
+                        arg != null && arg.equalsIgnoreCase("multi"))))
+                    .thenReturn(respuestaMulti);
 
             RespuestaCategorias respuestaCategorias = new RespuestaCategorias();
             TriviaCategory categoria1 = new TriviaCategory();
@@ -104,9 +136,14 @@ public class ControladorCuestionarioTest {
         Dificultad hard = new Dificultad();
         hard.setNombre("Hard");
         servicioDificultad.guardar(hard);
+
+        Dificultad multi = new Dificultad();
+        multi.setNombre("Multi");
+        servicioDificultad.guardar(multi);
     }
 
     @Test
+    @Transactional
     public void debeRetornarListaDeCuestionarios() throws Exception {
         MvcResult result = this.mockMvc.perform(get("/cuestionario/list"))
                 .andExpect(status().isOk())
@@ -119,6 +156,7 @@ public class ControladorCuestionarioTest {
     }
 
     @Test
+    @Transactional
     public void debeMostrarFormularioNuevoCuestionario() throws Exception {
         MvcResult result = this.mockMvc.perform(get("/cuestionario/new"))
                 .andExpect(status().isOk())
@@ -131,6 +169,7 @@ public class ControladorCuestionarioTest {
     }
 
     @Test
+    @Transactional
     public void debeMostrarFormularioConCategorias() throws Exception {
         MvcResult result = this.mockMvc.perform(get("/cuestionario/new"))
                 .andExpect(status().isOk())
@@ -151,6 +190,7 @@ public class ControladorCuestionarioTest {
     }
 
     @Test
+    @Transactional
     public void debeCrearCuestionarioYRedirigirALista() throws Exception {
         MvcResult result = this.mockMvc.perform(post("/cuestionario/new")
                         .param("nombre", "Historia Argentina")
@@ -158,6 +198,40 @@ public class ControladorCuestionarioTest {
                         .param("amount", "5")
                         .param("category", "25")
                         .param("difficulty", "medium"))
+                .andExpect(status().is3xxRedirection())
+                .andReturn();
+
+        ModelAndView mv = result.getModelAndView();
+        assert mv != null;
+        assertThat(mv.getViewName(), equalToIgnoringCase("redirect:/cuestionario/list"));
+    }
+
+    @Test
+    @Transactional
+    public void debeCrearCuestionarioConDificultadMulti() throws Exception {
+        MvcResult result = this.mockMvc.perform(post("/cuestionario/new")
+                        .param("nombre", "Trivia Multi Dificultad")
+                        .param("descripcion", "Preguntas de todas las dificultades")
+                        .param("amount", "10")
+                        .param("category", "22")
+                        .param("difficulty", "multi"))
+                .andExpect(status().is3xxRedirection())
+                .andReturn();
+
+        ModelAndView mv = result.getModelAndView();
+        assert mv != null;
+        assertThat(mv.getViewName(), equalToIgnoringCase("redirect:/cuestionario/list"));
+    }
+
+    @Test
+    @Transactional
+    public void debeCrearCuestionarioConDificultadMultiCaseInsensitive() throws Exception {
+        MvcResult result = this.mockMvc.perform(post("/cuestionario/new")
+                        .param("nombre", "Trivia Multi")
+                        .param("descripcion", "Preguntas variadas")
+                        .param("amount", "5")
+                        .param("category", "25")
+                        .param("difficulty", "MULTI"))
                 .andExpect(status().is3xxRedirection())
                 .andReturn();
 

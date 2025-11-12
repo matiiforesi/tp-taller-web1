@@ -3,7 +3,9 @@ package com.tallerwebi.dominio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -101,6 +103,7 @@ public class ServicioCuestionarioImpl implements ServicioCuestionario {
         if (normalizado.equalsIgnoreCase("easy")) normalizado = "Easy";
         else if (normalizado.equalsIgnoreCase("medium")) normalizado = "Medium";
         else if (normalizado.equalsIgnoreCase("hard")) normalizado = "Hard";
+        else if (normalizado.equalsIgnoreCase("multi")) normalizado = "Multi";
         return servicioDificultad.obtenerPorNombre(normalizado);
     }
 
@@ -121,6 +124,9 @@ public class ServicioCuestionarioImpl implements ServicioCuestionario {
             case "hard":
                 cuestionario.setVidas(3);
                 break;
+            case "multi":
+                cuestionario.setVidas(4);
+                break;
             default:
             cuestionario.setVidas(5);
             break;
@@ -135,5 +141,29 @@ public class ServicioCuestionarioImpl implements ServicioCuestionario {
     @Override
     public List<String> obtenerTodasLasCategorias() {
         return repositorioCuestionario.obtenerTodasLasCategorias();
+    }
+
+    @Override
+    public List<Cuestionario> obtenerCuestionariosSugeridos(int limite) {
+        List<Cuestionario> todosCuestionarios = repositorioCuestionario.buscarTodo();
+        Collections.shuffle(todosCuestionarios);
+        return todosCuestionarios.stream()
+                .limit(limite)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Cuestionario> obtenerCuestionariosFiltrados(HttpServletRequest request, String dificultad, String categoria) {
+        boolean showFiltered = request.getParameterMap().containsKey("dificultad") || request.getParameterMap().containsKey("categoria");
+        if (showFiltered) {
+            String dificultadFilter = (dificultad != null && dificultad.isEmpty()) ? null : dificultad;
+            String categoriaFilter = (categoria != null && categoria.isEmpty()) ? null : categoria;
+
+            if (dificultadFilter == null && categoriaFilter == null) {
+                return repositorioCuestionario.buscarTodo();
+            } else {
+                return repositorioCuestionario.filtrarPorDificultadYCategoria(dificultadFilter, categoriaFilter);
+            }
+        } else return null;
     }
 }

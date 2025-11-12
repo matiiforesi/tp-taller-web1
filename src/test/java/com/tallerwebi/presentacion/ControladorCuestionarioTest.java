@@ -119,7 +119,7 @@ public class ControladorCuestionarioTest {
     @Test
     public void debeManejarRespuestaCategoriasConListaVacia() {
         RespuestaCategorias respuestaCategorias = new RespuestaCategorias();
-        respuestaCategorias.setTriviaCategories(Arrays.asList());
+        respuestaCategorias.setTriviaCategories(List.of());
         when(servicioTriviaMock.obtenerCategorias()).thenReturn(respuestaCategorias);
         Model model = new ExtendedModelMap();
 
@@ -128,6 +128,42 @@ public class ControladorCuestionarioTest {
         assertThat(viewName, equalToIgnoringCase("cuestionario_form"));
         assertThat(model.getAttribute("cuestionario"), is(notNullValue()));
         verify(servicioTriviaMock, times(1)).obtenerCategorias();
+    }
+
+    @Test
+    public void debeCrearCuestionarioConDificultadMulti() {
+        Cuestionario cuestionario = new Cuestionario();
+        cuestionario.setNombre("Trivia Multi Dificultad");
+        cuestionario.setDescripcion("Preguntas de todas las dificultades");
+
+        doNothing().when(servicioCuestionarioMock).crearCuestionario(
+                anyString(), anyString(), anyInt(), anyInt(), anyString()
+        );
+
+        String viewName = controladorCuestionario.createTrivia(cuestionario, 10, 25, "multi");
+
+        assertThat(viewName, equalToIgnoringCase("redirect:/cuestionario/list"));
+        verify(servicioCuestionarioMock, times(1)).crearCuestionario(
+                "Trivia Multi Dificultad", "Preguntas de todas las dificultades", 10, 25, "multi"
+        );
+    }
+
+    @Test
+    public void debeCrearCuestionarioConDificultadMultiCaseInsensitive() {
+        Cuestionario cuestionario = new Cuestionario();
+        cuestionario.setNombre("Trivia Multi");
+        cuestionario.setDescripcion("Preguntas variadas");
+
+        doNothing().when(servicioCuestionarioMock).crearCuestionario(
+                anyString(), anyString(), anyInt(), anyInt(), anyString()
+        );
+
+        String viewName = controladorCuestionario.createTrivia(cuestionario, 5, 22, "MULTI");
+
+        assertThat(viewName, equalToIgnoringCase("redirect:/cuestionario/list"));
+        verify(servicioCuestionarioMock, times(1)).crearCuestionario(
+                "Trivia Multi", "Preguntas variadas", 5, 22, "MULTI"
+        );
     }
 
     private Cuestionario crearCuestionarioMock(String nombre, String descripcion) {

@@ -43,11 +43,11 @@
 
         <!-- Cuestionarios aleatorios -->
         <div class="d-flex flex-wrap justify-content-center gap-3">
-            <div th:each="cuestionario : ${cuestionarios}" class="card text-center p-3" style="width: 14rem;">
+            <div th:each="cuestionario : ${cuestionarios}" class="card text-center p-3 d-flex flex-column" style="width: 14rem;">
                 <h5 th:text="${cuestionario.nombre}">Nombre del cuestionario</h5>
                 <p th:text="${cuestionario.descripcion}">Descripción</p>
                 <p><strong th:text="${cuestionario.categoria}">Categoría</strong></p>
-                <a th:href="@{/iniciar?(idCuestionario=${cuestionario.id})}" class="btn btn-primary">
+                <a th:href="@{/iniciar?(idCuestionario=${cuestionario.id})}" class="btn btn-primary mt-auto">
                     Ingresar
                 </a>
             </div>
@@ -85,11 +85,11 @@
                 <h2 class="mb-3">Resultados de Búsqueda</h2>
             </div>
             <div class="d-flex flex-wrap justify-content-center gap-3">
-                <div th:each="cuestionario : ${cuestionariosFiltrados}" class="card text-center p-3" style="width: 14rem;">
+                <div th:each="cuestionario : ${cuestionariosFiltrados}" class="card text-center p-3 d-flex flex-column" style="width: 14rem;">
                     <h5 th:text="${cuestionario.nombre}">Nombre del cuestionario</h5>
                     <p th:text="${cuestionario.descripcion}">Descripción</p>
                     <p><strong th:text="${cuestionario.categoria}">Categoría</strong></p>
-                    <a th:href="@{/iniciar?(idCuestionario=${cuestionario.id})}" class="btn btn-primary">
+                    <a th:href="@{/iniciar?(idCuestionario=${cuestionario.id})}" class="btn btn-primary mt-auto">
                         Ingresar
                     </a>
                 </div>

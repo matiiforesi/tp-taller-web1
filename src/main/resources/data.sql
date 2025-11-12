@@ -4,6 +4,7 @@ INSERT INTO Usuario(id, email, password, rol, activo, nombre, puntaje, monedas) 
 INSERT INTO Dificultad(id, nombre) VALUES (null, 'Easy');
 INSERT INTO Dificultad(id, nombre) VALUES (null, 'Medium');
 INSERT INTO Dificultad(id, nombre) VALUES (null, 'Hard');
+INSERT INTO Dificultad(id, nombre) VALUES (null, 'Multi');
 -- Items
 INSERT INTO Item (id,descripcion, tipoItem, precio) VALUES (null,'Duplicar puntaje', 'DUPLICAR_PUNTAJE', 150);
 INSERT INTO Item (id,descripcion, tipoItem, precio) VALUES (null,'Quitar dos incorrectas', 'ELIMINAR_DOS_INCORRECTAS', 100);
@@ -28,4 +29,3 @@ INSERT INTO Preguntas (id, enunciado, categoria, dificultad_id, respuesta_correc
 INSERT INTO Preguntas (id, enunciado, categoria, dificultad_id, respuesta_correcta, respuesta_incorrecta_1, respuesta_incorrecta_2, respuesta_incorrecta_3, cuestionario_id) VALUES
 (5, '¿Quién dirigió la película “Titanic”?', 'Entretenimiento', 3, 'James Cameron', 'Steven Spielberg', 'Ridley Scott', 'Christopher Nolan', 3),
 (6, '¿En qué año se estrenó “El Padrino”?', 'Entretenimiento', 3, '1972', '1980', '1969', '1975', 3);
-

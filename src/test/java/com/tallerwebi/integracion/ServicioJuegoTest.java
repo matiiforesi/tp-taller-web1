@@ -205,4 +205,58 @@ public class ServicioJuegoTest {
         cuestionario.setNombre("Prueba Cuestionario");
         return cuestionario;
     }
+
+    @Test
+    public void queUseDificultadIndividualDeCadaPreguntaEnCuestionarioMulti() {
+        Preguntas preguntaEasy = new Preguntas();
+        preguntaEasy.setId(1L);
+        preguntaEasy.setRespuestaCorrecta("Easy answer");
+        Dificultad dificultadEasy = new Dificultad();
+        dificultadEasy.setNombre("Easy");
+        preguntaEasy.setDificultad(dificultadEasy);
+
+        Preguntas preguntaMedium = new Preguntas();
+        preguntaMedium.setId(2L);
+        preguntaMedium.setRespuestaCorrecta("Medium answer");
+        Dificultad dificultadMedium = new Dificultad();
+        dificultadMedium.setNombre("Medium");
+        preguntaMedium.setDificultad(dificultadMedium);
+
+        Preguntas preguntaHard = new Preguntas();
+        preguntaHard.setId(3L);
+        preguntaHard.setRespuestaCorrecta("Hard answer");
+        Dificultad dificultadHard = new Dificultad();
+        dificultadHard.setNombre("Hard");
+        preguntaHard.setDificultad(dificultadHard);
+
+        when(servPregunta.obtenerPorId(1L)).thenReturn(preguntaEasy);
+        when(servPregunta.obtenerPorId(2L)).thenReturn(preguntaMedium);
+        when(servPregunta.obtenerPorId(3L)).thenReturn(preguntaHard);
+
+        when(servDificultad.calcularMultiplicador(dificultadEasy)).thenReturn(1);
+        when(servDificultad.calcularMultiplicador(dificultadMedium)).thenReturn(2);
+        when(servDificultad.calcularMultiplicador(dificultadHard)).thenReturn(3);
+
+        when(servConfigJuego.getInt("puntaje.base", 100)).thenReturn(100);
+        when(servConfigJuego.getInt("bonificacion.tiempo", 10)).thenReturn(10);
+        when(servConfigJuego.getInt("penalizacion.vida", 1)).thenReturn(1);
+
+        TimerPregunta timer = new TimerPregunta(10);
+
+        Integer puntajeEasy = servicioJuego.obtenerPuntaje(1L, "Easy answer", timer);
+        servicioJuego.reiniciarPuntaje();
+
+        Integer puntajeMedium = servicioJuego.obtenerPuntaje(2L, "Medium answer", timer);
+        servicioJuego.reiniciarPuntaje();
+
+        Integer puntajeHard = servicioJuego.obtenerPuntaje(3L, "Hard answer", timer);
+
+        assertEquals((100 + (10 * 10)) * 1, puntajeEasy);
+        assertEquals((100 + (10 * 10)) * 2, puntajeMedium);
+        assertEquals((100 + (10 * 10)) * 3, puntajeHard);
+
+        verify(servDificultad, times(1)).calcularMultiplicador(dificultadEasy);
+        verify(servDificultad, times(1)).calcularMultiplicador(dificultadMedium);
+        verify(servDificultad, times(1)).calcularMultiplicador(dificultadHard);
+    }
 }

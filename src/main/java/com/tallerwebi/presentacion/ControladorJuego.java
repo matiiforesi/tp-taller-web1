@@ -42,17 +42,9 @@ public class ControladorJuego {
         }
 
         Usuario usuario = (Usuario) session.getAttribute("usuario");
-        if (usuario == null) {
-            return new ModelAndView("redirect:/login");
-        }
-
-        // servicioJuego.registrarIntento(usuario.getId(),cuestionario.getId());
 
         servicioJuego.reiniciarPuntaje();
         servicioJuego.inicializarVidas(cuestionario);
-
-//        int intentosPrevios = servicioJuego.obtenerIntentosPrevios(usuario.getId(), idCuestionario);
-//        session.setAttribute("intentosPrevios", intentosPrevios);
 
         session.setAttribute("preguntasMezcladas", preguntasMezcladas);
         session.setAttribute("indicePregunta", 0);
@@ -67,7 +59,8 @@ public class ControladorJuego {
         session.setAttribute("timer", timer);
         session.setAttribute("respondida", false);
 
-        return prepararVista(cuestionario, 0, timer, false, null, usuario, 0, 0, 0, cuestionario.getVidas());
+        return prepararVista(cuestionario, 0, timer, false, null, usuario,
+                0, 0, 0, cuestionario.getVidas(), false);
     }
 
     @RequestMapping("/siguiente")
@@ -100,18 +93,16 @@ public class ControladorJuego {
         if (vidasRestantes > 0 && nuevoIndice < cuestionario.getPreguntas().size()) {
             session.setAttribute("indicePregunta", nuevoIndice);
             return prepararVista(cuestionario, nuevoIndice, timer, false, null, usuario,
-                    puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes);
+                    puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, false);
         } else {
-            // servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas);
             Integer puntajeTotalSesion = (Integer) session.getAttribute("puntajeTotal");
             int monedasCuestionario = (int) Math.floor(puntajeTotalSesion * 0.1);
-            // servicioJuego.setPuntajeTotal(puntajeTotalSesion);
+
             servicioJuego.registrarIntento(usuario.getId(), cuestionario.getId(), puntajeTotalSesion);
             servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas, puntajeTotalSesion);
 
             servicioJuego.asignarMonedas(usuario, puntajeTotalSesion);
 
-            //usuario.setPuntaje(usuario.getPuntaje() + puntajeTotalSesion);
             session.setAttribute("usuario", usuario);
 
             session.removeAttribute("puntajeTotal");
@@ -136,18 +127,14 @@ public class ControladorJuego {
     public ModelAndView validarPregunta(@PathVariable("idCuestionario") Long idCuestionario,
                                         @RequestParam Long idPregunta,
                                         @RequestParam String respuesta,
-                                        @RequestParam(required = false) String tiempoAgotado,
+                                        @RequestParam String tiempoAgotado,
                                         HttpSession session) {
         Cuestionario cuestionario = servicioJuego.obtenerCuestionario(idCuestionario);
         List<Preguntas> preguntasMezcladas = (List<Preguntas>) session.getAttribute("preguntasMezcladas");
         cuestionario.setPreguntas(preguntasMezcladas);
         TimerPregunta timer = (TimerPregunta) session.getAttribute("timer");
 
-        if (timer == null || timer.tiempoAgotado()) {
-//            ModelMap errorModel = new ModelMap();
-//            errorModel.put("mensaje", "Tiempo agotado");
-//            errorModel.put("idCuestionario", idCuestionario);
-//            return new ModelAndView("tiempo-agotado", errorModel);
+        if (tiempoAgotado.equals("true")) {
             Integer indicePregunta = (Integer) session.getAttribute("indicePregunta");
             Integer puntajeTotal = (Integer) session.getAttribute("puntajeTotal");
             Integer preguntasErradas = (Integer) session.getAttribute("preguntasErradas");
@@ -163,6 +150,11 @@ public class ControladorJuego {
 
             vidasRestantes--;
             preguntasErradas++;
+
+            session.setAttribute("vidasRestantes", vidasRestantes);
+            session.setAttribute("preguntasErradas", preguntasErradas);
+            session.setAttribute("puntajeTotal", puntajeTotal);
+            session.setAttribute("respondida", true);
 
             if (vidasRestantes <= 0) {
                 int monedasCuestionario = (int) Math.floor(puntajeTotal * 0.1);
@@ -188,15 +180,8 @@ public class ControladorJuego {
                 return new ModelAndView("final_partida", model);
             }
 
-            session.setAttribute("vidasRestantes", vidasRestantes);
-            session.setAttribute("preguntasErradas", preguntasErradas);
-            session.setAttribute("puntajeTotal", puntajeTotal);
-            session.setAttribute("respondida", false);
-
-            timer.reiniciar();
-            session.setAttribute("timer", timer);
-
-            return new ModelAndView("redirect:../siguiente");
+            return prepararVista(cuestionario, indicePregunta, timer, true, false, usuario,
+                    puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, true);
         }
 
         Integer indicePregunta = (Integer) session.getAttribute("indicePregunta");
@@ -212,18 +197,13 @@ public class ControladorJuego {
         if (preguntasErradas == null) preguntasErradas = 0;
         if (vidasRestantes == null) vidasRestantes = cuestionario.getVidas();
 
-        if ("true".equals(tiempoAgotado)) {
-            vidasRestantes--;
-            preguntasErradas++;
-        }
-
         boolean esCorrecta = servicioJuego.validarRespuesta(respuesta, idPregunta);
+
         puntajeTotal = servicioJuego.obtenerPuntaje(idPregunta, respuesta, timer);
         servicioJuego.setPuntajeTotal(puntajeTotal);
+
         Integer puntajePenalizado = servicioJuego.calcularPenalizacion(usuario.getId(), cuestionario.getId(), puntajeTotal);
         puntajeTotal = puntajePenalizado;
-        // servicioJuego.setPuntajeTotal(puntajeTotal);
-        // Integer puntajePenalizado=servicioJuego.calcularPenalizacion(usuario.getId(), cuestionario.getId());
 
         if (esCorrecta) preguntasCorrectas++;
         else {
@@ -240,12 +220,7 @@ public class ControladorJuego {
 
         if (vidasRestantes <= 0) {
             int monedasCuestionario = (int) Math.floor(puntajeTotal * 0.1);
-//            int intentosPrevios = (Integer) session.getAttribute("intentosPrevios");
-//            Integer puntajePenalizado = (intentosPrevios == 0) ? puntajeTotal : puntajeTotal / (1 + intentosPrevios);
-//
-//            servicioJuego.setPuntajeTotal(puntajeTotal);
-//            servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas, puntajePenalizado);
-//            Integer puntajePenalizado = servicioJuego.calcularPenalizacion(usuario.getId(), idCuestionario, puntajeTotal);
+
             servicioJuego.registrarIntento(usuario.getId(), idCuestionario, puntajeTotal);
             servicioJuego.actualizarPuntajeYCrearHistorial(usuario, cuestionario, preguntasCorrectas, preguntasErradas, puntajePenalizado);
             servicioJuego.asignarMonedas(usuario, puntajeTotal);
@@ -263,27 +238,21 @@ public class ControladorJuego {
             model.put("cuestionario", cuestionario);
             model.put("usuario", usuario);
 
-//            session.removeAttribute("indicePregunta");
-//            session.removeAttribute("puntajeTotal");
-//            session.removeAttribute("preguntasCorrectas");
-//            session.removeAttribute("preguntasErradas");
-//            session.removeAttribute("idCuestionario");
-//            session.removeAttribute("vidasRestantes");
             session.invalidate();
             return new ModelAndView("final_partida", model);
         }
 
         return prepararVista(cuestionario, indicePregunta, timer, true, esCorrecta, usuario,
-                puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes);
+                puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, false);
     }
 
-    @RequestMapping("/tiempo-agotado")
-    public ModelAndView tiempoAgotado(@SessionAttribute("idCuestionario") Long idCuestionario) {
-        ModelMap model = new ModelMap();
-        model.put("mensaje", "Se acabo el tiempo de la pregunta");
-        model.put("idCuestionario", idCuestionario);
-        return new ModelAndView("tiempo-agotado", model);
-    }
+//    @RequestMapping("/tiempo-agotado")
+//    public ModelAndView tiempoAgotado(@SessionAttribute("idCuestionario") Long idCuestionario) {
+//        ModelMap model = new ModelMap();
+//        model.put("mensaje", "Se acabo el tiempo de la pregunta");
+//        model.put("idCuestionario", idCuestionario);
+//        return new ModelAndView("tiempo-agotado", model);
+//    }
 
     private ModelAndView prepararVista(Cuestionario cuestionario,
                                        Integer indice,
@@ -294,7 +263,8 @@ public class ControladorJuego {
                                        Integer puntajeTotal,
                                        Integer preguntasCorrectas,
                                        Integer preguntasErradas,
-                                       Integer vidasRestantes) {
+                                       Integer vidasRestantes,
+                                       Boolean tiempoAgotado) {
 
         ModelMap model = new ModelMap();
         Preguntas pregunta = servicioJuego.obtenerPregunta(cuestionario, indice);
@@ -320,6 +290,7 @@ public class ControladorJuego {
         model.put("tiempoRestante", timer.segundosRestantes());
         model.put("idCuestionario", cuestionario.getId());
         model.put("vidasRestantes", vidasRestantes);
+        model.put("tiempoAgotado", tiempoAgotado);
 
         int monedasCuestionario = (int) Math.floor(puntajeTotal * 0.1);
         model.put("monedas", monedasCuestionario);

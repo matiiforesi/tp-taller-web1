@@ -14,9 +14,9 @@
 <div class="contenedor_general w-100">
 
     <div id="contenedor-pregunta">
-        <div>⏰ Tiempo restante: <span id="timer" th:text="${tiempoRestante}"></span> segundos</div>
-        <div>❤️ Vidas restantes: <span th:text="${vidasRestantes}"></div>
-        <div>💰 Monedas ganadas: <span th:text="${monedas}"></span></div>
+        <div>Tiempo restante: <span id="timer" th:text="${tiempoRestante}"></span> segundos</div>
+        <div>Vidas restantes: <span th:text="${vidasRestantes}"></span></div>
+        <div>Monedas ganadas: <span th:text="${monedas}"></span></div>
 
         <h2 th:text="${pregunta.enunciado}"></h2>
 
@@ -36,20 +36,33 @@
 
         <!--Respuestas-->
         <div th:if="${respondida}">
-            <div th:if="${esCorrecta}" style="color: green; font-weight: bold;">
-                ✅ ¡Respuesta correcta!
-                <p>Puntaje Total <span th:text="${puntajeTotal}"></span></p>
+            <!-- Tiempo agotado -->
+            <div th:if="${tiempoAgotado}"
+                 style="color: orange; font-weight: bold; border: 2px solid orange; padding: 20px; border-radius: 8px; background-color: #fff3cd;">
+                ¡Se agotó el tiempo!
+                <p>Puntaje Total: <span th:text="${puntajeTotal}"></span></p>
                 <form th:action="@{/siguiente}" method="post">
-                    <!--<input type="hidden" name="indicePregunta" th:value="${indicePregunta}">-->
-                    <button type="submit" class="btn btn-primary">Siguiente</button>
+                    <button type="submit" class="btn btn-warning">Siguiente</button>
                 </form>
             </div>
 
-            <div th:if="${!esCorrecta}" style="color: red; font-weight: bold;">
-                ❌ Respuesta incorrecta.
-                <p>Puntaje Total <span th:text="${puntajeTotal}"></span></p>
+            <!-- Respuesta correcta -->
+            <div th:if="${!tiempoAgotado and esCorrecta}"
+                 style="color: #155724; font-weight: bold; border: 2px solid #28a745; padding: 20px; border-radius: 8px; background-color: #d4edda;">
+                ¡Respuesta correcta!
+                <p>Puntaje Total: <span th:text="${puntajeTotal}"></span></p>
                 <form th:action="@{/siguiente}" method="post">
-                    <button type="submit" class="btn btn-primary">Siguiente</button>
+                    <button type="submit" class="btn btn-success">Siguiente</button>
+                </form>
+            </div>
+
+            <!-- Respuesta incorrecta -->
+            <div th:if="${!tiempoAgotado and !esCorrecta}"
+                 style="color: #721c24; font-weight: bold; border: 2px solid #dc3545; padding: 20px; border-radius: 8px; background-color: #f8d7da;">
+                Respuesta incorrecta.
+                <p>Puntaje Total: <span th:text="${puntajeTotal}"></span></p>
+                <form th:action="@{/siguiente}" method="post">
+                    <button type="submit" class="btn btn-danger">Siguiente</button>
                 </form>
             </div>
         </div>
@@ -74,51 +87,31 @@
 
                 if (form) form.style.display = "none";
 
-                const aviso = document.createElement("div");
-                aviso.className = "card text-center animate__animated animate__fadeIn";
-                aviso.style.cssText = `
-                    max-width: 450px;
-                    margin: 40px auto;
-                    padding: 25px;
-                    border: 2px solid #dc3545;
-                    background-color: #ffe6e6;
-                    box-shadow: 0 0 10px rgba(0,0,0,0.25);
-                `;
-                aviso.innerHTML = `
-                    <h3 style="color: #d9534f;">⏰ Tiempo agotado</h3>
-                    <p>Tu respuesta no fue enviada a tiempo.</p>
-                    <p id="contador-redir">Pasando a la siguiente pregunta en <b>3</b> segundos...</p>
-                `;
-                document.getElementById("contenedor-pregunta").appendChild(aviso);
+                const tempForm = document.createElement("form");
+                tempForm.method = "POST";
+                tempForm.action = `/spring/juego/${idCuestionario}/validar`;
 
-                const data = new FormData();
-                data.append("idPregunta", idPregunta);
-                data.append("respuesta", "");
-                data.append("tiempoAgotado", "true");
+                const inputPregunta = document.createElement("input");
+                inputPregunta.type = "hidden";
+                inputPregunta.name = "idPregunta";
+                inputPregunta.value = idPregunta;
 
-                let segundos = 3;
-                const contadorSpan = aviso.querySelector("#contador-redir b");
+                const inputRespuesta = document.createElement("input");
+                inputRespuesta.type = "hidden";
+                inputRespuesta.name = "respuesta";
+                inputRespuesta.value = "";
 
-                const countdown = setInterval(() => {
-                    segundos--;
-                    contadorSpan.textContent = segundos;
+                const inputTiempo = document.createElement("input");
+                inputTiempo.type = "hidden";
+                inputTiempo.name = "tiempoAgotado";
+                inputTiempo.value = "true";
 
-                    if (segundos <= 0) {
-                        clearInterval(countdown);
+                tempForm.appendChild(inputPregunta);
+                tempForm.appendChild(inputRespuesta);
+                tempForm.appendChild(inputTiempo);
 
-                        fetch(`/spring/juego/${idCuestionario}/validar`, {
-                            method: "POST",
-                            body: data
-                        })
-                            .then(() => {
-                                window.location.href = "/spring/siguiente";
-                            })
-                            .catch(err => {
-                                console.error("Error al validar automáticamente:", err);
-                                window.location.href = "/spring/siguiente";
-                            });
-                    }
-                }, 1000);
+                document.body.appendChild(tempForm);
+                tempForm.submit();
             }
         }, 1000);
     }

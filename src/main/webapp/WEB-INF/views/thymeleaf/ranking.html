@@ -49,9 +49,10 @@
 </head>
 <body>
 
-<!-- Tabla General -->
+<!-- Ranking General -->
 <div th:if="${rankingGeneral != null}">
     <h1>Ranking General</h1>
+
     <table th:if="${!#lists.isEmpty(rankingGeneral)}">
         <thead>
         <tr>
@@ -61,36 +62,14 @@
         </thead>
         <tbody>
         <tr th:each="fila : ${rankingGeneral}">
-            <td th:text="${fila[1]}">Nombre</td>
-            <td th:text="${fila[2]}">Puntaje</td>
+            <td th:text="${fila.nombreUsuario}">Nombre</td>
+            <td th:text="${fila.puntajeTotal}">Puntaje</td>
         </tr>
         </tbody>
     </table>
+
     <p th:if="${#lists.isEmpty(rankingGeneral)}">No hay usuarios para mostrar.</p>
 </div>
-
-<!--<div th:if="${rankingCuestionario != null}">-->
-<!--    <h1 th:text="'Cuestionario de ' + ${nombreCuestionario}"></h1>-->
-<!--    <table th:if="${!#lists.isEmpty(rankingCuestionario)}">-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--            <th>Jugador</th>-->
-<!--            <th>Puntaje</th>-->
-<!--            <th>Correctas</th>-->
-<!--            <th>Erradas</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr th:each="historial : ${rankingCuestionario}">-->
-<!--            <td th:text="${historial.nombreUsuario}">Usuario</td>-->
-<!--            <td th:text="${historial.puntaje}">Puntaje</td>-->
-<!--            <td th:text="${historial.preguntasCorrectas}">Correctas</td>-->
-<!--            <td th:text="${historial.preguntasErradas}">Erradas</td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
-<!--    <p th:if="${#lists.isEmpty(rankingCuestionario)}">No hay resultados para este cuestionario.</p>-->
-<!--</div>-->
 
 <!-- Ranking Filtrado -->
 <div th:if="${rankingCuestionario != null}">
@@ -108,11 +87,11 @@
         </thead>
         <tbody>
         <tr th:each="fila : ${rankingCuestionario}">
-            <td th:text="${fila[1]}">Usuario</td>
-            <td th:text="${fila[2]}">Puntaje</td>
-            <td th:text="${fila[3]}">Correctas</td>
-            <td th:text="${fila[4]}">Erradas</td>
-            <td th:text="${fila[5]}">Intentos</td>
+            <td th:text="${fila.nombreUsuario}">Usuario</td>
+            <td th:text="${fila.puntajeTotal}">Puntaje</td>
+            <td th:text="${fila.preguntasCorrectas}">Correctas</td>
+            <td th:text="${fila.preguntasErradas}">Erradas</td>
+            <td th:text="${fila.numeroIntentos}">Intentos</td>
         </tr>
         </tbody>
     </table>

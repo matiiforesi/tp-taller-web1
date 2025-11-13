@@ -62,10 +62,7 @@ public class ControladorJuego {
         session.setAttribute("timer", timer);
         session.setAttribute("respondida", false);
 
-
-
-        return prepararVista(cuestionario, 0, timer, false, null, usuario, 0, 0, 0, cuestionario.getVidas(),false,session);
-
+        return prepararVista(cuestionario, 0, timer, false, null, usuario, 0, 0, 0, cuestionario.getVidas(), false, session);
     }
 
     @RequestMapping("/siguiente")
@@ -98,7 +95,7 @@ public class ControladorJuego {
         if (vidasRestantes > 0 && nuevoIndice < cuestionario.getPreguntas().size()) {
             session.setAttribute("indicePregunta", nuevoIndice);
             return prepararVista(cuestionario, nuevoIndice, timer, false, null, usuario,
-                    puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, false,session);
+                    puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, false, session);
 
         } else {
             Integer puntajeTotalSesion = (Integer) session.getAttribute("puntajeTotal");
@@ -191,19 +188,16 @@ public class ControladorJuego {
                 session.invalidate();
                 return new ModelAndView("final_partida", model);
             }
-          /*  session.setAttribute("vidasRestantes", vidasRestantes);
-            session.setAttribute("preguntasErradas", preguntasErradas);
-            session.setAttribute("puntajeTotal", puntajeTotal);
-            session.setAttribute("respondida", false);*/
-
-
+//            session.setAttribute("vidasRestantes", vidasRestantes);
+//            session.setAttribute("preguntasErradas", preguntasErradas);
+//            session.setAttribute("puntajeTotal", puntajeTotal);
+//            session.setAttribute("respondida", false);
 
             timer.reiniciar();
             session.setAttribute("timer", timer);
 
             return prepararVista(cuestionario, indicePregunta, timer, true, false, usuario,
-                    puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, true,session);
-
+                    puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, true, session);
         }
 
         Integer indicePregunta = (Integer) session.getAttribute("indicePregunta");
@@ -265,9 +259,7 @@ public class ControladorJuego {
             return new ModelAndView("final_partida", model);
         }
         return prepararVista(cuestionario, indicePregunta, timer, true, esCorrecta, usuario,
-
-                puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, false,session);
-
+                puntajeTotal, preguntasCorrectas, preguntasErradas, vidasRestantes, false, session);
     }
 
 //    @RequestMapping("/tiempo-agotado")
@@ -288,7 +280,6 @@ public class ControladorJuego {
         return servicioJuego.obtenerOpcionesFiltradas(pregunta, idUsuario, trampa);
     }
 
-
     private ModelAndView prepararVista(Cuestionario cuestionario,
                                        Integer indice,
                                        TimerPregunta timer,
@@ -298,10 +289,9 @@ public class ControladorJuego {
                                        Integer puntajeTotal,
                                        Integer preguntasCorrectas,
                                        Integer preguntasErradas,
-
                                        Integer vidasRestantes,
-                                       Boolean tiempoAgotado,HttpSession session) {
-
+                                       Boolean tiempoAgotado,
+                                       HttpSession session) {
 
         ModelMap model = new ModelMap();
         Preguntas pregunta = servicioJuego.obtenerPregunta(cuestionario, indice);
@@ -313,6 +303,7 @@ public class ControladorJuego {
                 pregunta.getRespuestaIncorrecta3()
         );
         Collections.shuffle(opciones);*/
+
         String trampaStr = (String) session.getAttribute("trampaUsada");
         TIPO_ITEMS trampaActivada = (trampaStr != null && !trampaStr.isEmpty())
                 ? TIPO_ITEMS.valueOf(trampaStr)
@@ -321,7 +312,6 @@ public class ControladorJuego {
         List<String> opciones = servicioJuego.obtenerOpcionesFiltradas(pregunta, usuario.getId(), trampaActivada);
         model.put("trampaUsada", trampaStr);
         session.removeAttribute("trampaUsada");
-
 
         model.put("cuestionario", cuestionario);
         model.put("pregunta", pregunta);

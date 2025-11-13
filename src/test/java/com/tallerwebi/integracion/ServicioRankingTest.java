@@ -1,6 +1,7 @@
 package com.tallerwebi.integracion;
 
 import com.tallerwebi.dominio.*;
+import com.tallerwebi.dominio.dto.RankingGeneralDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,7 +35,7 @@ public class ServicioRankingTest {
         when(repoHistorial.buscarRankingGeneral()).thenReturn(Collections.emptyList());
     }
 
-    private List<Object[]> whenObtenerRankingGeneral() {
+    private List<RankingGeneralDTO> whenObtenerRankingGeneral() {
         return servicioRanking.obtenerRankingGeneral();
     }
 
@@ -88,7 +89,7 @@ public class ServicioRankingTest {
     @Test
     public void queDevuelvaListVacioSiNoHayIntentosRegistrados() {
         givenRepoSinIntentosRegistrados();
-        List<Object[]> ranking = whenObtenerRankingGeneral();
+        List<RankingGeneralDTO> ranking = whenObtenerRankingGeneral();
         thenRankingVacio(ranking);
     }
 
@@ -96,11 +97,11 @@ public class ServicioRankingTest {
         when(repoHistorial.buscarRankingGeneral()).thenReturn(Collections.emptyList());
     }
 
-    private List<Object[]> whenObtieneRankingGeneral() {
+    private List<RankingGeneralDTO> whenObtieneRankingGeneral() {
         return servicioRanking.obtenerRankingGeneral();
     }
 
-    private void thenRankingVacio(List<Object[]> ranking) {
+    private void thenRankingVacio(List<RankingGeneralDTO> ranking) {
         assertEquals(0, ranking.size());
     }
 }

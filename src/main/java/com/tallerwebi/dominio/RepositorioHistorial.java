@@ -1,5 +1,8 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.dto.RankingCuestionarioDTO;
+import com.tallerwebi.dominio.dto.RankingGeneralDTO;
+
 import java.util.List;
 
 public interface RepositorioHistorial {
@@ -10,13 +13,9 @@ public interface RepositorioHistorial {
 
     void modificar(HistorialCuestionario historialCuestionario);
 
-    List<Object[]> buscarRankingGeneral();
+    List<RankingGeneralDTO> buscarRankingGeneral();
 
-//    List<HistorialCuestionario> buscarRankingCuestionarioPorNombre(String nombreCuestionario);
+    List<RankingCuestionarioDTO> buscarRankingCuestionarioPorId(Long idCuestionario);
 
-//    List<HistorialCuestionario> buscarRankingCuestionarioPorId(Long idCuestionario);
-
-    List<Object[]> buscarRankingCuestionarioPorId(Long idCuestionario);
-
-    List<Object[]> buscarRankingCuestionarioPorNombre(String nombreCuestionario);
+    List<RankingCuestionarioDTO> buscarRankingCuestionarioPorNombre(String nombreCuestionario);
 }

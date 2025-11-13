@@ -1,5 +1,7 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.dto.RankingCuestionarioDTO;
+import com.tallerwebi.dominio.dto.RankingGeneralDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,27 +22,17 @@ public class ServicioRankingImpl implements ServicioRanking {
     }
 
     @Override
-    public List<Object[]> obtenerRankingGeneral() {
+    public List<RankingGeneralDTO> obtenerRankingGeneral() {
         return repositorioHistorial.buscarRankingGeneral();
     }
 
-//    @Override
-//    public List<HistorialCuestionario> obtenerRankingCuestionarioPorNombre(String nombreCuestionario) {
-//        return repositorioHistorial.buscarRankingCuestionarioPorNombre(nombreCuestionario);
-//    }
-//
-//    @Override
-//    public List<HistorialCuestionario> obtenerRankingCuestionarioPorId(Long id) {
-//        return repositorioHistorial.buscarRankingCuestionarioPorId(id);
-//    }
-
     @Override
-    public List<Object[]> obtenerRankingCuestionarioPorId(Long idCuestionario) {
+    public List<RankingCuestionarioDTO> obtenerRankingCuestionarioPorId(Long idCuestionario) {
         return repositorioHistorial.buscarRankingCuestionarioPorId(idCuestionario);
     }
 
     @Override
-    public List<Object[]> obtenerRankingCuestionarioPorNombre(String nombreCuestionario) {
+    public List<RankingCuestionarioDTO> obtenerRankingCuestionarioPorNombre(String nombreCuestionario) {
         return repositorioHistorial.buscarRankingCuestionarioPorNombre(nombreCuestionario);
     }
 }

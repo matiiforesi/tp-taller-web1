@@ -1,16 +1,15 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.dto.RankingCuestionarioDTO;
+import com.tallerwebi.dominio.dto.RankingGeneralDTO;
+
 import java.util.List;
 
 public interface ServicioRanking {
 
-    List<Object[]> obtenerRankingGeneral();
+    List<RankingGeneralDTO> obtenerRankingGeneral();
 
-//    List<HistorialCuestionario> obtenerRankingCuestionarioPorNombre(String nombreCuestionario);
+    List<RankingCuestionarioDTO> obtenerRankingCuestionarioPorId(Long idCuestionario);
 
-//    List<HistorialCuestionario> obtenerRankingCuestionarioPorId(Long idCuestionario);
-
-    List<Object[]> obtenerRankingCuestionarioPorId(Long idCuestionario);
-
-    List<Object[]> obtenerRankingCuestionarioPorNombre(String nombreCuestionario);
+    List<RankingCuestionarioDTO> obtenerRankingCuestionarioPorNombre(String nombreCuestionario);
 }

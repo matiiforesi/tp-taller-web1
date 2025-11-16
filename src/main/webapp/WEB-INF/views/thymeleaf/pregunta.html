@@ -14,24 +14,88 @@
 <div class="contenedor_general w-100">
 
     <div id="contenedor-pregunta">
-        <div>Tiempo restante: <span id="timer" th:text="${tiempoRestante}"></span> segundos</div>
-        <div>Vidas restantes: <span th:text="${vidasRestantes}"></span></div>
-        <div>Monedas ganadas: <span th:text="${monedas}"></span></div>
+        <div class="d-flex justify-content-around mb-4">
+            <!-- Tiempo -->
+            <div class="card text-center shadow-sm border-warning" style="width: 10rem;">
+                <div class="card-body">
+                    <h6 class="card-title text-warning fw-bold"> Tiempo</h6>
+                    <span id="timer" th:text="${tiempoRestante}" class="fs-4 fw-bold text-dark"></span> s
+                </div>
+            </div>
 
+            <!-- Vidas -->
+            <div class="card text-center shadow-sm border-danger" style="width: 10rem;">
+                <div class="card-body">
+                    <h6 class="card-title text-danger fw-bold"> Vidas</h6>
+                    <span th:text="${vidasRestantes}" class="fs-4 fw-bold text-dark"></span>
+                </div>
+            </div>
+
+            <!-- Monedas -->
+            <div class="card text-center shadow-sm border-success" style="width: 10rem;">
+                <div class="card-body">
+                    <h6 class="card-title text-success fw-bold"> Monedas</h6>
+                    <span th:text="${monedas}" class="fs-4 fw-bold text-dark"></span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="alert alert-info text-center shadow-sm fs-4 fw-bold">
         <h2 th:text="${pregunta.enunciado}"></h2>
-
+        </div>
         <form id="formulario" th:if="${!respondida}"
               th:action="@{'/juego/' + ${cuestionario.id} + '/validar'}"
               method="post">
             <input type="hidden" name="idPregunta" th:value="${pregunta.id}"/>
-            <div class="mb-3">
-                <label for="trampaActivada" class="form-label">¿Querés usar una trampa?</label>
+           <!-- <div class="mb-3">
+                <label for="trampaActivada" class="form-label">¿Querés usar una ayuda?</label>
                 <select name="trampaActivada" id="trampaActivada" class="form-select">
-                    <option value="">Sin trampa</option>
+                    <option value="">Sin ayuda</option>
                     <option value="DUPLICAR_PUNTAJE" th:selected="${trampaUsada == 'DUPLICAR_PUNTAJE'}">Duplicar puntaje</option>
                     <option value="ELIMINAR_DOS_INCORRECTAS" th:selected="${trampaUsada == 'ELIMINAR_DOS_INCORRECTAS'}">Eliminar dos incorrectas</option>
                 </select>
+            </div>-->
+            <div class="mb-3" th:if="${ayudasDisponibles!=null and !ayudasDisponibles.isEmpty()}">
+                <label class="form-label fw-bold">¿Querés usar una ayuda?</label>
+                <div class="row g-3">
+
+                    <!-- Sin ayuda -->
+                    <div class="col-md-4" >
+                        <input type="radio" class="btn-check" name="trampaActivada" id="sinAyuda" value=""
+                               th:checked="${trampaUsada == null}">
+                        <label class="card btn btn-outline-secondary w-100" for="sinAyuda">
+                            <div class="card-body text-center">
+                                 Sin ayuda
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Duplicar puntaje -->
+                    <div class="col-md-4">
+                        <input type="radio" class="btn-check" name="trampaActivada" id="duplicar" value="DUPLICAR_PUNTAJE"
+                               th:checked="${trampaUsada == 'DUPLICAR_PUNTAJE'}">
+                        <label class="card btn btn-outline-success w-100" for="duplicar">
+                            <div class="card-body text-center">
+                                 Duplicar puntaje
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Eliminar dos incorrectas -->
+                    <div class="col-md-4">
+                        <input type="radio" class="btn-check" name="trampaActivada" id="eliminar" value="ELIMINAR_DOS_INCORRECTAS"
+                               th:checked="${trampaUsada == 'ELIMINAR_DOS_INCORRECTAS'}">
+                        <label class="card btn btn-outline-warning w-100" for="eliminar">
+                            <div class="card-body text-center">
+                                 Eliminar dos incorrectas
+                            </div>
+                        </label>
+                    </div>
+
+                </div>
             </div>
+
 
             <div class="d-grid gap-3">
                 <button type="submit" name="respuesta" th:value="${opcion}"
@@ -54,10 +118,10 @@
                 </form>
             </div>
             <div th:if="${trampaUsada == 'DUPLICAR_PUNTAJE'}">
-                🧨 ¡Usaste la trampa de duplicar puntaje!
+                 ¡Usaste la ayuda de duplicar puntaje!
             </div>
             <div th:if="${trampaUsada == 'ELIMINAR_DOS_INCORRECTAS'}">
-                🧨 ¡Usaste la trampa de eliminar dos opciones incorrectas!
+                 ¡Usaste la ayuda de eliminar dos opciones incorrectas!
             </div>
 
            <!-- <div th:if="${esCorrecta}" style="color: green; font-weight: bold;">
@@ -137,42 +201,44 @@
             }
         }, 1000);
     }
-    document.getElementById("trampaActivada").addEventListener("change", async function () {
-    const tipoTrampa = this.value;
-    if (tipoTrampa === "ELIMINAR_DOS_INCORRECTAS") {
-        const idPregunta = document.querySelector("input[name='idPregunta']").value;
-        const idUsuario = [[${usuario.id}]];
+    document.querySelectorAll("input[name='trampaActivada']").forEach(radio => {
+    radio.addEventListener("change", async function () {
+        const tipoTrampa = this.value;
 
-        const response = await fetch("/spring/juego/opciones-filtradas", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({
-                idPregunta: idPregunta,
-                idUsuario: idUsuario,
-                trampaActivada: tipoTrampa
-            })
-        });
+        if (tipoTrampa === "ELIMINAR_DOS_INCORRECTAS") {
+            const idPregunta = document.querySelector("input[name='idPregunta']").value;
+            const idUsuario = [[${usuario.id}]];
 
-        const opciones = await response.json();
-        const contenedor = document.querySelector(".d-grid");
-        contenedor.innerHTML = "";
+            const response = await fetch("/spring/juego/opciones-filtradas", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    idPregunta: idPregunta,
+                    idUsuario: idUsuario,
+                    trampaActivada: tipoTrampa
+                })
+            });
 
-        opciones.forEach(opcion => {
-            const button = document.createElement("button");
-            button.type = "submit";
-            button.name = "respuesta";
-            button.value = opcion;
-            button.className = "btn btn-outline-primary btn-lg";
-            button.innerHTML = `<span>${opcion}</span>`;
-            contenedor.appendChild(button);
-        });
+            const opciones = await response.json();
+            const contenedor = document.querySelector(".d-grid");
+            contenedor.innerHTML = "";
 
+            opciones.forEach(opcion => {
+                const button = document.createElement("button");
+                button.type = "submit";
+                button.name = "respuesta";
+                button.value = opcion;
+                button.className = "btn btn-outline-primary btn-lg";
+                button.innerHTML = `<span>${opcion}</span>`;
+                contenedor.appendChild(button);
+            });
 
-        const mensaje = document.createElement("div");
-        mensaje.className = "alert alert-warning mt-3";
-        mensaje.innerHTML = "🧨 Se eliminaron dos opciones incorrectas.";
-        document.getElementById("contenedor-pregunta").appendChild(mensaje);
-    }
+            const mensaje = document.createElement("div");
+            mensaje.className = "alert alert-warning mt-3";
+            mensaje.innerHTML = "Se eliminaron dos opciones incorrectas.";
+            document.getElementById("contenedor-pregunta").appendChild(mensaje);
+        }
+    });
 });
 
 </script>

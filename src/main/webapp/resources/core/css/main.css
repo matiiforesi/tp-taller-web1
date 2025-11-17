@@ -1,20 +1,29 @@
 body {
   padding-top: 5rem;
-  background-color: var(--periwinkle);
-}
-.starter-template {
-  padding: 3rem 1.5rem;
-  text-align: center;
+  background: var(--gradient-radial);
+  color: var(--fresh-sky);
 }
 
-h1{
-	color:#0000FF;
+h1 {
+  color: var(--fresh-sky);
 }
 
-h2{
-	color: var(--ultra-violet);
+h2 {
+  color: var(--fresh-sky);
 }
 
-.navbar-brand{
-    margin:0 2rem;
+.navbar {
+  background-color: var(--ink-black) !important;
+}
+
+.navbar-brand {
+  margin: 0 2rem;
+  color: var(--fresh-sky) !important;
+  font-weight: bold;
+}
+
+.card-cuestionario {
+  width: 14rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }

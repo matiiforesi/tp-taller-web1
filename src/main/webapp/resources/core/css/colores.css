@@ -1,12 +1,21 @@
-:root {
-  /* Colores */
+/*:root {
+
   --periwinkle: #c6d8ff;
   --ruddy-blue: #71a9f7;
   --ultra-violet: #6b5ca5;
   --byzantium: #72195a;
   --tyrian-purple: #4c1036;
 
-  /* Gradientes */
+
   --gradient-top: linear-gradient(0deg, var(--periwinkle), var(--ruddy-blue), var(--ultra-violet), var(--byzantium), var(--tyrian-purple));
   --gradient-radial: radial-gradient(var(--periwinkle), var(--ruddy-blue), var(--ultra-violet), var(--byzantium), var(--tyrian-purple));
+}*/
+:root {
+  --fresh-sky: #00a6fb;
+  --steel-blue: #0582ca;
+  --baltic-blue: #006494;
+  --deep-space-blue: #003554;
+  --ink-black: #051923;
+
+  --gradient-radial: radial-gradient(#00a6fb, #0582ca, #006494, #003554, #051923);
 }

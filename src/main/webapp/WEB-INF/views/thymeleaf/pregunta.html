@@ -74,7 +74,8 @@
                     <!-- Duplicar puntaje -->
                     <div class="col-md-4">
                         <input type="radio" class="btn-check" name="trampaActivada" id="duplicar" value="DUPLICAR_PUNTAJE"
-                               th:checked="${trampaUsada == 'DUPLICAR_PUNTAJE'}">
+                               th:checked="${trampaUsada == 'DUPLICAR_PUNTAJE'}"
+                               th:disabled="${duplicar_puntaje == 0}">
                         <label class="card btn btn-outline-success w-100" for="duplicar">
                             <div class="card-body text-center">
                                  Duplicar puntaje
@@ -85,7 +86,8 @@
                     <!-- Eliminar dos incorrectas -->
                     <div class="col-md-4">
                         <input type="radio" class="btn-check" name="trampaActivada" id="eliminar" value="ELIMINAR_DOS_INCORRECTAS"
-                               th:checked="${trampaUsada == 'ELIMINAR_DOS_INCORRECTAS'}">
+                               th:checked="${trampaUsada == 'ELIMINAR_DOS_INCORRECTAS'}"
+                        th:disabled="${eliminar_incorrectas == 0}">
                         <label class="card btn btn-outline-warning w-100" for="eliminar">
                             <div class="card-body text-center">
                                  Eliminar dos incorrectas

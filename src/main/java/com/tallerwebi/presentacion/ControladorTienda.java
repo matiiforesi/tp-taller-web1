@@ -32,8 +32,14 @@ public class ControladorTienda {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         Long idUsuario = usuario.getId();
         session.setAttribute("idUsuario", idUsuario);
+
+        Long duplicar_puntaje=servicioCompra.contarComprasPorUsuarioYTipo(idUsuario,TIPO_ITEMS.DUPLICAR_PUNTAJE);
+        Long eliminar_incorrectas=servicioCompra.contarComprasPorUsuarioYTipo(idUsuario,TIPO_ITEMS.ELIMINAR_DOS_INCORRECTAS);
+
         model.put("items", items);
         model.put("usuario", usuario);
+        model.put("duplicar_puntaje", duplicar_puntaje);
+        model.put("eliminar_incorrectas", eliminar_incorrectas);
 
         return new  ModelAndView("tienda",model);
     }

@@ -3,8 +3,10 @@
 <head>
     <title>Tienda</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/colores.css}">
+    <link rel="stylesheet" th:href="@{/css/tienda.css}">
 </head>
-<body class="bg-light">
+<body>
 
 <div class="container py-5">
     <div class="text-center mb-4">
@@ -23,7 +25,14 @@
                     <h5 class="card-title text-center" th:text="${item.descripcion}">Descripción</h5>
                     <p class="card-text text-center">
                         <strong>Precio:</strong> <span th:text="${item.precio}">0</span> monedas<br>
-                        <strong>Tipo:</strong> <span th:text="${item.tipoItem}">TIPO</span>
+                        <strong>Tipo:</strong> <span th:text="${item.tipoItem}">TIPO</span><br>
+                        <strong>Cantidad:</strong>
+                        <span th:if="${item.tipoItem.name() == 'DUPLICAR_PUNTAJE'}">
+                            (<span th:text="${duplicar_puntaje}">0</span>)
+                        </span>
+                        <span th:if="${item.tipoItem.name() == 'ELIMINAR_DOS_INCORRECTAS'}">
+                            (<span th:text="${eliminar_incorrectas}">0</span>)
+                        </span>
                     </p>
                     <form th:action="@{/comprar}" method="post" class="mt-auto">
                         <input type="hidden" name="idUsuario" th:value="${usuario.id}" />

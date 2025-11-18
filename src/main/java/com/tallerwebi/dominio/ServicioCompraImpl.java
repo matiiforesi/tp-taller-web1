@@ -49,4 +49,9 @@ public class ServicioCompraImpl implements ServicioCompra {
         return usuario;
 
     }
+
+    @Override
+    public Long contarComprasPorUsuarioYTipo(Long idUsuario, TIPO_ITEMS tipo) {
+        return repositorioCompraItem.contarComprasPorUsuarioYTipo(idUsuario,tipo);
+    }
 }

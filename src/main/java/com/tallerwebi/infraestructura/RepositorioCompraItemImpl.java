@@ -2,7 +2,9 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.CompraItem;
 import com.tallerwebi.dominio.RepositorioCompraItem;
+import com.tallerwebi.dominio.TIPO_ITEMS;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -31,5 +33,16 @@ public class RepositorioCompraItemImpl implements RepositorioCompraItem {
     @Override
     public void modificar(CompraItem compra) {
         sessionFactory.getCurrentSession().update(compra);
+    }
+
+    @Override
+    public Long contarComprasPorUsuarioYTipo(Long idUsuario, TIPO_ITEMS tipo) {
+        Long resultado= (Long)sessionFactory.getCurrentSession().createCriteria(CompraItem.class,"compra")
+                .createAlias("compra.item","item")
+                .add(Restrictions.eq("compra.usuario.id",idUsuario))
+                .add(Restrictions.eq("item.tipoItem",tipo))
+                .add(Restrictions.eq("compra.usado",false))
+                .setProjection(Projections.rowCount()).uniqueResult();
+        return resultado!=null ? resultado : 0L;
     }
 }

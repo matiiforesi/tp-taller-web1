@@ -20,12 +20,14 @@ public class ControladorJuego {
     private final ServicioJuego servicioJuego;
     private final ServicioPregunta servicioPregunta;
     private final ServicioCuestionario servicioCuestionario;
+    private final ServicioCompra servicioCompra;
 
     @Autowired
-    public ControladorJuego(ServicioJuego servicioJuego, ServicioPregunta servicioPregunta, ServicioCuestionario servicioCuestionario) {
+    public ControladorJuego(ServicioJuego servicioJuego, ServicioPregunta servicioPregunta, ServicioCuestionario servicioCuestionario, ServicioCompra servicioCompra) {
         this.servicioJuego = servicioJuego;
         this.servicioPregunta = servicioPregunta;
         this.servicioCuestionario = servicioCuestionario;
+        this.servicioCompra = servicioCompra;
     }
 
     @RequestMapping("/iniciar")
@@ -325,6 +327,9 @@ public class ControladorJuego {
         model.put("trampaUsada", trampaStr);
         session.removeAttribute("trampaUsada");
 
+        Long duplicar_puntaje=servicioCompra.contarComprasPorUsuarioYTipo(usuario.getId(), TIPO_ITEMS.DUPLICAR_PUNTAJE);
+        Long eliminar_incorrectas=servicioCompra.contarComprasPorUsuarioYTipo(usuario.getId(), TIPO_ITEMS.ELIMINAR_DOS_INCORRECTAS);
+
         model.put("cuestionario", cuestionario);
         model.put("pregunta", pregunta);
         model.put("indicePregunta", indice);
@@ -340,6 +345,8 @@ public class ControladorJuego {
         model.put("vidasRestantes", vidasRestantes);
         model.put("tiempoAgotado", tiempoAgotado);
         model.put("ayudasDisponibles", ayudasDisponibles);
+        model.put("duplicar_puntaje", duplicar_puntaje);
+        model.put("eliminar_incorrectas", eliminar_incorrectas);
 
         int monedasCuestionario = (int) Math.floor(puntajeTotal * 0.1);
         model.put("monedas", monedasCuestionario);

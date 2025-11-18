@@ -1,0 +1,27 @@
+body {
+ background: var(--gradient-radial);
+  color: white;
+}
+.card {
+   background-color: var(--deep-space-blue);
+   color: white;
+   border: 2px solid var(--steel-blue);
+   transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+   transform: translateY(-5px);
+   box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+ }
+ .btn-primary {
+   background-color: var(--steel-blue);
+   border-color: var(--baltic-blue);
+ }
+.btn-primary:hover {
+    background-color: var(--fresh-sky);
+    color: var(--ink-black);
+    }
+  .alert-info {
+    background-color: var(--ruddy-blue, #71a9f7);
+    color: var(--ink-black);
+    border: none;
+  }

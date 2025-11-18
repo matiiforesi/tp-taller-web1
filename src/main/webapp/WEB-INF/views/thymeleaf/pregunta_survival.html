@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modo Supervivencia - Pregunta</title>
+    <!-- Boostrap core CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <!-- Custom style -->
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" th:href="@{/css/pregunta.css}">
+</head>
+<body>
+
+<div class="contenedor_general w-100">
+
+    <div id="contenedor-pregunta">
+        <div class="alert alert-warning mb-3">
+            <strong>🔥 Modo Supervivencia</strong> | 
+            Dificultad: <span th:text="${dificultadActual != null ? dificultadActual : 'easy'}"></span> | 
+            Respuestas correctas: <span th:text="${survivalCorrectas != null ? survivalCorrectas : 0}"></span> |
+            Puntaje: <span th:text="${puntajeTotal != null ? puntajeTotal : 0}"></span>
+        </div>
+        <div class="d-flex justify-content-around mb-4 flex-wrap">
+            <!-- Tiempo -->
+            <div class="card text-center shadow-sm border-warning" style="width: 10rem;">
+                <div class="card-body">
+                    <h6 class="card-title text-warning fw-bold"> Tiempo</h6>
+                    <span id="timer" th:text="${tiempoRestante}" class="fs-4 fw-bold text-dark"></span> s
+                </div>
+            </div>
+
+            <!-- Vidas -->
+            <div class="card text-center shadow-sm border-danger" style="width: 10rem;">
+                <div class="card-body">
+                    <h6 class="card-title text-danger fw-bold"> Vidas</h6>
+                    <span th:text="${survivalVidas != null ? survivalVidas : 0}" class="fs-4 fw-bold text-dark"></span>
+                </div>
+            </div>
+
+            <!-- Puntaje -->
+            <div class="card text-center shadow-sm border-info" style="width: 10rem;">
+                <div class="card-body">
+                    <h6 class="card-title text-info fw-bold"> Puntaje</h6>
+                    <span th:text="${puntajeTotal != null ? puntajeTotal : 0}" class="fs-4 fw-bold text-dark"></span>
+                    <small class="text-muted d-block" th:if="${usuario != null and usuario.puntaje != null}">
+                        Total: <span th:text="${usuario.puntaje}"></span>
+                    </small>
+                </div>
+            </div>
+
+            <!-- Monedas -->
+            <div class="card text-center shadow-sm border-success" style="width: 10rem;">
+                <div class="card-body">
+                    <h6 class="card-title text-success fw-bold"> Monedas</h6>
+                    <span th:text="${monedas != null ? monedas : 0}" class="fs-4 fw-bold text-dark"></span>
+                    <small class="text-muted d-block" th:if="${usuario != null and usuario.monedas != null}">
+                        Total: <span th:text="${usuario.monedas}"></span>
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-info text-center shadow-sm fs-4 fw-bold">
+            <h2 th:text="${pregunta.enunciado}"></h2>
+        </div>
+
+        <!-- Form for Survival Mode -->
+        <form id="formulario" th:if="${!respondida}"
+              th:action="@{/survival/validar}"
+              method="post">
+            <div class="d-grid gap-3">
+                <button type="submit" name="respuesta" th:value="${opcion}"
+                        th:each="opcion : ${opciones}"
+                        class="btn btn-outline-primary btn-lg">
+                    <span th:text="${opcion}"></span>
+                </button>
+            </div>
+        </form>
+
+        <!--Respuestas-->
+        <div th:if="${respondida}">
+            <!-- Tiempo agotado -->
+            <div th:if="${tiempoAgotado}"
+                 style="color: orange; font-weight: bold; border: 2px solid orange; padding: 20px; border-radius: 8px; background-color: #fff3cd;">
+                <h4>¡Se agotó el tiempo!</h4>
+                <div class="mt-3">
+                    <p class="mb-1"><strong>Puntaje en este juego:</strong> <span th:text="${puntajeTotal != null ? puntajeTotal : 0}"></span></p>
+                    <p class="mb-1" th:if="${usuario != null and usuario.puntaje != null}">
+                        <strong>Puntaje total acumulado:</strong> <span th:text="${usuario.puntaje}"></span>
+                    </p>
+                    <p class="mb-1"><strong>Monedas en este juego:</strong> <span th:text="${monedas != null ? monedas : 0}"></span></p>
+                    <p class="mb-1" th:if="${usuario != null and usuario.monedas != null}">
+                        <strong>Total de monedas:</strong> <span th:text="${usuario.monedas}"></span>
+                    </p>
+                </div>
+                <form th:action="@{/survival/siguiente}" method="post" class="mt-3">
+                    <button type="submit" class="btn btn-warning">Siguiente</button>
+                </form>
+            </div>
+
+            <!-- Respuesta correcta -->
+            <div th:if="${(tiempoAgotado == null || !tiempoAgotado) and esCorrecta}"
+                 style="color: #155724; font-weight: bold; border: 2px solid #28a745; padding: 20px; border-radius: 8px; background-color: #d4edda;">
+                <h4>¡Respuesta correcta! 🎉</h4>
+                <div class="mt-3">
+                    <p class="mb-1"><strong>Puntaje en este juego:</strong> <span th:text="${puntajeTotal != null ? puntajeTotal : 0}"></span></p>
+                    <p class="mb-1" th:if="${usuario != null and usuario.puntaje != null}">
+                        <strong>Puntaje total acumulado:</strong> <span th:text="${usuario.puntaje}"></span>
+                    </p>
+                    <p class="mb-1"><strong>Monedas en este juego:</strong> <span th:text="${monedas != null ? monedas : 0}"></span></p>
+                    <p class="mb-1" th:if="${usuario != null and usuario.monedas != null}">
+                        <strong>Total de monedas:</strong> <span th:text="${usuario.monedas}"></span>
+                    </p>
+                </div>
+                <form th:action="@{/survival/siguiente}" method="post" class="mt-3">
+                    <button type="submit" class="btn btn-success">Siguiente</button>
+                </form>
+            </div>
+
+            <!-- Respuesta incorrecta -->
+            <div th:if="${(tiempoAgotado == null || !tiempoAgotado) and !esCorrecta}"
+                 style="color: #721c24; font-weight: bold; border: 2px solid #dc3545; padding: 20px; border-radius: 8px; background-color: #f8d7da;">
+                <h4>Respuesta incorrecta</h4>
+                <div class="mt-3">
+                    <p class="mb-1"><strong>Puntaje en este juego:</strong> <span th:text="${puntajeTotal != null ? puntajeTotal : 0}"></span></p>
+                    <p class="mb-1" th:if="${usuario != null and usuario.puntaje != null}">
+                        <strong>Puntaje total acumulado:</strong> <span th:text="${usuario.puntaje}"></span>
+                    </p>
+                    <p class="mb-1"><strong>Monedas en este juego:</strong> <span th:text="${monedas != null ? monedas : 0}"></span></p>
+                    <p class="mb-1" th:if="${usuario != null and usuario.monedas != null}">
+                        <strong>Total de monedas:</strong> <span th:text="${usuario.monedas}"></span>
+                    </p>
+                </div>
+                <form th:action="@{/survival/siguiente}" method="post" class="mt-3">
+                    <button type="submit" class="btn btn-danger">Siguiente</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let tiempo = /*[[${tiempoRestante}]]*/ 10;
+    const timerSpan = document.getElementById("timer");
+    const form = document.getElementById("formulario");
+    const respondida = /*[[${respondida}]]*/ false;
+
+    if (!respondida) {
+        const interval = setInterval(() => {
+            tiempo--;
+            timerSpan.textContent = tiempo;
+
+            if (tiempo <= 0) {
+                clearInterval(interval);
+
+                if (form) form.style.display = "none";
+
+                const tempForm = document.createElement("form");
+                tempForm.method = "POST";
+                tempForm.action = `/spring/survival/validar`;
+
+                const inputRespuesta = document.createElement("input");
+                inputRespuesta.type = "hidden";
+                inputRespuesta.name = "respuesta";
+                inputRespuesta.value = "";
+
+                const inputTiempo = document.createElement("input");
+                inputTiempo.type = "hidden";
+                inputTiempo.name = "tiempoAgotado";
+                inputTiempo.value = "true";
+
+                tempForm.appendChild(inputRespuesta);
+                tempForm.appendChild(inputTiempo);
+
+                document.body.appendChild(tempForm);
+                tempForm.submit();
+            }
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>
+

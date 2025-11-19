@@ -2,6 +2,7 @@ package com.tallerwebi.dominio;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -84,17 +85,26 @@ public class ServicioCuestionarioImpl implements ServicioCuestionario {
 
     private Preguntas mapearIncorrectas(PreguntaTrivia pregunta) {
         Preguntas p = new Preguntas();
-        p.setCategoria(pregunta.getCategory());
+        p.setCategoria(decodeHtmlEntities(pregunta.getCategory()));
         p.setDificultad(obtenerDificultadEntidad(pregunta.getDifficulty()));
-        p.setEnunciado(pregunta.getQuestion());
-        p.setRespuestaCorrecta(pregunta.getCorrect_answer());
+        p.setEnunciado(decodeHtmlEntities(pregunta.getQuestion()));
+        p.setRespuestaCorrecta(decodeHtmlEntities(pregunta.getCorrect_answer()));
 
         List<String> incorrects = pregunta.getIncorrect_answers();
-        if (incorrects.size() > 0) p.setRespuestaIncorrecta1(incorrects.get(0));
-        if (incorrects.size() > 1) p.setRespuestaIncorrecta2(incorrects.get(1));
-        if (incorrects.size() > 2) p.setRespuestaIncorrecta3(incorrects.get(2));
+        if (incorrects != null) {
+            if (incorrects.size() > 0) p.setRespuestaIncorrecta1(decodeHtmlEntities(incorrects.get(0)));
+            if (incorrects.size() > 1) p.setRespuestaIncorrecta2(decodeHtmlEntities(incorrects.get(1)));
+            if (incorrects.size() > 2) p.setRespuestaIncorrecta3(decodeHtmlEntities(incorrects.get(2)));
+        }
 
         return p;
+    }
+
+    private String decodeHtmlEntities(String text) {
+        if (text == null) {
+            return null;
+        }
+        return HtmlUtils.htmlUnescape(text);
     }
 
     private Dificultad obtenerDificultadEntidad(String nombre) {

@@ -46,7 +46,8 @@
         </div>
         <form id="formulario" th:if="${!respondida}"
               th:action="@{'/juego/' + ${cuestionario.id} + '/validar'}"
-              method="post">
+              method="post"
+              accept-charset="UTF-8">
             <input type="hidden" name="idPregunta" th:value="${pregunta.id}"/>
            <!-- <div class="mb-3">
                 <label for="trampaActivada" class="form-label">¿Querés usar una ayuda?</label>

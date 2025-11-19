@@ -2,6 +2,7 @@ package com.tallerwebi.dominio;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -101,18 +102,25 @@ public class ServicioSurvivalImpl implements ServicioSurvival {
 
     private Preguntas mapearPreguntaSurvival(PreguntaTrivia preguntaTrivia) {
         Preguntas p = new Preguntas();
-        p.setCategoria(preguntaTrivia.getCategory());
+        p.setCategoria(decodeHtmlEntities(preguntaTrivia.getCategory()));
         p.setDificultad(obtenerDificultadEntidadSurvival(preguntaTrivia.getDifficulty()));
-        p.setEnunciado(preguntaTrivia.getQuestion());
-        p.setRespuestaCorrecta(preguntaTrivia.getCorrect_answer());
+        p.setEnunciado(decodeHtmlEntities(preguntaTrivia.getQuestion()));
+        p.setRespuestaCorrecta(decodeHtmlEntities(preguntaTrivia.getCorrect_answer()));
 
         List<String> incorrects = preguntaTrivia.getIncorrect_answers();
         if (incorrects != null) {
-            if (incorrects.size() > 0) p.setRespuestaIncorrecta1(incorrects.get(0));
-            if (incorrects.size() > 1) p.setRespuestaIncorrecta2(incorrects.get(1));
-            if (incorrects.size() > 2) p.setRespuestaIncorrecta3(incorrects.get(2));
+            if (incorrects.size() > 0) p.setRespuestaIncorrecta1(decodeHtmlEntities(incorrects.get(0)));
+            if (incorrects.size() > 1) p.setRespuestaIncorrecta2(decodeHtmlEntities(incorrects.get(1)));
+            if (incorrects.size() > 2) p.setRespuestaIncorrecta3(decodeHtmlEntities(incorrects.get(2)));
         }
         return p;
+    }
+
+    private String decodeHtmlEntities(String text) {
+        if (text == null) {
+            return null;
+        }
+        return HtmlUtils.htmlUnescape(text);
     }
 
     private Dificultad obtenerDificultadEntidadSurvival(String nombre) {

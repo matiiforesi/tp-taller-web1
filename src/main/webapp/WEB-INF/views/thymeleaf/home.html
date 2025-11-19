@@ -3,147 +3,190 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Taller Web I</title>
-
-    <!-- Boostrap core css -->
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-
-    <!-- Custom style -->
+    <title>Home</title>
+    <!-- Estilos -->
     <link rel="stylesheet" th:href="@{/css/colores.css}">
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Mi Web</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item me-3 text-white">
-                    <h6 class="mb-0">Usuario: <span th:text="${nombre}">[nombre]</span></h6>
-                </li>
-                <li class="nav-item me-3 text-white">
-                    <h6 class="mb-0">Puntaje: <span th:text="${puntaje}">[puntaje]</span></h6>
-                </li>
-                <li class="nav-item me-3 text-white">
-                    <h6 class="mb-0">Monedas: <span th:text="${monedas}">[monedas]</span></h6>
-                </li>
-                <li class="nav-item">
-                    <a href="login.html" class="btn btn-danger btn-sm">Cerrar sesión</a>
-                </li>
-            </ul>
-        </div>
+<!-- NAV -->
+<nav class="navbar navbar-expand-md navbar-dark fixed-top px-4">
+    <a class="navbar-brand" th:href="@{/home}">Mi Web</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center">
+
+            <li class="nav-item me-3">
+                <a th:href="@{/home}" class="nav-link">Inicio</a>
+            </li>
+
+            <li class="nav-item me-3">
+                <a th:href="@{/ranking}" class="nav-link">Ranking</a>
+            </li>
+
+            <li class="nav-item me-3">
+                <a th:href="@{/tienda}" class="nav-link">Tienda</a>
+            </li>
+
+            <li class="nav-item text-white me-3">
+                Monedas: <strong th:text="${monedas}">[monedas]</strong>
+            </li>
+
+            <li class="nav-item text-white me-3">
+                Puntos: <strong th:text="${puntaje}">[puntaje]</strong>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white" href="#" id="userMenu"
+                   role="button" data-bs-toggle="dropdown">
+                    <span th:text="${nombre}">[nombre]</span>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item text-white" th:href="@{/login}">Cerrar sesión</a></li>
+                </ul>
+            </li>
+        </ul>
     </div>
 </nav>
 
-<main role="main" class="container w-100 h-100">
-    <div class="container d-flex flex-column align-items-center gap-4">
-    <a th:href="@{/tienda}" class="btn btn-primary">Ir a Tienda</a>
-        
-        <!-- Survival Mode Button -->
-        <div class="card p-4 mb-4" style="width: 30rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-            <div class="text-center text-white">
-                <h3 class="mb-3">Modo Supervivencia</h3>
-                <p class="mb-3">Responde preguntas sin parar. La dificultad aumenta con cada respuesta correcta.</p>
-                <a th:href="@{/survival/iniciar}" class="btn btn-warning btn-lg">
-                    Jugar Modo Supervivencia
+<!-- MAIN -->
+<main>
+    <!-- FILA 1: FILTROS + SUPERVIVENCIA + PANEL ADMIN -->
+    <div class="row mt-5">
+        <!-- FILTROS -->
+        <div class="col-md-3 mb-4">
+            <div class="card p-3 filtro">
+                <h5 class="mb-3">Filtrar Cuestionarios</h5>
+
+                <form th:action="@{/home}" method="get" class="d-flex flex-column gap-3">
+
+                    <div>
+                        <label class="form-label">Dificultad:</label>
+                        <select name="dificultad" class="form-select">
+                            <option value="">Todas</option>
+                            <option th:each="dif : ${dificultades}"
+                                    th:value="${dif.nombre}"
+                                    th:selected="${param.dificultad != null && param.dificultad[0] == dif.nombre}"
+                                    th:text="${dif.nombre}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Categoría:</label>
+                        <select name="categoria" class="form-select">
+                            <option value="">Todas</option>
+                            <option th:each="cat : ${categorias}"
+                                    th:value="${cat}"
+                                    th:selected="${param.categoria != null && param.categoria[0] == cat}"
+                                    th:text="${cat}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary">Filtrar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- TARJETA MODO SUPERVIVENCIA -->
+        <div class="col-md-6 d-flex justify-content-center align-items-start mb-4">
+            <div class="survival-card p-4 text-center">
+                <h5 class="text-white">Nuevo</h5>
+                <h3 class="text-white">Modo Supervivencia</h3>
+                <p class="mt-3 text-white">
+                    Responde preguntas sin parar.<br>
+                    La dificultad aumenta con cada respuesta correcta.
+                </p>
+
+                <a th:href="@{/survival/iniciar}" class="btn btn-warning mt-3 btn-wide">
+                    Jugar ahora
                 </a>
             </div>
         </div>
-        
-        <h1>Cuestionarios Sugeridos</h1>
 
-        <!-- Cuestionarios aleatorios -->
-        <div class="d-flex flex-wrap justify-content-center gap-3">
-            <div th:each="cuestionario : ${cuestionarios}" class="card text-center p-3 d-flex flex-column" style="width: 14rem;">
-                <h5 th:text="${cuestionario.nombre}">Nombre del cuestionario</h5>
-                <p th:text="${cuestionario.descripcion}">Descripción</p>
-                <p><strong th:text="${cuestionario.categoria}">Categoría</strong></p>
-                <a th:href="@{/iniciar?(idCuestionario=${cuestionario.id})}" class="btn btn-primary mt-auto">
-                    Ingresar
-                </a>
-            </div>
-        </div>
+        <!-- PANEL ADMIN -->
+        <div class="col-md-3 mb-4">
+            <div class="d-flex flex-wrap gap-3 justify-content-end align-items-center text-white">
 
-        <div class="card p-3" style="width:30em">
-            <h5 class="mb-3">Filtrar Cuestionarios</h5>
-            <form th:action="@{/home}" method="get" class="d-flex flex-column gap-3">
                 <div>
-                    <label for="dificultad" class="form-label">Dificultad:</label>
-                    <select name="dificultad" id="dificultad" class="form-select">
-                        <option value="">Todas</option>
-                        <option th:each="dif : ${dificultades}"
-                                th:value="${dif.nombre}"
-                                th:selected="${param.dificultad != null && param.dificultad[0] == dif.nombre}"
-                                th:text="${dif.nombre}">Easy</option>
-                    </select>
+                    Usuarios: <strong th:text="${cantidadUsuarios}"></strong>
                 </div>
-                <div>
-                    <label for="categoria" class="form-label">Categoría:</label>
-                    <select name="categoria" id="categoria" class="form-select">
-                        <option value="">Todas</option>
-                        <option th:each="cat : ${categorias}"
-                                th:value="${cat}"
-                                th:selected="${param.categoria != null && param.categoria[0] == cat}"
-                                th:text="${cat}">Historia</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Filtrar</button>
-            </form>
-        </div>
 
-        <div th:if="${cuestionariosFiltrados != null && !cuestionariosFiltrados.isEmpty()}" class="w-100">
-            <div class="d-flex justify-content-center mb-4">
-                <h2 class="mb-3">Resultados de Búsqueda</h2>
-            </div>
-            <div class="d-flex flex-wrap justify-content-center gap-3">
-                <div th:each="cuestionario : ${cuestionariosFiltrados}" class="card text-center p-3 d-flex flex-column" style="width: 14rem;">
-                    <h5 th:text="${cuestionario.nombre}">Nombre del cuestionario</h5>
-                    <p th:text="${cuestionario.descripcion}">Descripción</p>
-                    <p><strong th:text="${cuestionario.categoria}">Categoría</strong></p>
-                    <a th:href="@{/iniciar?(idCuestionario=${cuestionario.id})}" class="btn btn-primary mt-auto">
-                        Ingresar
+                <div>
+                    Cuestionarios: <strong th:text="${cantidadCuestionarios}"></strong>
+                </div>
+
+                <div th:if="${rol=='ADMIN'}">
+                    <a href="cuestionario/new" class="btn btn-primary btn-sm text-nowrap">
+                        Crear Cuestionario
                     </a>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div th:if="${cuestionariosFiltrados != null && cuestionariosFiltrados.isEmpty()}" class="alert alert-info" role="alert">
-            No se encontraron cuestionarios con los filtros seleccionados.
-        </div>
+    <!-- RESULTADOS FILTRADOS -->
+    <div class="row mt-4">
+        <div class="col-12">
 
-        <div th:if="${rol=='ADMIN'}" class="container mt-4">
-            <div class="d-flex justify-content-center mb-4">
-                <a href="cuestionario/new" class="btn btn-lg btn-primary justify-content-center p-1">Crear Cuestionario</a>
-            </div>
+            <div th:if="${cuestionariosFiltrados != null}">
+                <h4 class="text-white">Resultados filtrados</h4>
 
-            <div class="row justify-content-center">
-                <!-- Usuarios -->
-                <div class="col-sm-6 mb-3">
-                    <div class="border rounded p-3 text-center bg-light">
-                        <h5 class="mb-2">Usuarios</h5>
-                        <h3 class="text-primary">
-                            <span th:text="${cantidadUsuarios}">0</span>
-                        </h3>
+                <div class="d-flex flex-wrap justify-content-start gap-3">
+                    <div th:each="c : ${cuestionariosFiltrados}"
+                         class="card p-3 text-center card-cuestionario">
+
+                        <p><strong th:text="${c.categoria}"></strong></p>
+                        <h5 th:text="${c.nombre}"></h5>
+                        <p th:text="${c.descripcion}"></p>
+
+                        <a th:href="@{/iniciar?(idCuestionario=${c.id})}"
+                           class="btn btn-primary mt-auto">Ingresar</a>
                     </div>
                 </div>
 
-                <!-- Cuestionarios -->
-                <div class="col-sm-6 mb-3">
-                    <div class="border rounded p-3 text-center bg-light">
-                        <h5 class="mb-2">Cuestionarios</h5>
-                        <h3 class="text-success">
-                            <span th:text="${cantidadCuestionarios}">0</span>
-                        </h3>
-                    </div>
+                <div th:if="${cuestionariosFiltrados.isEmpty()}"
+                     class="alert alert-info mt-3">
+                    No se encontraron resultados.
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- SUGERIDOS -->
+    <div class="row mt-5">
+        <div class="col-12">
+
+            <h3 class="text-white">Cuestionarios sugeridos</h3>
+            <p class="text-white">Prueba algunos de nuestros cuestionarios recomendados.</p>
+
+            <div class="d-flex flex-wrap gap-3">
+                <div th:each="c : ${cuestionarios}"
+                     class="card p-3 text-center card-cuestionario">
+
+                    <p><strong th:text="${c.categoria}"></strong></p>
+                    <h5 th:text="${c.nombre}"></h5>
+                    <p th:text="${c.descripcion}"></p>
+
+                    <a th:href="@{/iniciar?(idCuestionario=${c.id})}"
+                       class="btn btn-primary mt-auto">Ingresar</a>
+                </div>
+            </div>
+        </div>
     </div>
+
 </main>
 
-<!-- Boostrap core js -->
-<script type="text/javascript" th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

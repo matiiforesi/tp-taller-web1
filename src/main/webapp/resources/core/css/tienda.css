@@ -1,27 +1,84 @@
 body {
- background: var(--gradient-radial);
-  color: white;
+    padding: 3.55rem 3rem;
+    background: var(--gradient-radial);
+    min-height: 100vh;
 }
-.card {
-   background-color: var(--deep-space-blue);
-   color: white;
-   border: 2px solid var(--steel-blue);
-   transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+/* NAVBAR */
+.navbar {
+    background-color: var(--ink-black) !important;
 }
-.card:hover {
-   transform: translateY(-5px);
-   box-shadow: 0 8px 20px rgba(0,0,0,0.3);
- }
- .btn-primary {
-   background-color: var(--steel-blue);
-   border-color: var(--baltic-blue);
- }
-.btn-primary:hover {
-    background-color: var(--fresh-sky);
-    color: var(--ink-black);
-    }
-  .alert-info {
-    background-color: var(--ruddy-blue, #71a9f7);
-    color: var(--ink-black);
-    border: none;
-  }
+
+.navbar-brand {
+    margin: 0 2rem;
+    color: var(--fresh-sky) !important;
+    font-weight: bold;
+}
+
+/* MENU HAMBURGUESA */
+.dropdown-menu {
+    background-color: var(--deep-space-blue) !important;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: var(--steel-blue) !important;
+    color: var(--white) !important;
+}
+
+/* TARJETAS DE TIENDA */
+.store-card {
+    width: 20rem;
+    height: 25.5rem;
+    background: var(--deep-space-blue);
+    color: var(--white);
+    padding: 1.2rem;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.store-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 12.5rem;
+    margin-bottom: 10px;
+}
+
+.store-icon img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.store-card h4 {
+    font-size: 1.4rem;
+    margin-bottom: .4rem;
+}
+
+.store-card .desc {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+/* BOTONES */
+.btn-buy {
+    width: 100%;
+}
+
+/* TARJETAS EN FILA */
+.d-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4.3rem;
+}
+
+/* MODAL CONFIRMACION */
+.modal-header {
+    /*border-bottom: none !important;*/
+}
+
+.modal-footer {
+    border-top: none !important;
+}

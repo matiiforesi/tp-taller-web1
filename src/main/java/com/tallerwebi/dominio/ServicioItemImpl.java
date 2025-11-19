@@ -11,10 +11,12 @@ import java.util.List;
 public class ServicioItemImpl implements ServicioItem {
 
     private final RepositorioItem repositorio;
+
     @Autowired
     public ServicioItemImpl(RepositorioItem repositorio) {
         this.repositorio = repositorio;
     }
+
     @Override
     public void guardar(Item item) {
         repositorio.guardar(item);

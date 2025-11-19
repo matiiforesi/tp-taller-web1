@@ -14,7 +14,7 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     private SessionFactory sessionFactory;
 
     @Autowired
-    public RepositorioUsuarioImpl(SessionFactory sessionFactory){
+    public RepositorioUsuarioImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -51,11 +51,12 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     public Usuario buscarPorId(Long idUsuario) {
         return (Usuario) sessionFactory.getCurrentSession().createCriteria(Usuario.class).add(Restrictions.eq("id", idUsuario)).uniqueResult();
     }
+
     @Override
     public Integer contarUsuarios() {
-        Long cantidad= (Long)sessionFactory.getCurrentSession().
+        Long cantidad = (Long) sessionFactory.getCurrentSession().
                 createQuery("SELECT COUNT(u) FROM Usuario u").uniqueResult();
-        return cantidad!=null ? cantidad.intValue():0;
+        return cantidad != null ? cantidad.intValue() : 0;
     }
 
     @Override

@@ -1,58 +1,210 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Tienda</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Estilos -->
     <link rel="stylesheet" th:href="@{/css/colores.css}">
     <link rel="stylesheet" th:href="@{/css/tienda.css}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
 
+<!-- NAV -->
+<nav class="navbar navbar-expand-md navbar-dark fixed-top px-4">
+    <a class="navbar-brand" th:href="@{/home}">Mi Web</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center">
+
+            <li class="nav-item me-3">
+                <a th:href="@{/home}" class="nav-link">Inicio</a>
+            </li>
+
+            <li class="nav-item me-3">
+                <a th:href="@{/ranking}" class="nav-link">Ranking</a>
+            </li>
+
+            <li class="nav-item me-3">
+                <a th:href="@{/tienda}" class="nav-link">Tienda</a>
+            </li>
+
+            <li class="nav-item text-white me-3">
+                Monedas: <strong th:text="${monedas}">[monedas]</strong>
+            </li>
+
+            <li class="nav-item text-white me-3">
+                Puntos: <strong th:text="${puntaje}">[puntaje]</strong>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white" href="#" id="userMenu"
+                   role="button" data-bs-toggle="dropdown">
+                    <span th:text="${nombre}">[nombre]</span>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item text-white" th:href="@{/login}">Cerrar sesión</a></li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+</nav>
+
 <div class="container py-5">
-    <div class="text-center mb-4">
-        <h1 class="display-5">Tienda de Ítems</h1>
-        <p class="lead">Monedas disponibles: <span th:text="${usuario.monedas}">0</span></p>
-    </div>
 
+    <!--  MENSAJE COMPRA  -->
     <div th:if="${mensaje}" class="alert alert-info text-center" role="alert">
-        <span th:text="${mensaje}">Mensaje</span>
+        <span th:text="${mensaje}"></span>
     </div>
 
-    <div class="row justify-content-center" th:if="${items}" th:each="item : ${items}">
-        <div class="col-md-6 col-lg-4 mb-4 d-flex">
-            <div class="card shadow-sm w-100">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <h5 class="card-title text-center" th:text="${item.descripcion}">Descripción</h5>
-                    <p class="card-text text-center">
-                        <strong>Precio:</strong> <span th:text="${item.precio}">0</span> monedas<br>
-                        <strong>Tipo:</strong> <span th:text="${item.tipoItem}">TIPO</span><br>
-                        <strong>Cantidad:</strong>
-                        <span th:if="${item.tipoItem.name() == 'DUPLICAR_PUNTAJE'}">
-                            (<span th:text="${duplicar_puntaje}">0</span>)
-                        </span>
-                        <span th:if="${item.tipoItem.name() == 'ELIMINAR_DOS_INCORRECTAS'}">
-                            (<span th:text="${eliminar_incorrectas}">0</span>)
-                        </span>
-                    </p>
-                    <form th:action="@{/comprar}" method="post" class="mt-auto">
-                        <input type="hidden" name="idUsuario" th:value="${usuario.id}" />
-                        <input type="hidden" name="idItem" th:value="${item.id}" />
-                        <button type="submit" class="btn btn-primary w-100">Comprar</button>
-                    </form>
-                </div>
+    <!-- MONEDAS INSUFICIENTES -->
+    <div id="mensajeError" class="alert alert-danger text-center d-none"></div>
+
+    <div class="text-start mb-4">
+        <h1 class="display-6 text-white">Tienda</h1>
+        <p class="lead text-white">Compra ayudas para usar en futuras partidas.</p>
+    </div>
+
+    <!-- TARJETAS -->
+    <div class="d-flex flex-wrap">
+
+        <!-- DUPLICAR PUNTAJE -->
+        <div class="store-card">
+            <div class="store-icon">
+                <img th:src="@{/img/star_4108363.png}" alt="duplicar puntaje">
             </div>
+
+            <h4>Duplicar</h4>
+            <p class="desc">
+                Duplica el puntaje ganado en una pregunta.<br>
+                Tienes: <strong th:text="${duplicar_puntaje}">*</strong>
+            </p>
+
+            <form th:action="@{/comprar}" method="post">
+                <input type="hidden" name="idUsuario" th:value="${usuario.id}"/>
+                <input type="hidden" name="idItem" th:value="1"/>
+                <button class="btn btn-primary btn-buy"
+                        data-nombre="Duplicar"
+                        data-precio="150">
+                    Comprar - 150 monedas
+                </button>
+            </form>
+        </div>
+
+        <!-- QUITAR INCORRECTAS -->
+        <div class="store-card">
+            <div class="store-icon">
+                <img th:src="@{/img/bomb_3002380.png}" alt="quitar dos incorrectas">
+            </div>
+
+            <h4>Bomba</h4>
+            <p class="desc">
+                Elimina dos de las cuatro respuestas posibles de una pregunta.<br>
+                Tienes: <strong th:text="${eliminar_incorrectas}"></strong>
+            </p>
+
+            <form th:action="@{/comprar}" method="post">
+                <input type="hidden" name="idUsuario" th:value="${usuario.id}"/>
+                <input type="hidden" name="idItem" th:value="2"/>
+
+                <button class="btn btn-primary btn-buy"
+                        data-nombre="Bomba"
+                        data-precio="100">
+                    Comprar - 100 monedas
+                </button>
+            </form>
+        </div>
+
+        <!-- PROXIMAMENTE -->
+        <div class="store-card wip">
+            <div class="store-icon">
+                <img th:src="@{/img/construction-worker_17234400.png}" alt="proximamente">
+            </div>
+
+            <h4>En construcción</h4>
+            <p class="desc">
+                Estamos trabajando en nuevas ayudas para usar en cuestionarios.<br>
+                ¡Vuelve más tarde!
+            </p>
+        </div>
+
+        <!-- VOLVER HOME -->
+        <div class="ms-auto align-self-end">
+            <a href="/spring/home" class="btn btn-primary btn-back">Volver al Inicio</a>
         </div>
     </div>
 
-    <div th:if="${#lists.isEmpty(items)}" class="text-center mt-5">
-        <p class="text-muted">No hay ítems disponibles en este momento.</p>
-    </div>
+</div>
 
-    <div class="text-center mt-4">
-        <a href="/spring/home" class="btn btn-primary">Volver</a>
+<!-- CONFIRMAR COMPRA-->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar compra</h5>
+            </div>
+
+            <div class="modal-body">
+                <p id="modalTextoConfirmacion"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" id="confirmarCompraBtn">Comprar</button>
+            </div>
+
+        </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    let formQueSeVaAEnviar = null;
+    const monedasUsuario = Number([[${monedas}]]);
+
+    document.querySelectorAll(".btn-buy").forEach(btn => {
+        btn.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const precio = Number(this.dataset.precio);
+            const nombre = this.dataset.nombre;
+
+            if (monedasUsuario < precio) {
+
+                const mensajeServer = document.querySelector(".alert-info");
+                if (mensajeServer) mensajeServer.classList.add("d-none");
+
+                const mensajeError = document.getElementById("mensajeError");
+                mensajeError.textContent = "Monedas insuficientes";
+                mensajeError.classList.remove("d-none");
+
+                return;
+            }
+
+            formQueSeVaAEnviar = this.closest("form");
+
+            document.getElementById("modalTextoConfirmacion").innerText =
+                `¿Deseas comprar "${nombre}" por ${precio} monedas?`;
+
+            new bootstrap.Modal(document.getElementById("confirmModal")).show();
+        });
+    });
+
+    document.getElementById("confirmarCompraBtn").addEventListener("click", function () {
+        if (formQueSeVaAEnviar) {
+            formQueSeVaAEnviar.submit();
+        }
+    });
+</script>
+
 </body>
 </html>

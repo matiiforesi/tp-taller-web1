@@ -88,7 +88,7 @@ public class ControladorLogin {
             @RequestParam(required = false) String categoria) {
 
         HttpSession session = request.getSession();
-        if(session==null || session.getAttribute("usuario")==null){
+        if (session == null || session.getAttribute("usuario") == null) {
             return new ModelAndView("redirect:/login");
         }
 
@@ -101,7 +101,7 @@ public class ControladorLogin {
         List<Dificultad> dificultades = servicioDificultad.obtenerTodas();
         List<String> categorias = servicioCuestionario.obtenerTodasLasCategorias();
 
-        List<Cuestionario> cuestionariosSugeridos = servicioCuestionario.obtenerCuestionariosSugeridos(4);
+        List<Cuestionario> cuestionariosSugeridos = servicioCuestionario.obtenerCuestionariosSugeridos(6);
 
         List<Cuestionario> cuestionariosFiltrados = servicioCuestionario.obtenerCuestionariosFiltrados(request, dificultad, categoria);
 
@@ -115,9 +115,8 @@ public class ControladorLogin {
         model.put("cantidadCuestionarios", cantidadCuestionarios);
         model.put("dificultades", dificultades);
         model.put("categorias", categorias);
-        model.put("monedas",usuarioEncontrado.getMonedas());
+        model.put("monedas", usuarioEncontrado.getMonedas());
 
-System.out.println("puntaje del comienzo= " + usuarioEncontrado.getPuntaje());
         return new ModelAndView("home", model);
     }
 

@@ -1,29 +1,64 @@
+/* BACKGROUND GENERAL */
 body {
-  padding-top: 5rem;
-  background: var(--gradient-radial);
-  color: var(--fresh-sky);
+    padding: 3.55rem 3rem;
+    background: var(--gradient-radial);
+    min-height: 100vh;
 }
 
-h1 {
-  color: var(--fresh-sky);
-}
-
-h2 {
-  color: var(--fresh-sky);
-}
-
+/* NAVBAR */
 .navbar {
-  background-color: var(--ink-black) !important;
+    background-color: var(--ink-black) !important;
 }
 
 .navbar-brand {
-  margin: 0 2rem;
-  color: var(--fresh-sky) !important;
-  font-weight: bold;
+    margin: 0 2rem;
+    color: var(--fresh-sky) !important;
+    font-weight: bold;
 }
 
+/* FONDO MENU HAMBURGUESA */
+.dropdown-menu {
+    background-color: var(--deep-space-blue) !important;
+    border: none;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: var(--steel-blue) !important;
+    color: var(--white) !important;
+}
+
+/* TITULOS */
+h3, h4, h5 {
+    color: var(--white);
+    font-weight: 600;
+}
+
+/* FILTRADO */
+.filtro {
+    background-color: var(--ink-black) !important;
+    color: var(--white) !important;
+}
+
+/* TARJETA MODO SUPERVIVENCIA */
+.survival-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.35);
+}
+.survival-card .btn-wide {
+    min-width: 70%;
+    font-weight: 600;
+}
+
+/* TEXTO ADMIN */
+.text-nowrap {
+    white-space: nowrap;
+}
+
+/* TARJETAS SUGERIDAS & FILTRADAS*/
 .card-cuestionario {
-  width: 14rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    width: 15.5rem !important;
+    min-height: 16rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }

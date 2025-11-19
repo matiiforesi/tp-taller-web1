@@ -12,7 +12,7 @@ public class ServicioCompraImpl implements ServicioCompra {
     private final RepositorioItem repositorioItem;
     private final RepositorioCompraItem repositorioCompraItem;
 
-    public ServicioCompraImpl(RepositorioUsuario repositorioUsuario, RepositorioItem repositorioItem,RepositorioCompraItem repositorioCompraItem) {
+    public ServicioCompraImpl(RepositorioUsuario repositorioUsuario, RepositorioItem repositorioItem, RepositorioCompraItem repositorioCompraItem) {
         this.repositorioUsuario = repositorioUsuario;
         this.repositorioItem = repositorioItem;
         this.repositorioCompraItem = repositorioCompraItem;
@@ -20,13 +20,11 @@ public class ServicioCompraImpl implements ServicioCompra {
 
     @Override
     public Boolean comprarItem(Long idUsuario, Long idItem) {
-        Usuario usuario= this.repositorioUsuario.buscarPorId(idUsuario);
-        System.out.println("puntaje inicial= " + usuario.getPuntaje());
-        Item item= this.repositorioItem.obtenerPorId(idItem);
+        Usuario usuario = this.repositorioUsuario.buscarPorId(idUsuario);
+        Item item = this.repositorioItem.obtenerPorId(idItem);
 
-        if(usuario.getMonedas()>=item.getPrecio()) {
-            usuario.setMonedas(usuario.getMonedas()-item.getPrecio());
-            System.out.println("puntaje= " + usuario.getPuntaje());
+        if (usuario.getMonedas() >= item.getPrecio()) {
+            usuario.setMonedas(usuario.getMonedas() - item.getPrecio());
             repositorioUsuario.modificar(usuario);
 
             CompraItem compra = new CompraItem();
@@ -43,15 +41,12 @@ public class ServicioCompraImpl implements ServicioCompra {
     @Override
     public Usuario obtenerUsuarioActualizado(Long idUsuario) {
         Usuario usuario = repositorioUsuario.buscarPorId(idUsuario);
-        System.out.println("Usuario actualizado:");
-        System.out.println("Monedas: " + usuario.getMonedas());
-        System.out.println("Puntaje: " + usuario.getPuntaje());
         return usuario;
 
     }
 
     @Override
     public Long contarComprasPorUsuarioYTipo(Long idUsuario, TIPO_ITEMS tipo) {
-        return repositorioCompraItem.contarComprasPorUsuarioYTipo(idUsuario,tipo);
+        return repositorioCompraItem.contarComprasPorUsuarioYTipo(idUsuario, tipo);
     }
 }

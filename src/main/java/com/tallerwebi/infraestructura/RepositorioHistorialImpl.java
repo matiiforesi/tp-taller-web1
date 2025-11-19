@@ -43,16 +43,6 @@ public class RepositorioHistorialImpl implements RepositorioHistorial {
     @Override
     public List<RankingGeneralDTO> buscarRankingGeneral() {
         final Session session = sessionFactory.getCurrentSession();
-//        return session.createCriteria(HistorialCuestionario.class, "h")
-//                .createAlias("h.jugador", "u")
-//                .setProjection(Projections.projectionList()
-//                        .add(Projections.groupProperty("u.id"))
-//                        .add(Projections.groupProperty("u.nombre"))
-//                        .add(Projections.sum("h.puntaje").as("puntajeTotal"))
-//                )
-//                .addOrder(Order.desc("puntajeTotal"))
-//                .list();
-
         @SuppressWarnings("unchecked")
         List<Object[]> resultados = session.createCriteria(HistorialCuestionario.class, "h")
                 .createAlias("h.jugador", "u")
@@ -72,17 +62,6 @@ public class RepositorioHistorialImpl implements RepositorioHistorial {
     @Override
     public List<RankingCuestionarioDTO> buscarRankingCuestionarioPorId(Long idCuestionario) {
         final Session session = sessionFactory.getCurrentSession();
-//        return session.createCriteria(HistorialCuestionario.class, "h")
-//                .add(Restrictions.eq("idCuestionario", idCuestionario))
-//                .setProjection(Projections.projectionList()
-//                        .add(Projections.groupProperty("jugador.id"))
-//                        .add(Projections.groupProperty("nombreUsuario"))
-//                        .add(Projections.sum("puntaje").as("puntajeTotal"))
-//                        .add(Projections.sum("preguntasCorrectas"))
-//                        .add(Projections.sum("preguntasErradas"))
-//                        .add(Projections.count("id"))
-//                ).addOrder(Order.desc("puntajeTotal")).list();
-
         @SuppressWarnings("unchecked")
         List<Object[]> resultados = session.createCriteria(HistorialCuestionario.class, "h")
                 .add(Restrictions.eq("idCuestionario", idCuestionario))
@@ -93,7 +72,9 @@ public class RepositorioHistorialImpl implements RepositorioHistorial {
                         .add(Projections.sum("preguntasCorrectas"))
                         .add(Projections.sum("preguntasErradas"))
                         .add(Projections.count("id"))
-                ).addOrder(Order.desc("puntajeTotal"))
+                        .add(Projections.groupProperty("nombreCuestionario"))
+                )
+                .addOrder(Order.desc("puntajeTotal"))
                 .list();
 
         return resultados.stream()
@@ -104,17 +85,6 @@ public class RepositorioHistorialImpl implements RepositorioHistorial {
     @Override
     public List<RankingCuestionarioDTO> buscarRankingCuestionarioPorNombre(String nombreCuestionario) {
         final Session session = sessionFactory.getCurrentSession();
-//        return session.createCriteria(HistorialCuestionario.class, "h")
-//                .add(Restrictions.eq("nombreCuestionario", nombreCuestionario))
-//                .setProjection(Projections.projectionList()
-//                        .add(Projections.groupProperty("jugador.id"))
-//                        .add(Projections.groupProperty("nombreUsuario"))
-//                        .add(Projections.sum("puntaje").as("puntajeTotal"))
-//                        .add(Projections.sum("preguntasCorrectas"))
-//                        .add(Projections.sum("preguntasErradas"))
-//                        .add(Projections.count("id"))
-//                ).addOrder(Order.desc("puntajeTotal")).list();
-
         @SuppressWarnings("unchecked")
         List<Object[]> resultados = session.createCriteria(HistorialCuestionario.class, "h")
                 .add(Restrictions.eq("nombreCuestionario", nombreCuestionario))
@@ -125,7 +95,9 @@ public class RepositorioHistorialImpl implements RepositorioHistorial {
                         .add(Projections.sum("preguntasCorrectas"))
                         .add(Projections.sum("preguntasErradas"))
                         .add(Projections.count("id"))
-                ).addOrder(Order.desc("puntajeTotal"))
+                        .add(Projections.groupProperty("nombreCuestionario"))
+                )
+                .addOrder(Order.desc("puntajeTotal"))
                 .list();
 
         return resultados.stream()

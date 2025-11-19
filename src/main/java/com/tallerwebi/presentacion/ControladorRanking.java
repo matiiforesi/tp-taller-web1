@@ -46,6 +46,10 @@ public class ControladorRanking {
             ranking = Collections.emptyList();
         }
 
+        if (nombreCuestionario == null && !ranking.isEmpty()) {
+            nombreCuestionario = ranking.get(0).getNombreCuestionario();
+        }
+
         ModelMap model = new ModelMap();
         model.addAttribute("rankingCuestionario", ranking);
         model.addAttribute("nombreCuestionario", nombreCuestionario);

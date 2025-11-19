@@ -7,25 +7,28 @@ public class RankingCuestionarioDTO {
     private Long preguntasCorrectas;
     private Long preguntasErradas;
     private Long numeroIntentos;
+    private String nombreCuestionario;
 
     public RankingCuestionarioDTO(Long idUsuario, String nombreUsuario, Long puntajeTotal,
-                                  Long preguntasCorrectas, Long preguntasErradas, Long numeroIntentos) {
+                                  Long preguntasCorrectas, Long preguntasErradas, Long numeroIntentos, String nombreCuestionario) {
         this.idUsuario = idUsuario;
         this.nombreUsuario = nombreUsuario;
         this.puntajeTotal = puntajeTotal;
         this.preguntasCorrectas = preguntasCorrectas;
         this.preguntasErradas = preguntasErradas;
         this.numeroIntentos = numeroIntentos;
+        this.nombreCuestionario = nombreCuestionario;
     }
 
     public RankingCuestionarioDTO(Object[] data) {
-        if (data != null && data.length >= 6) {
+        if (data != null && data.length >= 7) {
             this.idUsuario = data[0] != null ? ((Number) data[0]).longValue() : null;
             this.nombreUsuario = (String) data[1];
             this.puntajeTotal = data[2] != null ? ((Number) data[2]).longValue() : 0L;
             this.preguntasCorrectas = data[3] != null ? ((Number) data[3]).longValue() : 0L;
             this.preguntasErradas = data[4] != null ? ((Number) data[4]).longValue() : 0L;
             this.numeroIntentos = data[5] != null ? ((Number) data[5]).longValue() : 0L;
+            this.nombreCuestionario = (String) data[6];
         }
     }
 
@@ -47,4 +50,6 @@ public class RankingCuestionarioDTO {
     public Long getNumeroIntentos() {return numeroIntentos;}
     public void setNumeroIntentos(Long numeroIntentos) {this.numeroIntentos = numeroIntentos;}
 
+    public String getNombreCuestionario() {return nombreCuestionario;}
+    public void setNombreCuestionario(String nombreCuestionario) {this.nombreCuestionario = nombreCuestionario;}
 }

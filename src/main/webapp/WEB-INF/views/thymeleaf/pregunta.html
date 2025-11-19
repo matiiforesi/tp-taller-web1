@@ -159,6 +159,35 @@
     const respondida = [[${respondida}]];
     const idCuestionario = [[${cuestionario.id}]];
     const idPregunta = [[${pregunta.id}]];
+    
+    if (!respondida) {
+        let isSubmitting = false;
+        let isLeaving = false;
+
+        document.querySelectorAll('form').forEach(function(formElement) {
+            formElement.addEventListener('submit', function() {
+                isSubmitting = true;
+            });
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F5' || (e.ctrlKey && (e.key === 'r' || e.key === 'R'))) {
+                e.preventDefault();
+                if (confirm('¿Estás seguro de que quieres salir? Se perderá el progreso de esta pregunta.')) {
+                    isLeaving = true;
+                    window.location.href = '/spring/home';
+                }
+            }
+        });
+        
+        window.addEventListener('beforeunload', function(e) {
+            if (!isSubmitting && !isLeaving) {
+                e.preventDefault();
+                e.returnValue = '¿Estás seguro de que quieres salir? Se perderá el progreso de esta pregunta.';
+                return e.returnValue;
+            }
+        });
+    }
 
     if (!respondida) {
         const interval = setInterval(() => {

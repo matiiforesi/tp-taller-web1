@@ -145,6 +145,41 @@
     const timerSpan = document.getElementById("timer");
     const form = document.getElementById("formulario");
     const respondida = /*[[${respondida}]]*/ false;
+    
+    // Prevent page refresh - show confirmation and redirect to home
+    if (!respondida) {
+        let isSubmitting = false;
+        let isLeaving = false;
+        
+        // Mark form submission as legitimate (not a refresh)
+        // Handle all forms on the page
+        document.querySelectorAll('form').forEach(function(formElement) {
+            formElement.addEventListener('submit', function() {
+                isSubmitting = true;
+            });
+        });
+        
+        // Intercept keyboard shortcuts (F5, Ctrl+R, Ctrl+F5)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F5' || (e.ctrlKey && (e.key === 'r' || e.key === 'R'))) {
+                e.preventDefault();
+                if (confirm('¿Estás seguro de que quieres salir? Se perderá el progreso de esta pregunta.')) {
+                    isLeaving = true;
+                    window.location.href = '/spring/home';
+                }
+            }
+        });
+        
+        // Handle beforeunload event (browser refresh button, closing tab, etc.)
+        // Only show warning if it's not a legitimate form submission
+        window.addEventListener('beforeunload', function(e) {
+            if (!isSubmitting && !isLeaving) {
+                e.preventDefault();
+                e.returnValue = '¿Estás seguro de que quieres salir? Se perderá el progreso de esta pregunta.'; // Required for Chrome
+                return e.returnValue; // Required for some browsers
+            }
+        });
+    }
 
     if (!respondida) {
         const interval = setInterval(() => {

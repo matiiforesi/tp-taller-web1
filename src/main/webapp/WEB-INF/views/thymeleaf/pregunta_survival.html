@@ -6,7 +6,7 @@
     <!-- Boostrap core CSS -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
     <!-- Custom style -->
-    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" th:href="@{/css/colores.css}"/>
     <link rel="stylesheet" th:href="@{/css/pregunta.css}">
 </head>
 <body>
@@ -22,17 +22,17 @@
         </div>
         <div class="d-flex justify-content-around mb-4 flex-wrap">
             <!-- Tiempo -->
-            <div class="card text-center shadow-sm border-warning" style="width: 10rem;">
+            <div class="card text-center shadow-sm card-metrica card-tiempo" style="width: 10rem;">
                 <div class="card-body">
-                    <h6 class="card-title text-warning fw-bold"> Tiempo</h6>
+                    <h6 class="card-title"> Tiempo</h6>
                     <span id="timer" th:text="${tiempoRestante}" class="fs-4 fw-bold text-dark"></span> s
                 </div>
             </div>
 
             <!-- Vidas -->
-            <div class="card text-center shadow-sm border-danger" style="width: 10rem;">
+            <div class="card text-center shadow-sm card-metrica card-vidas" style="width: 10rem;">
                 <div class="card-body">
-                    <h6 class="card-title text-danger fw-bold"> Vidas</h6>
+                    <h6 class="card-title"> Vidas</h6>
                     <span th:text="${survivalVidas != null ? survivalVidas : 0}" class="fs-4 fw-bold text-dark"></span>
                 </div>
             </div>
@@ -40,7 +40,7 @@
             <!-- Puntaje -->
             <div class="card text-center shadow-sm border-info" style="width: 10rem;">
                 <div class="card-body">
-                    <h6 class="card-title text-info fw-bold"> Puntaje</h6>
+                    <h6 class="card-title" style="color:black;"> Puntaje</h6>
                     <span th:text="${puntajeTotal != null ? puntajeTotal : 0}" class="fs-4 fw-bold text-dark"></span>
                     <small class="text-muted d-block" th:if="${usuario != null and usuario.puntaje != null}">
                         Total: <span th:text="${usuario.puntaje}"></span>
@@ -49,9 +49,9 @@
             </div>
 
             <!-- Monedas -->
-            <div class="card text-center shadow-sm border-success" style="width: 10rem;">
+            <div class="card text-center shadow-sm card-monedas" style="width: 10rem;">
                 <div class="card-body">
-                    <h6 class="card-title text-success fw-bold"> Monedas</h6>
+                    <h6 class="card-title" style="color:black"> Monedas</h6>
                     <span th:text="${monedas != null ? monedas : 0}" class="fs-4 fw-bold text-dark"></span>
                     <small class="text-muted d-block" th:if="${usuario != null and usuario.monedas != null}">
                         Total: <span th:text="${usuario.monedas}"></span>
@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <div class="alert alert-info text-center shadow-sm fs-4 fw-bold">
+        <div class="alert alert-pregunta text-center shadow-sm fs-4 fw-bold">
             <h2 th:text="${pregunta.enunciado}"></h2>
         </div>
 
@@ -71,7 +71,7 @@
             <div class="d-grid gap-3">
                 <button type="submit" name="respuesta" th:value="${opcion}"
                         th:each="opcion : ${opciones}"
-                        class="btn btn-outline-primary btn-lg">
+                        class="btn btn-respuesta btn-lg">
                     <span th:text="${opcion}"></span>
                 </button>
             </div>
@@ -81,7 +81,7 @@
         <div th:if="${respondida}">
             <!-- Tiempo agotado -->
             <div th:if="${tiempoAgotado}"
-                 style="color: orange; font-weight: bold; border: 2px solid orange; padding: 20px; border-radius: 8px; background-color: #fff3cd;">
+                 style="color: orange; font-weight: bold; border: 2px solid orange; padding: 20px; border-radius: 8px; background-color: #fff3cd;" class="d-flex justify-content-center align-items-center flex-column">
                 <h4>¡Se agotó el tiempo!</h4>
                 <div class="mt-3">
                     <p class="mb-1"><strong>Puntaje en este juego:</strong> <span th:text="${puntajeTotal != null ? puntajeTotal : 0}"></span></p>
@@ -100,7 +100,7 @@
 
             <!-- Respuesta correcta -->
             <div th:if="${(tiempoAgotado == null || !tiempoAgotado) and esCorrecta}"
-                 style="color: #155724; font-weight: bold; border: 2px solid #28a745; padding: 20px; border-radius: 8px; background-color: #d4edda;">
+                 style="color: #155724; font-weight: bold; border: 2px solid #28a745; padding: 20px; border-radius: 8px; background-color: #d4edda;" class="d-flex justify-content-center align-items-center flex-column">
                 <h4>¡Respuesta correcta! 🎉</h4>
                 <div class="mt-3">
                     <p class="mb-1"><strong>Puntaje en este juego:</strong> <span th:text="${puntajeTotal != null ? puntajeTotal : 0}"></span></p>
@@ -119,7 +119,7 @@
 
             <!-- Respuesta incorrecta -->
             <div th:if="${(tiempoAgotado == null || !tiempoAgotado) and !esCorrecta}"
-                 style="color: #721c24; font-weight: bold; border: 2px solid #dc3545; padding: 20px; border-radius: 8px; background-color: #f8d7da;">
+                 style="color: #721c24; font-weight: bold; border: 2px solid #dc3545; padding: 20px; border-radius: 8px; background-color: #f8d7da;" class="d-flex justify-content-center align-items-center flex-column">
                 <h4>Respuesta incorrecta</h4>
                 <div class="mt-3">
                     <p class="mb-1"><strong>Puntaje en este juego:</strong> <span th:text="${puntajeTotal != null ? puntajeTotal : 0}"></span></p>

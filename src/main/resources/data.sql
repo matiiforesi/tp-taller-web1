@@ -27,5 +27,5 @@ INSERT INTO Preguntas (id, enunciado, categoria, dificultad_id, respuesta_correc
 
 -- Preguntas Cuestionario 3 (Cine)
 INSERT INTO Preguntas (id, enunciado, categoria, dificultad_id, respuesta_correcta, respuesta_incorrecta_1, respuesta_incorrecta_2, respuesta_incorrecta_3, cuestionario_id) VALUES
-(5, '¿Quién dirigió la película “Titanic”?', 'Entretenimiento', 3, 'James Cameron', 'Steven Spielberg', 'Ridley Scott', 'Christopher Nolan', 3),
-(6, '¿En qué año se estrenó “El Padrino”?', 'Entretenimiento', 3, '1972', '1980', '1969', '1975', 3);
+(5, '¿Quién dirigió la película Titanic?', 'Entretenimiento', 3, 'James Cameron', 'Steven Spielberg', 'Ridley Scott', 'Christopher Nolan', 3),
+(6, '¿En qué año se estrenó El Padrino?', 'Entretenimiento', 3, '1972', '1980', '1969', '1975', 3);

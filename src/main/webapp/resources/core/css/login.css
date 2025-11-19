@@ -1,0 +1,52 @@
+body {
+    padding: 3.55rem 3rem;
+    background: var(--gradient-radial);
+    min-height: 100vh;
+}
+        .login-container {
+
+            width: 550px;
+            background: var(--ink-black);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 0 18px rgba(0,0,0,0.3);
+            color: var(--white);
+        }
+
+        .login-container h3 {
+            color: var(--fresh-sky);
+        }
+
+        .form-control {
+            background-color: #0c2331;
+            border: 1px solid var(--steel-blue);
+            color: var(--white);
+        }
+
+        .form-control:focus {
+            background-color: #0c2331;
+            border-color: var(--fresh-sky);
+            box-shadow: 0 0 0 .25rem rgba(0, 166, 251, .25);
+            color: var(--white);
+        }
+
+        .btn-primary {
+            background-color: var(--fresh-sky);
+            border-color: var(--fresh-sky);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--steel-blue);
+            border-color: var(--steel-blue);
+        }
+
+        a {
+            color: var(--fresh-sky);
+        }
+        a:hover {
+            color: var(--steel-blue);
+        }
+
+        nav {
+            background-color: var(--deep-space-blue) !important;
+        }

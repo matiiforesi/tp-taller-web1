@@ -10,35 +10,36 @@
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
 
     <!-- custom style -->
-    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" th:href="@{/css/colores.css}">
+    <link rel="stylesheet" th:href="@{/css/login.css}"/>
 
 </head>
 
 <body>
 
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">UNLAM</a>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top">
+    <a class="navbar-brand ms-3" href="#">UNLAM</a>
 </nav>
 
-<main role="main" class="container">
+<main role="main" class="d-flex justify-content-center align-items-center min-vh-100">
 
-    <div class = "container">
-        <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div class="login-container">
             <form action="#" th:action="@{/validar-login}" method="POST" th:object="${datosLogin}">
                 <h3 class="form-signin-heading">Taller Web I</h3>
                 <hr class="colorgraph"><br>
 
-                <input th:field="*{email}" id="email" type="email" class="form-control" required/>
+                <input th:field="*{email}" id="email" type="email" class="form-control" required/><br>
                 <input th:field="*{password}" type="password" id="password" class="form-control" required/>
-
+                <br>
                 <button id="btn-login" class="btn btn-lg btn-primary btn-block" Type="Submit" disabled>Login</button>
 
                 <p th:if="${error != null}" class="alert alert-danger" th:text="'Error ' + ${error}">
                 </p>
             </form>
+            <br>
             <a id="btn-register" href="nuevo-usuario">Registrarme</a>
         </div>
-    </div>
+
 </main>
 <!-- /.container -->
 

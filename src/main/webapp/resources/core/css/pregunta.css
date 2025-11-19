@@ -1,4 +1,10 @@
 
+body{
+        background: var(--gradient-radial);
+        color: var(--white);
+        font-family: 'Segoe UI', sans-serif;
+}
+
 .contenedor_general{
     display: flex;
     align-items: center;
@@ -27,4 +33,108 @@ label{
     height:100vh;
     align-items: center;
     justify-content:center;
+}
+.card-metrica {
+    width: 10rem;
+    border-radius: 12px;
+    color: var(--ink-black);
+    font-weight: bold;
+}
+
+.card-tiempo {
+    border: 2px solid var(--fresh-sky);
+}
+.card-vidas {
+    border: 2px solid var(--steel-blue);
+}
+.card-monedas {
+    border: 2px solid var(--baltic-blue);
+}
+.alert-pregunta {
+    background-color: var(--deep-space-blue);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+/* Botones de respuesta */
+.btn-respuesta {
+    border: 2px solid var(--fresh-sky);
+    color: var(--white);
+    background-color: var(--deep-space-blue);
+    transition: 0.3s;
+}
+.btn-respuesta:hover {
+    background-color: var(--fresh-sky);
+    border-color: var(--white);
+}
+
+/* Estados de respuesta */
+.respuesta-correcta {
+    color: var(--white);
+    border: 2px solid var(--fresh-sky);
+    background-color: var(--steel-blue);
+    border-radius: 8px;
+    padding: 20px;
+}
+.respuesta-incorrecta {
+    color: var(--white);
+    border: 2px solid var(--baltic-blue);
+    background-color: var(--deep-space-blue);
+    border-radius: 8px;
+    padding: 20px;
+}
+.respuesta-tiempo {
+    color: var(--white);
+    border: 2px solid var(--fresh-sky);
+    background-color: var(--ink-black);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.ayudas-container {
+    margin-top: 1.5rem;
+}
+
+.btn-ayuda {
+    border: 2px solid var(--fresh-sky);
+    background-color: var(--deep-space-blue);
+    color: var(--white);
+    border-radius: 12px;
+    transition: 0.3s;
+    font-weight: bold;
+}
+.btn-ayuda:hover {
+    background-color: var(--steel-blue);
+    border-color: var(--white);
+}
+
+.btn-ayuda-sin {
+    border-color: var(--ink-black);
+    background-color: var(--ink-black);
+}
+.btn-ayuda-sin:hover {
+    background-color: var(--black);
+}
+
+.btn-ayuda-duplicar {
+    border-color: var(--fresh-sky);
+    background-color: var(--baltic-blue);
+}
+.btn-ayuda-duplicar:hover {
+    background-color: var(--steel-blue);
+}
+
+.btn-ayuda-eliminar {
+    border-color: var(--steel-blue);
+    background-color: var(--deep-space-blue);
+}
+.btn-ayuda-eliminar:hover {
+    background-color: var(--baltic-blue);
+}
+
+.btn-ayuda:disabled,
+.btn-ayuda[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
 }

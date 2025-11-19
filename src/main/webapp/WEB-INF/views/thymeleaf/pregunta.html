@@ -6,7 +6,7 @@
     <!-- Boostrap core CSS -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
     <!-- Custom style -->
-    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" th:href="@{/css/colores.css}"/>
     <link rel="stylesheet" th:href="@{/css/pregunta.css}">
 </head>
 <body>
@@ -16,32 +16,32 @@
     <div id="contenedor-pregunta">
         <div class="d-flex justify-content-around mb-4">
             <!-- Tiempo -->
-            <div class="card text-center shadow-sm border-warning" style="width: 10rem;">
+            <div class="card text-center shadow-sm card-metrica card-tiempo" style="width: 10rem;">
                 <div class="card-body">
-                    <h6 class="card-title text-warning fw-bold"> Tiempo</h6>
-                    <span id="timer" th:text="${tiempoRestante}" class="fs-4 fw-bold text-dark"></span> s
+                    <h6 class="card-title"> Tiempo</h6>
+                    <span id="timer" th:text="${tiempoRestante}" class="fs-4"></span> s
                 </div>
             </div>
 
             <!-- Vidas -->
-            <div class="card text-center shadow-sm border-danger" style="width: 10rem;">
+            <div class="card text-center shadow-sm card-metrica card-vidas" style="width: 10rem;">
                 <div class="card-body">
-                    <h6 class="card-title text-danger fw-bold"> Vidas</h6>
-                    <span th:text="${vidasRestantes}" class="fs-4 fw-bold text-dark"></span>
+                    <h6 class="card-title"> Vidas</h6>
+                    <span th:text="${vidasRestantes}" class="fs-4"></span>
                 </div>
             </div>
 
             <!-- Monedas -->
-            <div class="card text-center shadow-sm border-success" style="width: 10rem;">
+            <div class="card text-center shadow-sm card-metrica card-monedas" style="width: 10rem;">
                 <div class="card-body">
-                    <h6 class="card-title text-success fw-bold"> Monedas</h6>
-                    <span th:text="${monedas}" class="fs-4 fw-bold text-dark"></span>
+                    <h6 class="card-title"> Monedas</h6>
+                    <span th:text="${monedas}" class="fs-4"></span>
                 </div>
             </div>
         </div>
 
 
-        <div class="alert alert-info text-center shadow-sm fs-4 fw-bold">
+        <div class="alert alert-pregunta text-center shadow-sm fs-4 fw-bold">
         <h2 th:text="${pregunta.enunciado}"></h2>
         </div>
         <form id="formulario" th:if="${!respondida}"
@@ -56,7 +56,7 @@
                     <option value="ELIMINAR_DOS_INCORRECTAS" th:selected="${trampaUsada == 'ELIMINAR_DOS_INCORRECTAS'}">Eliminar dos incorrectas</option>
                 </select>
             </div>-->
-            <div class="mb-3" th:if="${ayudasDisponibles!=null and !ayudasDisponibles.isEmpty()}">
+            <div class="mb-3 ayudas-container" th:if="${ayudasDisponibles!=null and !ayudasDisponibles.isEmpty()}">
                 <label class="form-label fw-bold">¿Querés usar una ayuda?</label>
                 <div class="row g-3">
 
@@ -64,7 +64,7 @@
                     <div class="col-md-4" >
                         <input type="radio" class="btn-check" name="trampaActivada" id="sinAyuda" value=""
                                th:checked="${trampaUsada == null}">
-                        <label class="card btn btn-outline-secondary w-100" for="sinAyuda">
+                        <label class="card btn btn-ayuda btn-ayuda-sin w-100" for="sinAyuda">
                             <div class="card-body text-center">
                                  Sin ayuda
                             </div>
@@ -76,7 +76,7 @@
                         <input type="radio" class="btn-check" name="trampaActivada" id="duplicar" value="DUPLICAR_PUNTAJE"
                                th:checked="${trampaUsada == 'DUPLICAR_PUNTAJE'}"
                                th:disabled="${duplicar_puntaje == 0}">
-                        <label class="card btn btn-outline-success w-100" for="duplicar">
+                        <label class="card btn btn-ayuda btn-ayuda-duplicar w-100" for="duplicar">
                             <div class="card-body text-center">
                                  Duplicar puntaje
                             </div>
@@ -88,7 +88,7 @@
                         <input type="radio" class="btn-check" name="trampaActivada" id="eliminar" value="ELIMINAR_DOS_INCORRECTAS"
                                th:checked="${trampaUsada == 'ELIMINAR_DOS_INCORRECTAS'}"
                         th:disabled="${eliminar_incorrectas == 0}">
-                        <label class="card btn btn-outline-warning w-100" for="eliminar">
+                        <label class="card btn btn-ayuda btn-ayuda-eliminar w-100" for="eliminar">
                             <div class="card-body text-center">
                                  Eliminar dos incorrectas
                             </div>
@@ -102,7 +102,7 @@
             <div class="d-grid gap-3">
                 <button type="submit" name="respuesta" th:value="${opcion}"
                         th:each="opcion : ${opciones}"
-                        class="btn btn-outline-primary btn-lg">
+                        class="btn btn-respuesta btn-lg">
                     <span th:text="${opcion}"></span>
                 </button>
             </div>
@@ -112,20 +112,13 @@
         <div th:if="${respondida}">
             <!-- Tiempo agotado -->
             <div th:if="${tiempoAgotado}"
-                 style="color: orange; font-weight: bold; border: 2px solid orange; padding: 20px; border-radius: 8px; background-color: #fff3cd;">
+                 style="color: orange; font-weight: bold; border: 2px solid orange; padding: 20px; border-radius: 8px; background-color: #fff3cd;" class="d-flex align-items-center justify-content-center flex-column">
                 ¡Se agotó el tiempo!
                 <p>Puntaje Total: <span th:text="${puntajeTotal}"></span></p>
                 <form th:action="@{/siguiente}" method="post">
                     <button type="submit" class="btn btn-warning">Siguiente</button>
                 </form>
             </div>
-            <div th:if="${trampaUsada == 'DUPLICAR_PUNTAJE'}">
-                 ¡Usaste la ayuda de duplicar puntaje!
-            </div>
-            <div th:if="${trampaUsada == 'ELIMINAR_DOS_INCORRECTAS'}">
-                 ¡Usaste la ayuda de eliminar dos opciones incorrectas!
-            </div>
-
            <!-- <div th:if="${esCorrecta}" style="color: green; font-weight: bold;">
                 ✅ ¡Respuesta correcta!
                 <p>Puntaje Total <span th:text="${puntajeTotal}"></span></p>
@@ -136,7 +129,8 @@
 
             <!-- Respuesta correcta -->
             <div th:if="${!tiempoAgotado and esCorrecta}"
-                 style="color: #155724; font-weight: bold; border: 2px solid #28a745; padding: 20px; border-radius: 8px; background-color: #d4edda;">
+                 style="color: #155724; font-weight: bold; border: 2px solid #28a745; padding: 20px; border-radius: 8px; background-color: #d4edda;"
+                 class="d-flex align-items-center justify-content-center flex-column">
                 ¡Respuesta correcta!
                 <p>Puntaje Total: <span th:text="${puntajeTotal}"></span></p>
                 <form th:action="@{/siguiente}" method="post">
@@ -146,7 +140,7 @@
 
             <!-- Respuesta incorrecta -->
             <div th:if="${!tiempoAgotado and !esCorrecta}"
-                 style="color: #721c24; font-weight: bold; border: 2px solid #dc3545; padding: 20px; border-radius: 8px; background-color: #f8d7da;">
+                 style="color: #721c24; font-weight: bold; border: 2px solid #dc3545; padding: 20px; border-radius: 8px; background-color: #f8d7da;" class="d-flex align-items-center justify-content-center flex-column">
                 Respuesta incorrecta.
                 <p>Puntaje Total: <span th:text="${puntajeTotal}"></span></p>
                 <form th:action="@{/siguiente}" method="post">
@@ -230,7 +224,7 @@
                 button.type = "submit";
                 button.name = "respuesta";
                 button.value = opcion;
-                button.className = "btn btn-outline-primary btn-lg";
+                button.className = "btn btn-respuesta btn-lg";
                 button.innerHTML = `<span>${opcion}</span>`;
                 contenedor.appendChild(button);
             });

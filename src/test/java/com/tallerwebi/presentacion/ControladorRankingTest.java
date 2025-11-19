@@ -1,6 +1,7 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.ServicioRanking;
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.dto.RankingCuestionarioDTO;
 import com.tallerwebi.dominio.dto.RankingGeneralDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -21,8 +23,14 @@ public class ControladorRankingTest {
 
     private ControladorRanking controladorRanking = new ControladorRanking(servRanking);
 
+    private HttpSession session = mock(HttpSession.class);
+    private Usuario usuario;
+
     @BeforeEach
     void setUp() {
+        usuario = new Usuario();
+        usuario.setId(1L);
+        usuario.setNombre("Test");
         Mockito.reset(servRanking);
     }
 
@@ -32,9 +40,14 @@ public class ControladorRankingTest {
 
     @Test
     public void queSeLlameAlServicioYDevuelvaRankingGeneral() {
+        givenUsuarioEnSesion();
         givenServicioRankingGeneral();
         ModelAndView mav = whenObtieneRankingGeneral();
         thenSeRenderizaVistaRankingGeneral(mav);
+    }
+
+    private void givenUsuarioEnSesion() {
+        when(session.getAttribute("usuario")).thenReturn(usuario);
     }
 
     private void givenServicioRankingGeneral() {
@@ -44,7 +57,7 @@ public class ControladorRankingTest {
     }
 
     private ModelAndView whenObtieneRankingGeneral() {
-        return controladorRanking.mostrarRankingGeneral();
+        return controladorRanking.mostrarRankingGeneral(session);
     }
 
     private void thenSeRenderizaVistaRankingGeneral(ModelAndView mav) {
@@ -57,6 +70,7 @@ public class ControladorRankingTest {
 
     @Test
     public void queSeLlameAlServicioYDevuelvaRankingFiltradoPorNombre() {
+        givenUsuarioEnSesion();
         String nombreCuestionario = "Historia";
         givenRankingFiltradoPorNombre(nombreCuestionario);
         ModelAndView mav = whenObtieneNombreCuestionario(nombreCuestionario);
@@ -70,7 +84,7 @@ public class ControladorRankingTest {
     }
 
     private ModelAndView whenObtieneNombreCuestionario(String nombreCuestionario) {
-        return controladorRanking.mostrarRankingCuestionario(nombreCuestionario, null);
+        return controladorRanking.mostrarRankingCuestionario(nombreCuestionario, session);
     }
 
     private void thenRenderizaVistaRankingFiltradoPorNombre(ModelAndView mav, String nombreCuestionario) {
@@ -88,6 +102,7 @@ public class ControladorRankingTest {
 
     @Test
     public void queSeLlameAlServicioYDevuelvaRankingFiltradoPorId() {
+        givenUsuarioEnSesion();
         Long idCuestionario = 1L;
         givenRankingFiltradoPorId(idCuestionario);
         ModelAndView mav = whenObtieneIdCuestionario(idCuestionario);
@@ -95,13 +110,13 @@ public class ControladorRankingTest {
     }
 
     private void givenRankingFiltradoPorId(Long idCuestionario) {
-        RankingCuestionarioDTO dto = new RankingCuestionarioDTO(1L, "Damian", 40L, 4L, 6L, 1L, "");
+        RankingCuestionarioDTO dto = new RankingCuestionarioDTO(1L, "Damian", 40L, 4L, 6L, 1L, "Historia");
         when(servRanking.obtenerRankingCuestionarioPorId(idCuestionario))
                 .thenReturn(Collections.singletonList(dto));
     }
 
     private ModelAndView whenObtieneIdCuestionario(Long idCuestionario) {
-        return controladorRanking.mostrarRankingCuestionario(null, idCuestionario);
+        return controladorRanking.mostrarRankingCuestionario(String.valueOf(idCuestionario), session);
     }
 
     private void thenSeRenderizaVistaRankingFiltradoPorId(ModelAndView mav, Long idCuestionario) {
@@ -118,7 +133,8 @@ public class ControladorRankingTest {
     }
 
     @Test
-    public void siNoHayJugadoresElModeloEsteVacio() {
+    public void siNoHayJugadoresElModeloEstaVacio() {
+        givenUsuarioEnSesion();
         String nombreCuestionario = "Geografía";
         givenServicioSinJugadores(nombreCuestionario);
         ModelAndView mav = whenObtieneNombreCuestionario(nombreCuestionario);
@@ -134,5 +150,18 @@ public class ControladorRankingTest {
         verify(servRanking, times(1)).obtenerRankingCuestionarioPorNombre(nombreCuestionario);
         List<RankingCuestionarioDTO> lista = (List<RankingCuestionarioDTO>) mav.getModel().get("rankingCuestionario");
         assertTrue(lista.isEmpty());
+    }
+
+    @Test
+    public void siNoHayUsuarioEnSesionRedirigeALogin() {
+        givenSinUsuarioEnSesion();
+        ModelAndView mavGeneral = controladorRanking.mostrarRankingGeneral(session);
+        ModelAndView mavCuestionario = controladorRanking.mostrarRankingCuestionario("1", session);
+        assertEquals("redirect:/login", mavGeneral.getViewName());
+        assertEquals("redirect:/login", mavCuestionario.getViewName());
+    }
+
+    private void givenSinUsuarioEnSesion() {
+        when(session.getAttribute("usuario")).thenReturn(null);
     }
 }

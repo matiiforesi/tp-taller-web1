@@ -1,0 +1,40 @@
+body {
+    padding: 3.55rem 3rem;
+    background: var(--gradient-radial);
+    min-height: 100vh;
+}
+
+/* NAVBAR */
+.navbar {
+    background-color: var(--ink-black) !important;
+}
+
+.navbar-brand {
+    margin: 0 2rem;
+    color: var(--fresh-sky) !important;
+    font-weight: bold;
+}
+
+/* FONDO MENU HAMBURGUESA */
+.dropdown-menu {
+    background-color: var(--deep-space-blue) !important;
+    border: none;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: var(--steel-blue) !important;
+    color: var(--white) !important;
+}
+
+.table {
+    width: 100% !important;
+}
+
+.table-rounded {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.form-control {
+    max-width: 67.88rem;
+}

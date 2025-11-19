@@ -87,7 +87,7 @@ public class RepositorioHistorialImpl implements RepositorioHistorial {
         final Session session = sessionFactory.getCurrentSession();
         @SuppressWarnings("unchecked")
         List<Object[]> resultados = session.createCriteria(HistorialCuestionario.class, "h")
-                .add(Restrictions.eq("nombreCuestionario", nombreCuestionario))
+                .add(Restrictions.ilike("nombreCuestionario", nombreCuestionario))
                 .setProjection(Projections.projectionList()
                         .add(Projections.groupProperty("jugador.id"))
                         .add(Projections.groupProperty("nombreUsuario"))

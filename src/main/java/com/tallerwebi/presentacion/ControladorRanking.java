@@ -1,6 +1,7 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.ServicioRanking;
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.dto.RankingCuestionarioDTO;
 import com.tallerwebi.dominio.dto.RankingGeneralDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
 
 @Controller
 public class ControladorRanking {
 
-    private ServicioRanking servicioRanking;
+    private final ServicioRanking servicioRanking;
 
     @Autowired
     public ControladorRanking(ServicioRanking servicioRanking) {
@@ -24,26 +26,50 @@ public class ControladorRanking {
     }
 
     @RequestMapping("/ranking")
-    public ModelAndView mostrarRankingGeneral() {
-        List<RankingGeneralDTO> ranking = servicioRanking.obtenerRankingGeneral();
+    public ModelAndView mostrarRankingGeneral(HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return new ModelAndView("redirect:/login");
+        }
+
+        List<RankingGeneralDTO> rankingGeneral = servicioRanking.obtenerRankingGeneral();
+
         ModelMap model = new ModelMap();
-        model.addAttribute("rankingGeneral", ranking);
+        model.addAttribute("rankingGeneral", rankingGeneral);
+
+        // Datos del usuario para el nav
+        model.addAttribute("nombre", usuario.getNombre());
+        model.addAttribute("puntaje", usuario.getPuntaje());
+        model.addAttribute("monedas", usuario.getMonedas());
+
         return new ModelAndView("ranking", model);
     }
 
     @RequestMapping("/rankingCuestionario")
     public ModelAndView mostrarRankingCuestionario(
-            @RequestParam(value = "nombreCuestionario", required = false) String nombreCuestionario,
-            @RequestParam(value = "idCuestionario", required = false) Long idCuestionario) {
+            @RequestParam(value = "busqueda", required = false) String busqueda,
+            HttpSession session) {
 
-        List<RankingCuestionarioDTO> ranking;
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return new ModelAndView("redirect:/login");
+        }
 
-        if (nombreCuestionario != null) {
-            ranking = servicioRanking.obtenerRankingCuestionarioPorNombre(nombreCuestionario);
-        } else if (idCuestionario != null) {
-            ranking = servicioRanking.obtenerRankingCuestionarioPorId(idCuestionario);
-        } else {
-            ranking = Collections.emptyList();
+        List<RankingCuestionarioDTO> ranking = Collections.emptyList();
+        String nombreCuestionario = null;
+        Long idCuestionario = null;
+
+        if (busqueda != null && !busqueda.isBlank()) {
+            busqueda = busqueda.trim();
+            try {
+                // Si es un número, buscar por ID
+                idCuestionario = Long.parseLong(busqueda);
+                ranking = servicioRanking.obtenerRankingCuestionarioPorId(idCuestionario);
+            } catch (NumberFormatException e) {
+                // Si no es número, buscar por nombre
+                nombreCuestionario = busqueda;
+                ranking = servicioRanking.obtenerRankingCuestionarioPorNombre(nombreCuestionario);
+            }
         }
 
         if (nombreCuestionario == null && !ranking.isEmpty()) {
@@ -54,6 +80,11 @@ public class ControladorRanking {
         model.addAttribute("rankingCuestionario", ranking);
         model.addAttribute("nombreCuestionario", nombreCuestionario);
         model.addAttribute("idCuestionario", idCuestionario);
+
+        // Datos del usuario para el nav
+        model.addAttribute("nombre", usuario.getNombre());
+        model.addAttribute("puntaje", usuario.getPuntaje());
+        model.addAttribute("monedas", usuario.getMonedas());
 
         return new ModelAndView("ranking", model);
     }

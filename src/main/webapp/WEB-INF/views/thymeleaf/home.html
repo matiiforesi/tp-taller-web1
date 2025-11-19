@@ -141,7 +141,7 @@
             <div th:if="${cuestionariosFiltrados != null}">
                 <h4 class="text-white">Resultados filtrados</h4>
 
-                <div class="d-flex flex-wrap justify-content-start gap-3">
+                <div class="d-flex flex-wrap justify-content-start filtrados">
                     <div th:each="c : ${cuestionariosFiltrados}"
                          class="card p-3 text-center card-cuestionario">
 
@@ -169,7 +169,7 @@
             <h3 class="text-white">Cuestionarios sugeridos</h3>
             <p class="text-white">Prueba algunos de nuestros cuestionarios recomendados.</p>
 
-            <div class="d-flex flex-wrap gap-3">
+            <div class="d-flex flex-wrap sugeridos">
                 <div th:each="c : ${cuestionarios}"
                      class="card p-3 text-center card-cuestionario">
 

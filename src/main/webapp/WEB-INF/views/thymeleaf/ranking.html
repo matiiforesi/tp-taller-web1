@@ -3,101 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <title>Ranking</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 2rem;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 80%;
-            margin-top: 1rem;
-        }
-
-        th, td {
-            border: 1px solid #333;
-            padding: 0.5rem 1rem;
-            text-align: left;
-        }
-
-        th {
-            background-color: #555;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        h1 {
-            margin-top: 2rem;
-        }
-
-        a {
-            display: inline-block;
-            margin-top: 1rem;
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-        }
-
-        a:hover {
-            color: #007BFF;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/colores.css}">
+    <link rel="stylesheet" th:href="@{/css/ranking.css}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
-<!-- Ranking General -->
-<div th:if="${rankingGeneral != null}">
-    <h1>Ranking General</h1>
+<!-- NAV -->
+<nav class="navbar navbar-expand-md navbar-dark fixed-top px-4">
+    <a class="navbar-brand" th:href="@{/home}">Mi Web</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center">
+            <li class="nav-item me-3">
+                <a th:href="@{/home}" class="nav-link">Inicio</a>
+            </li>
+            <li class="nav-item me-3">
+                <a th:href="@{/ranking}" class="nav-link">Ranking</a>
+            </li>
+            <li class="nav-item me-3">
+                <a th:href="@{/tienda}" class="nav-link">Tienda</a>
+            </li>
+            <li class="nav-item text-white me-3">
+                Monedas: <strong th:text="${monedas}">0</strong>
+            </li>
+            <li class="nav-item text-white me-3">
+                Puntos: <strong th:text="${puntaje}">0</strong>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white" href="#" id="userMenu"
+                   role="button" data-bs-toggle="dropdown">
+                    <span th:text="${nombre}">Usuario</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item text-white" th:href="@{/login}">Cerrar sesión</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
 
-    <table th:if="${!#lists.isEmpty(rankingGeneral)}">
-        <thead>
-        <tr>
-            <th>Jugador</th>
-            <th>Puntaje</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="fila : ${rankingGeneral}">
-            <td th:text="${fila.nombreUsuario}">Nombre</td>
-            <td th:text="${fila.puntajeTotal}">Puntaje</td>
-        </tr>
-        </tbody>
-    </table>
+<div class="container py-5">
 
-    <p th:if="${#lists.isEmpty(rankingGeneral)}">No hay usuarios para mostrar.</p>
+    <!-- BARRA DE BÚSQUEDA -->
+    <form class="d-flex mb-4" th:action="@{/rankingCuestionario}" method="get">
+        <input class="form-control me-2" type="text" name="busqueda"
+               placeholder="Busca un cuestionario por su ID o nombre" value="">
+        <button class="btn btn-primary me-2" type="submit">Buscar</button>
+        <a th:href="@{/ranking}" class="btn btn-secondary">Tabla General</a>
+    </form>
+
+    <!-- RANKING GENERAL -->
+    <div th:if="${rankingGeneral != null and rankingCuestionario == null}">
+        <h2 class="text-white mb-3">Ranking General</h2>
+
+        <div th:if="${!#lists.isEmpty(rankingGeneral)}">
+            <table class="table table-striped table-dark table-hover table-rounded">
+                <thead>
+                <tr>
+                    <th>Jugador</th>
+                    <th>Puntaje</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="fila : ${rankingGeneral}">
+                    <td th:text="${fila.nombreUsuario}">Nombre</td>
+                    <td th:text="${fila.puntajeTotal}">0</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p th:unless="${!#lists.isEmpty(rankingGeneral)}" class="text-white">
+            No hay usuarios para mostrar.
+        </p>
+    </div>
+
+    <!-- RANKING POR CUESTIONARIO -->
+    <div th:if="${rankingCuestionario != null}">
+        <h2 class="text-white mb-3"
+            th:text="'Cuestionario ' + (${nombreCuestionario != null ? nombreCuestionario : idCuestionario})">
+        </h2>
+
+        <div th:if="${!#lists.isEmpty(rankingCuestionario)}">
+            <table class="table table-striped table-dark table-hover table-rounded">
+                <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Puntaje</th>
+                    <th>Correctas</th>
+                    <th>Erradas</th>
+                    <th>Intentos</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="fila : ${rankingCuestionario}">
+                    <td th:text="${fila.nombreUsuario}">Usuario</td>
+                    <td th:text="${fila.puntajeTotal}">0</td>
+                    <td th:text="${fila.preguntasCorrectas}">0</td>
+                    <td th:text="${fila.preguntasErradas}">0</td>
+                    <td th:text="${fila.numeroIntentos}">0</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p th:unless="${!#lists.isEmpty(rankingCuestionario)}" class="text-white">
+            No hay resultados para este cuestionario.
+        </p>
+    </div>
 </div>
 
-<!-- Ranking Filtrado -->
-<div th:if="${rankingCuestionario != null}">
-    <h1 th:text="'Cuestionario de ' + ${nombreCuestionario}"></h1>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <table th:if="${!#lists.isEmpty(rankingCuestionario)}">
-        <thead>
-        <tr>
-            <th>Usuario</th>
-            <th>Puntaje</th>
-            <th>Correctas</th>
-            <th>Erradas</th>
-            <th>Intentos</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="fila : ${rankingCuestionario}">
-            <td th:text="${fila.nombreUsuario}">Usuario</td>
-            <td th:text="${fila.puntajeTotal}">Puntaje</td>
-            <td th:text="${fila.preguntasCorrectas}">Correctas</td>
-            <td th:text="${fila.preguntasErradas}">Erradas</td>
-            <td th:text="${fila.numeroIntentos}">Intentos</td>
-        </tr>
-        </tbody>
-    </table>
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.querySelector("form");
+        const input = document.querySelector("input[name='busqueda']");
 
-    <p th:if="${#lists.isEmpty(rankingCuestionario)}">No hay resultados para este cuestionario.</p>
-</div>
+        form.addEventListener("submit", function (e) {
+            const valor = input.value.trim();
+
+            if (valor === "") {
+                e.preventDefault();
+                window.location.href = /*[[@{/ranking}]]*/ "/ranking";
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

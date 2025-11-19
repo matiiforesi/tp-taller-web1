@@ -67,7 +67,8 @@
         <!-- Form for Survival Mode -->
         <form id="formulario" th:if="${!respondida}"
               th:action="@{/survival/validar}"
-              method="post">
+              method="post"
+              accept-charset="UTF-8">
             <div class="d-grid gap-3">
                 <button type="submit" name="respuesta" th:value="${opcion}"
                         th:each="opcion : ${opciones}"

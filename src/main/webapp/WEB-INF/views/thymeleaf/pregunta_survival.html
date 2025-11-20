@@ -163,7 +163,7 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'F5' || (e.ctrlKey && (e.key === 'r' || e.key === 'R'))) {
                 e.preventDefault();
-                if (confirm('¿Estás seguro de que quieres salir? Se perderá el progreso de esta pregunta.')) {
+                if (confirm('¿Estás seguro de que quieres salir? Se perderá el progreso.')) {
                     isLeaving = true;
                     window.location.href = '/spring/home';
                 }
@@ -174,7 +174,7 @@
         window.addEventListener('beforeunload', function(e) {
             if (!isSubmitting && !isLeaving) {
                 e.preventDefault();
-                e.returnValue = '¿Estás seguro de que quieres salir? Se perderá el progreso de esta pregunta.';
+                e.returnValue = '¿Estás seguro de que quieres salir? Se perderá el progreso.';
                 return e.returnValue;
             }
         });

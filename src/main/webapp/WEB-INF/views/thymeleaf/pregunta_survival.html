@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Modo Supervivencia - Pregunta</title>
-    <!-- Boostrap core CSS -->
+    <!-- Boostrap CSS -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-    <!-- Custom style -->
+    <!-- Estilos -->
     <link rel="stylesheet" th:href="@{/css/colores.css}"/>
     <link rel="stylesheet" th:href="@{/css/pregunta.css}">
 </head>
@@ -14,45 +14,48 @@
 <div class="contenedor_general w-100">
 
     <div id="contenedor-pregunta">
-        <div class="alert alert-warning mb-3">
-            <strong>🔥 Modo Supervivencia</strong> | 
-            Dificultad: <span th:text="${dificultadActual != null ? dificultadActual : 'easy'}"></span> | 
-            Respuestas correctas: <span th:text="${survivalCorrectas != null ? survivalCorrectas : 0}"></span> |
-            Puntaje: <span th:text="${puntajeTotal != null ? puntajeTotal : 0}"></span>
+        <div class="mb-3">
+            <h5 class="d-inline">Modo Supervivencia</h5> |
+            Dificultad: <span th:text="${dificultadActual != null ? dificultadActual : 'easy'}"></span>
         </div>
         <div class="d-flex justify-content-around mb-4 flex-wrap">
-            <!-- Tiempo -->
-            <div class="card text-center shadow-sm card-metrica card-tiempo" style="width: 10rem;">
+
+            <!-- TIEMPO -->
+            <div class="card text-center shadow-sm card-metrica">
                 <div class="card-body">
-                    <h6 class="card-title"> Tiempo</h6>
-                    <span id="timer" th:text="${tiempoRestante}" class="fs-4 fw-bold text-dark"></span> s
+                    <img th:src="@{/img/clock_6626437.png}" alt="tiempo">
+                    <h6 class="card-title">Tiempo</h6>
+                    <span id="timer" th:text="${tiempoRestante}" class="fs-4"></span>s
                 </div>
             </div>
 
-            <!-- Vidas -->
-            <div class="card text-center shadow-sm card-metrica card-vidas" style="width: 10rem;">
+            <!-- VIDAS -->
+            <div class="card text-center shadow-sm card-metrica">
                 <div class="card-body">
-                    <h6 class="card-title"> Vidas</h6>
-                    <span th:text="${survivalVidas != null ? survivalVidas : 0}" class="fs-4 fw-bold text-dark"></span>
+                    <img th:src="@{/img/heart_2630121.png}" alt="vidas">
+                    <h6 class="card-title">Vidas</h6>
+                    <span th:text="${survivalVidas != null ? survivalVidas : 0}" class="fs-4"></span>
                 </div>
             </div>
 
-            <!-- Puntaje -->
-            <div class="card text-center shadow-sm border-info" style="width: 10rem;">
+            <!-- PUNTAJE -->
+            <div class="card text-center shadow-sm card-metrica">
                 <div class="card-body">
-                    <h6 class="card-title" style="color:black;"> Puntaje</h6>
-                    <span th:text="${puntajeTotal != null ? puntajeTotal : 0}" class="fs-4 fw-bold text-dark"></span>
+                    <img th:src="@{/img/star_1965098.png}" alt="puntos">
+                    <h6 class="card-title" style="color:black;">Puntaje</h6>
+                    <span th:text="${puntajeTotal != null ? puntajeTotal : 0}" class="fs-4"></span>
                     <small class="text-muted d-block" th:if="${usuario != null and usuario.puntaje != null}">
                         Total: <span th:text="${usuario.puntaje}"></span>
                     </small>
                 </div>
             </div>
 
-            <!-- Monedas -->
-            <div class="card text-center shadow-sm card-monedas" style="width: 10rem;">
+            <!-- MONEDAS -->
+            <div class="card text-center shadow-sm card-metrica">
                 <div class="card-body">
-                    <h6 class="card-title" style="color:black"> Monedas</h6>
-                    <span th:text="${monedas != null ? monedas : 0}" class="fs-4 fw-bold text-dark"></span>
+                    <img th:src="@{/img/coin_7163342.png}" alt="monedas">
+                    <h6 class="card-title" style="color:black">Monedas</h6>
+                    <span th:text="${monedas != null ? monedas : 0}" class="fs-4"></span>
                     <small class="text-muted d-block" th:if="${usuario != null and usuario.monedas != null}">
                         Total: <span th:text="${usuario.monedas}"></span>
                     </small>
@@ -64,7 +67,7 @@
             <h2 th:text="${pregunta.enunciado}"></h2>
         </div>
 
-        <!-- Form for Survival Mode -->
+        <!-- FORM MODO SUPERVIVENCIA -->
         <form id="formulario" th:if="${!respondida}"
               th:action="@{/survival/validar}"
               method="post"
@@ -78,60 +81,73 @@
             </div>
         </form>
 
-        <!--Respuestas-->
+        <!-- RESPUESTAS -->
         <div th:if="${respondida}">
-            <!-- Tiempo agotado -->
+
+            <!-- TIEMPO AGOTADO -->
             <div th:if="${tiempoAgotado}"
                  style="color: orange; font-weight: bold; border: 2px solid orange; padding: 20px; border-radius: 8px; background-color: #fff3cd;" class="d-flex justify-content-center align-items-center flex-column">
                 <h4>¡Se agotó el tiempo!</h4>
-                <div class="mt-3">
-                    <p class="mb-1"><strong>Puntaje en este juego:</strong> <span th:text="${puntajeTotal != null ? puntajeTotal : 0}"></span></p>
-                    <p class="mb-1" th:if="${usuario != null and usuario.puntaje != null}">
-                        <strong>Puntaje total acumulado:</strong> <span th:text="${usuario.puntaje}"></span>
-                    </p>
-                    <p class="mb-1"><strong>Monedas en este juego:</strong> <span th:text="${monedas != null ? monedas : 0}"></span></p>
-                    <p class="mb-1" th:if="${usuario != null and usuario.monedas != null}">
-                        <strong>Total de monedas:</strong> <span th:text="${usuario.monedas}"></span>
-                    </p>
+                <div class="d-inline-flex gap-1">
+                    <span>Respuestas correctas hasta el momento:</span>
+                    <span th:text="${survivalCorrectas != null ? survivalCorrectas : 0}"></span>
                 </div>
+                <!--                <div class="mt-3">-->
+<!--                    <p class="mb-1"><strong>Puntaje en este juego:</strong> <span th:text="${puntajeTotal != null ? puntajeTotal : 0}"></span></p>-->
+<!--                    <p class="mb-1" th:if="${usuario != null and usuario.puntaje != null}">-->
+<!--                        <strong>Puntaje total acumulado:</strong> <span th:text="${usuario.puntaje}"></span>-->
+<!--                    </p>-->
+<!--                    <p class="mb-1"><strong>Monedas en este juego:</strong> <span th:text="${monedas != null ? monedas : 0}"></span></p>-->
+<!--                    <p class="mb-1" th:if="${usuario != null and usuario.monedas != null}">-->
+<!--                        <strong>Total de monedas:</strong> <span th:text="${usuario.monedas}"></span>-->
+<!--                    </p>-->
+<!--                </div>-->
                 <form th:action="@{/survival/siguiente}" method="post" class="mt-3">
                     <button type="submit" class="btn btn-warning">Siguiente</button>
                 </form>
             </div>
 
-            <!-- Respuesta correcta -->
+            <!-- CORRECTA -->
             <div th:if="${(tiempoAgotado == null || !tiempoAgotado) and esCorrecta}"
                  style="color: #155724; font-weight: bold; border: 2px solid #28a745; padding: 20px; border-radius: 8px; background-color: #d4edda;" class="d-flex justify-content-center align-items-center flex-column">
                 <h4>¡Respuesta correcta!</h4>
-                <div class="mt-3">
-                    <p class="mb-1"><strong>Puntaje en este juego:</strong> <span th:text="${puntajeTotal != null ? puntajeTotal : 0}"></span></p>
-                    <p class="mb-1" th:if="${usuario != null and usuario.puntaje != null}">
-                        <strong>Puntaje total acumulado:</strong> <span th:text="${usuario.puntaje}"></span>
-                    </p>
-                    <p class="mb-1"><strong>Monedas en este juego:</strong> <span th:text="${monedas != null ? monedas : 0}"></span></p>
-                    <p class="mb-1" th:if="${usuario != null and usuario.monedas != null}">
-                        <strong>Total de monedas:</strong> <span th:text="${usuario.monedas}"></span>
-                    </p>
+                <div class="d-inline-flex gap-1">
+                    <span>Respuestas correctas hasta el momento:</span>
+                    <span th:text="${survivalCorrectas != null ? survivalCorrectas : 0}"></span>
                 </div>
+<!--                <div class="mt-3">-->
+<!--                    <p class="mb-1"><strong>Puntaje en este juego:</strong> <span th:text="${puntajeTotal != null ? puntajeTotal : 0}"></span></p>-->
+<!--                    <p class="mb-1" th:if="${usuario != null and usuario.puntaje != null}">-->
+<!--                        <strong>Puntaje total acumulado:</strong> <span th:text="${usuario.puntaje}"></span>-->
+<!--                    </p>-->
+<!--                    <p class="mb-1"><strong>Monedas en este juego:</strong> <span th:text="${monedas != null ? monedas : 0}"></span></p>-->
+<!--                    <p class="mb-1" th:if="${usuario != null and usuario.monedas != null}">-->
+<!--                        <strong>Total de monedas:</strong> <span th:text="${usuario.monedas}"></span>-->
+<!--                    </p>-->
+<!--                </div>-->
                 <form th:action="@{/survival/siguiente}" method="post" class="mt-3">
                     <button type="submit" class="btn btn-success">Siguiente</button>
                 </form>
             </div>
 
-            <!-- Respuesta incorrecta -->
+            <!-- INCORRECTA -->
             <div th:if="${(tiempoAgotado == null || !tiempoAgotado) and !esCorrecta}"
                  style="color: #721c24; font-weight: bold; border: 2px solid #dc3545; padding: 20px; border-radius: 8px; background-color: #f8d7da;" class="d-flex justify-content-center align-items-center flex-column">
                 <h4>Respuesta incorrecta</h4>
-                <div class="mt-3">
-                    <p class="mb-1"><strong>Puntaje en este juego:</strong> <span th:text="${puntajeTotal != null ? puntajeTotal : 0}"></span></p>
-                    <p class="mb-1" th:if="${usuario != null and usuario.puntaje != null}">
-                        <strong>Puntaje total acumulado:</strong> <span th:text="${usuario.puntaje}"></span>
-                    </p>
-                    <p class="mb-1"><strong>Monedas en este juego:</strong> <span th:text="${monedas != null ? monedas : 0}"></span></p>
-                    <p class="mb-1" th:if="${usuario != null and usuario.monedas != null}">
-                        <strong>Total de monedas:</strong> <span th:text="${usuario.monedas}"></span>
-                    </p>
+                <div class="d-inline-flex gap-1">
+                    <span>Respuestas correctas hasta el momento:</span>
+                    <span th:text="${survivalCorrectas != null ? survivalCorrectas : 0}"></span>
                 </div>
+                <!--                <div class="mt-3">-->
+<!--                    <p class="mb-1"><strong>Puntaje en este juego:</strong> <span th:text="${puntajeTotal != null ? puntajeTotal : 0}"></span></p>-->
+<!--                    <p class="mb-1" th:if="${usuario != null and usuario.puntaje != null}">-->
+<!--                        <strong>Puntaje total acumulado:</strong> <span th:text="${usuario.puntaje}"></span>-->
+<!--                    </p>-->
+<!--                    <p class="mb-1"><strong>Monedas en este juego:</strong> <span th:text="${monedas != null ? monedas : 0}"></span></p>-->
+<!--                    <p class="mb-1" th:if="${usuario != null and usuario.monedas != null}">-->
+<!--                        <strong>Total de monedas:</strong> <span th:text="${usuario.monedas}"></span>-->
+<!--                    </p>-->
+<!--                </div>-->
                 <form th:action="@{/survival/siguiente}" method="post" class="mt-3">
                     <button type="submit" class="btn btn-danger">Siguiente</button>
                 </form>
@@ -146,20 +162,16 @@
     const form = document.getElementById("formulario");
     const respondida = [[${respondida}]];
 
-    // Shared flags for refresh prevention
     let isSubmitting = false;
     let isLeaving = false;
 
-    // Prevent page refresh - show confirmation and redirect to home
     if (!respondida) {
-        // Mark form submission as legitimate (not a refresh)
         document.querySelectorAll('form').forEach(function(formElement) {
             formElement.addEventListener('submit', function() {
                 isSubmitting = true;
             });
         });
 
-        // Intercept keyboard shortcuts (F5, Ctrl+R, Ctrl+F5)
         document.addEventListener('keydown', function(e) {
             if (e.key === 'F5' || (e.ctrlKey && (e.key === 'r' || e.key === 'R'))) {
                 e.preventDefault();
@@ -170,7 +182,6 @@
             }
         });
 
-        // Handle beforeunload event (browser refresh button, closing tab, etc.)
         window.addEventListener('beforeunload', function(e) {
             if (!isSubmitting && !isLeaving) {
                 e.preventDefault();

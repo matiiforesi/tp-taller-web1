@@ -47,10 +47,10 @@
 
 <div class="container py-5">
 
-    <!-- BARRA DE BÚSQUEDA -->
+    <!-- BARRA DE BUSQUEDA -->
     <form class="d-flex mb-4" th:action="@{/rankingCuestionario}" method="get">
         <input class="form-control me-2" type="text" name="busqueda"
-               placeholder="Busca un cuestionario por su ID o nombre" value="">
+               placeholder="Busca un cuestionario especifico por su nombre" value="">
         <button class="btn btn-primary me-2" type="submit">Buscar</button>
         <a th:href="@{/ranking}" class="btn btn-secondary">Tabla General</a>
     </form>

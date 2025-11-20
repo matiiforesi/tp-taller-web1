@@ -3,102 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <title>Pregunta</title>
-    <!-- Boostrap core CSS -->
+    <!-- Boostrap CSS -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-    <!-- Custom style -->
+    <!-- Estilos -->
     <link rel="stylesheet" th:href="@{/css/colores.css}"/>
     <link rel="stylesheet" th:href="@{/css/pregunta.css}">
 </head>
 <body>
 
 <div class="contenedor_general w-100">
-
     <div id="contenedor-pregunta">
         <div class="d-flex justify-content-around mb-4">
-            <!-- Tiempo -->
-            <div class="card text-center shadow-sm card-metrica card-tiempo" style="width: 10rem;">
+
+            <!-- TIEMPO -->
+            <div class="card text-center shadow-sm card-metrica">
                 <div class="card-body">
-                    <h6 class="card-title"> Tiempo</h6>
-                    <span id="timer" th:text="${tiempoRestante}" class="fs-4"></span> s
+                    <img th:src="@{/img/clock_6626437.png}" alt="tiempo">
+                    <h6 class="card-title">Tiempo</h6>
+                    <span id="timer" th:text="${tiempoRestante}" class="fs-4"></span>s
                 </div>
             </div>
 
-            <!-- Vidas -->
-            <div class="card text-center shadow-sm card-metrica card-vidas" style="width: 10rem;">
+            <!-- VIDAS -->
+            <div class="card text-center shadow-sm card-metrica">
                 <div class="card-body">
-                    <h6 class="card-title"> Vidas</h6>
+                    <img th:src="@{/img/heart_2630121.png}" alt="vidas">
+                    <h6 class="card-title">Vidas</h6>
                     <span th:text="${vidasRestantes}" class="fs-4"></span>
                 </div>
             </div>
 
-            <!-- Monedas -->
-            <div class="card text-center shadow-sm card-metrica card-monedas" style="width: 10rem;">
+            <!-- PUNTAJE -->
+            <div class="card text-center shadow-sm card-metrica">
                 <div class="card-body">
+                    <img th:src="@{/img/star_1965098.png}" alt="puntos">
+                    <h6 class="card-title" style="color:black;">Puntaje</h6>
+                    <span th:text="${puntajeTotal}" class="fs-4"></span>
+                </div>
+            </div>
+
+            <!-- MONEDAS -->
+            <div class="card text-center shadow-sm card-metrica">
+                <div class="card-body">
+                    <img th:src="@{/img/coin_7163342.png}" alt="monedas">
                     <h6 class="card-title"> Monedas</h6>
                     <span th:text="${monedas}" class="fs-4"></span>
                 </div>
             </div>
         </div>
 
-
         <div class="alert alert-pregunta text-center shadow-sm fs-4 fw-bold">
-        <h2 th:text="${pregunta.enunciado}"></h2>
+            <h2 th:text="${pregunta.enunciado}"></h2>
         </div>
+
         <form id="formulario" th:if="${!respondida}"
               th:action="@{'/juego/' + ${cuestionario.id} + '/validar'}"
               method="post"
               accept-charset="UTF-8">
             <input type="hidden" name="idPregunta" th:value="${pregunta.id}"/>
-           <!-- <div class="mb-3">
-                <label for="trampaActivada" class="form-label">¿Querés usar una ayuda?</label>
-                <select name="trampaActivada" id="trampaActivada" class="form-select">
-                    <option value="">Sin ayuda</option>
-                    <option value="DUPLICAR_PUNTAJE" th:selected="${trampaUsada == 'DUPLICAR_PUNTAJE'}">Duplicar puntaje</option>
-                    <option value="ELIMINAR_DOS_INCORRECTAS" th:selected="${trampaUsada == 'ELIMINAR_DOS_INCORRECTAS'}">Eliminar dos incorrectas</option>
-                </select>
-            </div>-->
+
             <div class="mb-3 ayudas-container" th:if="${ayudasDisponibles!=null and !ayudasDisponibles.isEmpty()}">
                 <label class="form-label fw-bold">¿Querés usar una ayuda?</label>
                 <div class="row g-3">
 
-                    <!-- Sin ayuda -->
-                    <div class="col-md-4" >
+                    <!-- SIN AYUDA (predeterminado) -->
+                    <div class="col-md-4">
                         <input type="radio" class="btn-check" name="trampaActivada" id="sinAyuda" value=""
                                th:checked="${trampaUsada == null}">
                         <label class="card btn btn-ayuda btn-ayuda-sin w-100" for="sinAyuda">
                             <div class="card-body text-center">
-                                 Sin ayuda
+                                Sin ayuda
                             </div>
                         </label>
                     </div>
 
-                    <!-- Duplicar puntaje -->
+                    <!-- DUPLICAR PUNTAJE -->
                     <div class="col-md-4">
-                        <input type="radio" class="btn-check" name="trampaActivada" id="duplicar" value="DUPLICAR_PUNTAJE"
+                        <input type="radio" class="btn-check" name="trampaActivada" id="duplicar"
+                               value="DUPLICAR_PUNTAJE"
                                th:checked="${trampaUsada == 'DUPLICAR_PUNTAJE'}"
                                th:disabled="${duplicar_puntaje == 0}">
                         <label class="card btn btn-ayuda btn-ayuda-duplicar w-100" for="duplicar">
                             <div class="card-body text-center">
-                                 Duplicar puntaje
+                                Duplicar
+                                <small>(<strong th:text="${duplicar_puntaje}"></strong>)</small>
                             </div>
                         </label>
                     </div>
 
-                    <!-- Eliminar dos incorrectas -->
+                    <!-- ELIMINAR DOS INCORRECTAS -->
                     <div class="col-md-4">
-                        <input type="radio" class="btn-check" name="trampaActivada" id="eliminar" value="ELIMINAR_DOS_INCORRECTAS"
+                        <input type="radio" class="btn-check" name="trampaActivada" id="eliminar"
+                               value="ELIMINAR_DOS_INCORRECTAS"
                                th:checked="${trampaUsada == 'ELIMINAR_DOS_INCORRECTAS'}"
-                        th:disabled="${eliminar_incorrectas == 0}">
+                               th:disabled="${eliminar_incorrectas == 0}">
                         <label class="card btn btn-ayuda btn-ayuda-eliminar w-100" for="eliminar">
                             <div class="card-body text-center">
-                                 Eliminar dos incorrectas
+                                Bomba
+                                <small>(<strong th:text="${eliminar_incorrectas}"></strong>)</small>
                             </div>
                         </label>
                     </div>
-
                 </div>
             </div>
-
 
             <div class="d-grid gap-3">
                 <button type="submit" name="respuesta" th:value="${opcion}"
@@ -109,41 +116,34 @@
             </div>
         </form>
 
-        <!--Respuestas-->
+        <!-- RESPUESTAS -->
         <div th:if="${respondida}">
-            <!-- Tiempo agotado -->
+
+            <!-- TIEMPO AGOTADO -->
             <div th:if="${tiempoAgotado}"
-                 style="color: orange; font-weight: bold; border: 2px solid orange; padding: 20px; border-radius: 8px; background-color: #fff3cd;" class="d-flex align-items-center justify-content-center flex-column">
-                ¡Se agotó el tiempo!
-                <p>Puntaje Total: <span th:text="${puntajeTotal}"></span></p>
+                 style="color: orange; font-weight: bold; border: 2px solid orange; padding: 20px; border-radius: 8px; background-color: #fff3cd;"
+                 class="d-flex align-items-center justify-content-center flex-column">
+                <h4>¡Se agotó el tiempo!</h4>
                 <form th:action="@{/siguiente}" method="post">
                     <button type="submit" class="btn btn-warning">Siguiente</button>
                 </form>
             </div>
-           <!-- <div th:if="${esCorrecta}" style="color: green; font-weight: bold;">
-                ✅ ¡Respuesta correcta!
-                <p>Puntaje Total <span th:text="${puntajeTotal}"></span></p>
-                <form th:action="@{/siguiente}" method="post">
-                    <button type="submit" class="btn btn-warning">Siguiente</button>
-                </form>
-            </div>-->
 
-            <!-- Respuesta correcta -->
+            <!-- CORRECTA -->
             <div th:if="${!tiempoAgotado and esCorrecta}"
                  style="color: #155724; font-weight: bold; border: 2px solid #28a745; padding: 20px; border-radius: 8px; background-color: #d4edda;"
                  class="d-flex align-items-center justify-content-center flex-column">
-                ¡Respuesta correcta!
-                <p>Puntaje Total: <span th:text="${puntajeTotal}"></span></p>
+                <h4>¡Respuesta correcta!</h4>
                 <form th:action="@{/siguiente}" method="post">
                     <button type="submit" class="btn btn-success">Siguiente</button>
                 </form>
             </div>
 
-            <!-- Respuesta incorrecta -->
+            <!-- INCORRECTA -->
             <div th:if="${!tiempoAgotado and !esCorrecta}"
-                 style="color: #721c24; font-weight: bold; border: 2px solid #dc3545; padding: 20px; border-radius: 8px; background-color: #f8d7da;" class="d-flex align-items-center justify-content-center flex-column">
-                Respuesta incorrecta.
-                <p>Puntaje Total: <span th:text="${puntajeTotal}"></span></p>
+                 style="color: #721c24; font-weight: bold; border: 2px solid #dc3545; padding: 20px; border-radius: 8px; background-color: #f8d7da;"
+                 class="d-flex align-items-center justify-content-center flex-column">
+                <h4>¡Respuesta incorrecta!</h4>
                 <form th:action="@{/siguiente}" method="post">
                     <button type="submit" class="btn btn-danger">Siguiente</button>
                 </form>
@@ -160,18 +160,17 @@
     const idCuestionario = [[${cuestionario.id}]];
     const idPregunta = [[${pregunta.id}]];
 
-    // Shared flags for refresh prevention
     let isSubmitting = false;
     let isLeaving = false;
 
     if (!respondida) {
-        document.querySelectorAll('form').forEach(function(formElement) {
-            formElement.addEventListener('submit', function() {
+        document.querySelectorAll('form').forEach(function (formElement) {
+            formElement.addEventListener('submit', function () {
                 isSubmitting = true;
             });
         });
 
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'F5' || (e.ctrlKey && (e.key === 'r' || e.key === 'R'))) {
                 e.preventDefault();
                 if (confirm('¿Estás seguro de que quieres salir? Se perderá el progreso.')) {
@@ -181,7 +180,7 @@
             }
         });
 
-        window.addEventListener('beforeunload', function(e) {
+        window.addEventListener('beforeunload', function (e) {
             if (!isSubmitting && !isLeaving) {
                 e.preventDefault();
                 e.returnValue = '¿Estás seguro de que quieres salir? Se perderá el progreso.';
@@ -231,45 +230,44 @@
         }, 1000);
     }
     document.querySelectorAll("input[name='trampaActivada']").forEach(radio => {
-    radio.addEventListener("change", async function () {
-        const tipoTrampa = this.value;
+        radio.addEventListener("change", async function () {
+            const tipoTrampa = this.value;
 
-        if (tipoTrampa === "ELIMINAR_DOS_INCORRECTAS") {
-            const idPregunta = document.querySelector("input[name='idPregunta']").value;
-            const idUsuario = [[${usuario.id}]];
+            if (tipoTrampa === "ELIMINAR_DOS_INCORRECTAS") {
+                const idPregunta = document.querySelector("input[name='idPregunta']").value;
+                const idUsuario = [[${usuario.id}]];
 
-            const response = await fetch("/spring/juego/opciones-filtradas", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: new URLSearchParams({
-                    idPregunta: idPregunta,
-                    idUsuario: idUsuario,
-                    trampaActivada: tipoTrampa
-                })
-            });
+                const response = await fetch("/spring/juego/opciones-filtradas", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                    body: new URLSearchParams({
+                        idPregunta: idPregunta,
+                        idUsuario: idUsuario,
+                        trampaActivada: tipoTrampa
+                    })
+                });
 
-            const opciones = await response.json();
-            const contenedor = document.querySelector(".d-grid");
-            contenedor.innerHTML = "";
+                const opciones = await response.json();
+                const contenedor = document.querySelector(".d-grid");
+                contenedor.innerHTML = "";
 
-            opciones.forEach(opcion => {
-                const button = document.createElement("button");
-                button.type = "submit";
-                button.name = "respuesta";
-                button.value = opcion;
-                button.className = "btn btn-respuesta btn-lg";
-                button.innerHTML = `<span>${opcion}</span>`;
-                contenedor.appendChild(button);
-            });
+                opciones.forEach(opcion => {
+                    const button = document.createElement("button");
+                    button.type = "submit";
+                    button.name = "respuesta";
+                    button.value = opcion;
+                    button.className = "btn btn-respuesta btn-lg";
+                    button.innerHTML = `<span>${opcion}</span>`;
+                    contenedor.appendChild(button);
+                });
 
-            const mensaje = document.createElement("div");
-            mensaje.className = "alert alert-warning mt-3";
-            mensaje.innerHTML = "Se eliminaron dos opciones incorrectas.";
-            document.getElementById("contenedor-pregunta").appendChild(mensaje);
-        }
+                const mensaje = document.createElement("div");
+                mensaje.className = "alert alert-warning mt-3";
+                mensaje.innerHTML = "Se eliminaron dos opciones incorrectas.";
+                document.getElementById("contenedor-pregunta").appendChild(mensaje);
+            }
+        });
     });
-});
-
 </script>
 
 </body>

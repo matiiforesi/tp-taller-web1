@@ -1,4 +1,3 @@
-/* BACKGROUND GENERAL */
 body {
     padding: 3.55rem 3rem;
     background: var(--gradient-radial);
@@ -37,14 +36,16 @@ h3, h4, h5 {
 .filtro {
     background-color: var(--ink-black) !important;
     color: var(--white) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
 }
 
 /* TARJETA MODO SUPERVIVENCIA */
 .survival-card {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.35);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
 }
+
 .survival-card .btn-wide {
     min-width: 70%;
     font-weight: 600;
@@ -60,7 +61,7 @@ h3, h4, h5 {
     width: 15.5rem !important;
     min-height: 16rem;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
 }
 
 .filtrados, .sugeridos {

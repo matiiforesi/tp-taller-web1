@@ -35,6 +35,7 @@ public class ControladorCuestionarioTest {
                 crearCuestionarioMock("Geografia", "Preguntas de geografía")
         );
         when(servicioCuestionarioMock.buscarTodo()).thenReturn(cuestionarios);
+
         Model model = new ExtendedModelMap();
 
         String viewName = controladorCuestionario.listTrivias(model);
@@ -50,13 +51,14 @@ public class ControladorCuestionarioTest {
         TriviaCategory categoria1 = new TriviaCategory();
         categoria1.setId(9);
         categoria1.setName("General Knowledge");
-        
+
         TriviaCategory categoria2 = new TriviaCategory();
         categoria2.setId(22);
         categoria2.setName("Geography");
-        
+
         respuestaCategorias.setTriviaCategories(Arrays.asList(categoria1, categoria2));
         when(servicioTriviaMock.obtenerCategorias()).thenReturn(respuestaCategorias);
+
         Model model = new ExtendedModelMap();
 
         String viewName = controladorCuestionario.mostrarForm(model);
@@ -70,6 +72,7 @@ public class ControladorCuestionarioTest {
     @Test
     public void debeMostrarFormularioCuandoNoHayCategorias() {
         when(servicioTriviaMock.obtenerCategorias()).thenReturn(null);
+
         Model model = new ExtendedModelMap();
 
         String viewName = controladorCuestionario.mostrarForm(model);
@@ -121,6 +124,7 @@ public class ControladorCuestionarioTest {
         RespuestaCategorias respuestaCategorias = new RespuestaCategorias();
         respuestaCategorias.setTriviaCategories(List.of());
         when(servicioTriviaMock.obtenerCategorias()).thenReturn(respuestaCategorias);
+
         Model model = new ExtendedModelMap();
 
         String viewName = controladorCuestionario.mostrarForm(model);
@@ -173,4 +177,3 @@ public class ControladorCuestionarioTest {
         return cuestionario;
     }
 }
-

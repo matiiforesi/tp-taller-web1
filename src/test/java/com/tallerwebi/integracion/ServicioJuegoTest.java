@@ -6,7 +6,6 @@ import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Timer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -26,7 +25,7 @@ public class ServicioJuegoTest {
     private ServicioConfigJuego servConfigJuego = mock(ServicioConfigJuego.class);
     private RepositorioCompraItem repositorioCompraItem = mock(RepositorioCompraItem.class);
 
-    private ServicioJuego servicioJuego = new ServicioJuegoImpl(repositorioCompraItem,repoUsuario, repoHistorial, repoIntento, servCuestionario, servPregunta, servDificultad, servConfigJuego);
+    private ServicioJuego servicioJuego = new ServicioJuegoImpl(repositorioCompraItem, repoUsuario, repoHistorial, repoIntento, servCuestionario, servPregunta, servDificultad, servConfigJuego);
 
     private RepositorioCuestionario repoCuestionario = mock(RepositorioCuestionario.class);
 
@@ -50,10 +49,6 @@ public class ServicioJuegoTest {
         pregunta.setRespuestaIncorrecta2("24 de Junio");
         pregunta.setRespuestaIncorrecta3("25 de Julio");
 
-       /* Cuestionario c=new Cuestionario();
-        c.setPreguntas(Arrays.asList(pregunta));
-
-        Mockito.when(serv.buscar(2L)).thenReturn(c);*/
         Mockito.when(servPregunta.obtenerPorId(1L)).thenReturn(pregunta);
         Mockito.when(servDificultad.calcularMultiplicador(Mockito.any())).thenReturn(3);
         Mockito.when(servConfigJuego.getInt("puntaje.base", 100)).thenReturn(100);
@@ -62,13 +57,9 @@ public class ServicioJuegoTest {
 
     }
 
-    private Boolean whenSeValideLaRespuestaSiEsCorrecta() {
-        return servicioJuego.validarRespuesta("25 de Mayo", 1L);
-    }
+    private Boolean whenSeValideLaRespuestaSiEsCorrecta() {return servicioJuego.validarRespuesta("25 de Mayo", 1L);}
 
-    private void thenValideLaRespuesta(Boolean respuesta) {
-        assertEquals(Boolean.TRUE, respuesta);
-    }
+    private void thenValideLaRespuesta(Boolean respuesta) {assertEquals(Boolean.TRUE, respuesta);}
 
     @Test
     public void queSeValideLaRespuestaSiEsIncorrecta() {
@@ -81,9 +72,7 @@ public class ServicioJuegoTest {
         return servicioJuego.validarRespuesta("23 de Abril", 1L);
     }
 
-    private void thenSeValideRespuestaIncorrecta(Boolean obtenido) {
-        assertEquals(Boolean.FALSE, obtenido);
-    }
+    private void thenSeValideRespuestaIncorrecta(Boolean obtenido) {assertEquals(Boolean.FALSE, obtenido);}
 
     @Test
     public void queObtengaPuntos() {
@@ -98,8 +87,9 @@ public class ServicioJuegoTest {
         Integer obtenido = whenAcumulaPuntaje("23 de Abril");
         thenAcumulaPuntaje(0, obtenido);
     }
+
     @Test
-    public void queDupliqueElPuntajeSiTieneTrampaDuplicarPuntaje(){
+    public void queDupliqueElPuntajeSiTieneTrampaDuplicarPuntaje() {
         Preguntas pregunta = new Preguntas();
         pregunta.setId(1L);
         pregunta.setRespuestaCorrecta("Correcta");
@@ -107,10 +97,10 @@ public class ServicioJuegoTest {
         dificultad.setNombre("Media");
         pregunta.setDificultad(dificultad);
 
-        Item trampa=new Item();
+        Item trampa = new Item();
         trampa.setTipoItem(TIPO_ITEMS.DUPLICAR_PUNTAJE);
 
-        CompraItem compra=new CompraItem();
+        CompraItem compra = new CompraItem();
         compra.setItem(trampa);
         compra.setUsado(false);
 
@@ -123,13 +113,13 @@ public class ServicioJuegoTest {
 
         TimerPregunta timer = new TimerPregunta(5);
 
-        Integer puntaje= servicioJuego.obtenerPuntajeConTrampa(1L,"Correcta",timer,1L,trampa.getTipoItem());
+        Integer puntaje = servicioJuego.obtenerPuntajeConTrampa(1L, "Correcta", timer, 1L, trampa.getTipoItem());
 
-        Integer esperado=(100+50)*2*2;
-        assertEquals(esperado,puntaje);
+        Integer esperado = (100 + 50) * 2 * 2;
+        assertEquals(esperado, puntaje);
         assertTrue(compra.getUsado());
     }
-    
+
     @Test
     public void queSeEliminenDosOpcionesIncorrectasSiTieneTrampa() {
         Preguntas pregunta = new Preguntas();
@@ -155,16 +145,14 @@ public class ServicioJuegoTest {
     }
 
 
-
-    private void thenAcumulaPuntaje(Integer esperado, Integer puntaje) {
-        assertEquals(esperado, puntaje);
-    }
+    private void thenAcumulaPuntaje(Integer esperado, Integer puntaje) {assertEquals(esperado, puntaje);}
 
     private Integer whenAcumulaPuntaje(String respuesta) {
         TimerPregunta timer = new TimerPregunta(10);
         if (whenSeValideLaRespuestaSiEsCorrecta()) {
             return servicioJuego.obtenerPuntaje(1L, respuesta, timer);
         }
+
         return 0;
     }
 
@@ -251,7 +239,7 @@ public class ServicioJuegoTest {
         verify(repoIntento, times(1)).guardar(any(IntentoCuestionario.class));
     }
 
-    public Usuario givenUsuarioConId(Long id){
+    public Usuario givenUsuarioConId(Long id) {
         Usuario usuario = new Usuario();
         usuario.setId(id);
         usuario.setPuntaje(0L);
@@ -259,7 +247,7 @@ public class ServicioJuegoTest {
         return usuario;
     }
 
-    private Cuestionario givenCuestionarioConId(Long id){
+    private Cuestionario givenCuestionarioConId(Long id) {
         Cuestionario cuestionario = new Cuestionario();
         cuestionario.setId(id);
         cuestionario.setNombre("Prueba Cuestionario");

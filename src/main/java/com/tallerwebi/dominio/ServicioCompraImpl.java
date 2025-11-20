@@ -35,6 +35,7 @@ public class ServicioCompraImpl implements ServicioCompra {
 
             return true;
         }
+
         return false;
     }
 
@@ -42,7 +43,6 @@ public class ServicioCompraImpl implements ServicioCompra {
     public Usuario obtenerUsuarioActualizado(Long idUsuario) {
         Usuario usuario = repositorioUsuario.buscarPorId(idUsuario);
         return usuario;
-
     }
 
     @Override

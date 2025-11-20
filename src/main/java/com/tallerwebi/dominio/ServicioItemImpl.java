@@ -13,27 +13,17 @@ public class ServicioItemImpl implements ServicioItem {
     private final RepositorioItem repositorio;
 
     @Autowired
-    public ServicioItemImpl(RepositorioItem repositorio) {
-        this.repositorio = repositorio;
-    }
+    public ServicioItemImpl(RepositorioItem repositorio) {this.repositorio = repositorio;}
 
     @Override
-    public void guardar(Item item) {
-        repositorio.guardar(item);
-    }
+    public void guardar(Item item) {repositorio.guardar(item);}
 
     @Override
-    public void actualizar(Item item) {
-        repositorio.actualizar(item);
-    }
+    public void actualizar(Item item) {repositorio.actualizar(item);}
 
     @Override
-    public Item obtenerPorId(Long id) {
-        return repositorio.obtenerPorId(id);
-    }
+    public Item obtenerPorId(Long id) {return repositorio.obtenerPorId(id);}
 
     @Override
-    public List<Item> obtenerTodos() {
-        return repositorio.obtenerTodos();
-    }
+    public List<Item> obtenerTodos() {return repositorio.obtenerTodos();}
 }

@@ -4,7 +4,6 @@ import com.tallerwebi.dominio.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
@@ -29,7 +28,7 @@ public class ServicioCuestionarioMultiTest {
         servicioTriviaMock = mock(ServicioTrivia.class);
         servicioDificultadMock = mock(ServicioDificultad.class);
         servicioCuestionario = new ServicioCuestionarioImpl(repositorioCuestionarioMock);
-        
+
         ReflectionTestUtils.setField(servicioCuestionario, "servicioTrivia", servicioTriviaMock);
         ReflectionTestUtils.setField(servicioCuestionario, "servicioDificultad", servicioDificultadMock);
     }
@@ -95,7 +94,7 @@ public class ServicioCuestionarioMultiTest {
         dificultadHard.setNombre("Hard");
         Dificultad dificultadMulti = new Dificultad();
         dificultadMulti.setNombre("Multi");
-        
+
         when(servicioDificultadMock.obtenerPorNombre("Easy")).thenReturn(dificultadEasy);
         when(servicioDificultadMock.obtenerPorNombre("Medium")).thenReturn(dificultadMedium);
         when(servicioDificultadMock.obtenerPorNombre("Hard")).thenReturn(dificultadHard);
@@ -105,7 +104,7 @@ public class ServicioCuestionarioMultiTest {
 
         var cuestionarioCaptor = ArgumentCaptor.forClass(Cuestionario.class);
         verify(repositorioCuestionarioMock, times(1)).guardar(cuestionarioCaptor.capture());
-        
+
         Cuestionario cuestionarioGuardado = cuestionarioCaptor.getValue();
         assertThat(cuestionarioGuardado.getNombre(), is("Trivia Multi"));
         assertThat(cuestionarioGuardado.getDescripcion(), is("Descripción"));
@@ -113,11 +112,10 @@ public class ServicioCuestionarioMultiTest {
         assertThat(cuestionarioGuardado.getDificultad().getNombre(), is("Multi"));
         assertThat(cuestionarioGuardado.getPreguntas(), is(notNullValue()));
         assertThat(cuestionarioGuardado.getPreguntas().size(), is(3));
-        
+
         List<Preguntas> preguntas = cuestionarioGuardado.getPreguntas();
         assertThat(preguntas.get(0).getDificultad().getNombre(), is("Easy"));
         assertThat(preguntas.get(1).getDificultad().getNombre(), is("Medium"));
         assertThat(preguntas.get(2).getDificultad().getNombre(), is("Hard"));
     }
 }
-

@@ -10,51 +10,40 @@ import java.util.List;
 @Transactional
 public class ServicioDificultadImpl implements ServicioDificultad {
 
-	private RepositorioDificultad repositorioDificultad;
+    private RepositorioDificultad repositorioDificultad;
 
-	@Autowired
-	public ServicioDificultadImpl(RepositorioDificultad repositorioDificultad) {
-		this.repositorioDificultad = repositorioDificultad;
-	}
-
-	@Override
-	public Dificultad obtenerPorNombre(String nombre) {
-		return repositorioDificultad.buscarPorNombre(nombre);
-	}
-
-	@Override
-	public Dificultad obtenerPorId(Long id) {
-		return repositorioDificultad.buscarPorId(id);
-	}
-
-    @Override
-    public void guardar(Dificultad dificultad) {
-        repositorioDificultad.guardar(dificultad);
+    @Autowired
+    public ServicioDificultadImpl(RepositorioDificultad repositorioDificultad) {
+        this.repositorioDificultad = repositorioDificultad;
     }
 
     @Override
-    public void modificar(Dificultad dificultad) {
-        repositorioDificultad.modificar(dificultad);
-    }
+    public Dificultad obtenerPorNombre(String nombre) {return repositorioDificultad.buscarPorNombre(nombre);}
+
+    @Override
+    public Dificultad obtenerPorId(Long id) {return repositorioDificultad.buscarPorId(id);}
+
+    @Override
+    public void guardar(Dificultad dificultad) {repositorioDificultad.guardar(dificultad);}
+
+    @Override
+    public void modificar(Dificultad dificultad) {repositorioDificultad.modificar(dificultad);}
 
     @Override
     public int calcularMultiplicador(Dificultad dificultad) {
-        if (dificultad == null) {return 1;}
+        if (dificultad == null) return 1;
 
         Integer mult = dificultad.getMultiplicadorDificultad();
-        if (mult != null && mult > 0) {return mult;}
+        if (mult != null && mult > 0) return mult;
 
         String nombre = dificultad.getNombre();
-        if (nombre == null) {return 1;}
+        if (nombre == null) return 1;
 
         switch (nombre.trim().toLowerCase()) {
-            // case "facil":
             case "easy":
                 return 1;
-            // case "medio":
             case "medium":
                 return 2;
-            // case "dificil":
             case "hard":
                 return 3;
             case "multi":

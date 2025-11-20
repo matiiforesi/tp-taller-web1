@@ -1,10 +1,11 @@
 package com.tallerwebi.dominio;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class RespuestaCategorias {
-    
+
     @JsonProperty("trivia_categories")
     private List<TriviaCategory> triviaCategories;
 

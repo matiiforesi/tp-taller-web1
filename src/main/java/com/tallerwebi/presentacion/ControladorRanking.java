@@ -37,7 +37,6 @@ public class ControladorRanking {
         ModelMap model = new ModelMap();
         model.addAttribute("rankingGeneral", rankingGeneral);
 
-        // Datos del usuario para el nav
         model.addAttribute("nombre", usuario.getNombre());
         model.addAttribute("puntaje", usuario.getPuntaje());
         model.addAttribute("monedas", usuario.getMonedas());
@@ -62,11 +61,11 @@ public class ControladorRanking {
         if (busqueda != null && !busqueda.isBlank()) {
             busqueda = busqueda.trim();
             try {
-                // Si es un número, buscar por ID
+                // Si es nro, busca por ID
                 idCuestionario = Long.parseLong(busqueda);
                 ranking = servicioRanking.obtenerRankingCuestionarioPorId(idCuestionario);
             } catch (NumberFormatException e) {
-                // Si no es número, buscar por nombre
+                // Si no es nro, busca por nombre
                 nombreCuestionario = busqueda;
                 ranking = servicioRanking.obtenerRankingCuestionarioPorNombre(nombreCuestionario);
             }
@@ -81,7 +80,6 @@ public class ControladorRanking {
         model.addAttribute("nombreCuestionario", nombreCuestionario);
         model.addAttribute("idCuestionario", idCuestionario);
 
-        // Datos del usuario para el nav
         model.addAttribute("nombre", usuario.getNombre());
         model.addAttribute("puntaje", usuario.getPuntaje());
         model.addAttribute("monedas", usuario.getMonedas());

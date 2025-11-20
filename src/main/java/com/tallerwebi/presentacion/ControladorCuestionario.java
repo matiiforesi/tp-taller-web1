@@ -23,6 +23,7 @@ public class ControladorCuestionario {
     @GetMapping("/cuestionario/list")
     public String listTrivias(Model model) {
         model.addAttribute("trivias", servicioCuestionario.buscarTodo());
+
         return "cuestionario_list";
     }
 
@@ -34,7 +35,7 @@ public class ControladorCuestionario {
         if (respuestaCategorias != null && respuestaCategorias.getTriviaCategories() != null) {
             model.addAttribute("triviaCategories", respuestaCategorias.getTriviaCategories());
         }
-        
+
         return "cuestionario_form";
     }
 
@@ -51,6 +52,7 @@ public class ControladorCuestionario {
                 category,
                 difficulty
         );
+
         return "redirect:/cuestionario/list";
     }
 }

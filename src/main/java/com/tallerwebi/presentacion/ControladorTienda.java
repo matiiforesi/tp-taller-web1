@@ -46,11 +46,9 @@ public class ControladorTienda {
         model.put("usuario", usuario);
         model.put("duplicar_puntaje", duplicar_puntaje);
         model.put("eliminar_incorrectas", eliminar_incorrectas);
-
         model.put("nombre", usuario.getNombre());
         model.put("puntaje", usuario.getPuntaje());
         model.put("monedas", usuario.getMonedas());
-
         return new ModelAndView("tienda", model);
     }
 
@@ -69,6 +67,7 @@ public class ControladorTienda {
         } else {
             redirectAttributes.addFlashAttribute("mensaje", "Monedas insuficientes");
         }
+
         return new ModelAndView("redirect:/tienda");
     }
 }

@@ -19,24 +19,20 @@ public class RepositorioPreguntasImpl implements RepositorioPreguntas {
 
     @Override
     public Preguntas buscarPregunta(Long idPregunta) {
-       final Session session = sessionFactory.getCurrentSession();
+        final Session session = sessionFactory.getCurrentSession();
         return (Preguntas) session.createCriteria(Preguntas.class)
                 .add(Restrictions.eq("id", idPregunta))
                 .uniqueResult();
     }
 
     @Override
-    public void guardar(Preguntas pregunta) {
-       sessionFactory.getCurrentSession().save(pregunta);
-    }
+    public void guardar(Preguntas pregunta) {sessionFactory.getCurrentSession().save(pregunta);}
 
     @Override
-    public void modificar(Preguntas pregunta) {
-        sessionFactory.getCurrentSession().update(pregunta);
-    }
+    public void modificar(Preguntas pregunta) {sessionFactory.getCurrentSession().update(pregunta);}
 
     @Override
-    public Preguntas buscarPorCategoria(String categoria){
+    public Preguntas buscarPorCategoria(String categoria) {
         final Session session = sessionFactory.getCurrentSession();
         return (Preguntas) session.createCriteria(Preguntas.class);
     }

@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 @Service
 public class ServicioTriviaImpl implements ServicioTrivia {
 
@@ -21,15 +22,16 @@ public class ServicioTriviaImpl implements ServicioTrivia {
 
     @Override
     public RespuestaTrivia buscarPreguntas(int amount, int category, String difficulty) {
-        System.out.println("test"+ difficulty);
+        System.out.println("test" + difficulty);
         if ("multi".equals(difficulty)) {
             return buscarPreguntasMulti(amount, category);
         }
-        
+
         String url = String.format(
                 "https://opentdb.com/api.php?amount=%d&category=%d&difficulty=%s&type=multiple",
                 amount, category, difficulty
         );
+
         try {
             String json = restTemplate.getForObject(url, String.class);
             ObjectMapper mapper = new ObjectMapper();
@@ -49,6 +51,7 @@ public class ServicioTriviaImpl implements ServicioTrivia {
                     "https://opentdb.com/api.php?amount=%d&category=%d&difficulty=%s&type=multiple",
                     amount, category, diff.getNombre().toLowerCase()
             );
+
             try {
                 String json = restTemplate.getForObject(url, String.class);
                 ObjectMapper mapper = new ObjectMapper();
@@ -58,9 +61,10 @@ public class ServicioTriviaImpl implements ServicioTrivia {
                 }
                 Thread.sleep(5000); // "too many requests" :(
             } catch (Exception e) {
-                System.out.println("Error:"+ e.getMessage());
+                System.out.println("Error:" + e.getMessage());
             }
         }
+
         Collections.shuffle(todasLasPreguntas);
 
         RespuestaTrivia respuestaFinal = new RespuestaTrivia();

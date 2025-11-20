@@ -22,7 +22,5 @@ public class ServicioPreguntaImpl implements ServicioPregunta {
     }
 
     @Override
-    public void guardarPregunta(Preguntas pregunta) {
-        this.repositorioPreguntas.guardar(pregunta);
-    }
+    public void guardarPregunta(Preguntas pregunta) {this.repositorioPreguntas.guardar(pregunta);}
 }

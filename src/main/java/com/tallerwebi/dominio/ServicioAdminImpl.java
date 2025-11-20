@@ -13,17 +13,14 @@ public class ServicioAdminImpl implements ServicioAdmin {
     private final RepositorioCuestionario repositorioCuestionario;
 
     @Autowired
-    public ServicioAdminImpl(RepositorioUsuario repositorioUsuario,RepositorioCuestionario repositorioCuestionario) {
+    public ServicioAdminImpl(RepositorioUsuario repositorioUsuario, RepositorioCuestionario repositorioCuestionario) {
         this.repositorioUsuario = repositorioUsuario;
         this.repositorioCuestionario = repositorioCuestionario;
     }
 
     @Override
-    public Integer contarUsuarios() {
-        return repositorioUsuario.contarUsuarios();
-    }
+    public Integer contarUsuarios() {return repositorioUsuario.contarUsuarios();}
+
     @Override
-    public Integer contarCuestionarios() {
-        return repositorioCuestionario.contarCuestionarios();
-    }
+    public Integer contarCuestionarios() {return repositorioCuestionario.contarCuestionarios();}
 }

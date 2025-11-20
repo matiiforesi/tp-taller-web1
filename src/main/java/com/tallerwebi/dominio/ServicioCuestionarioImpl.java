@@ -68,10 +68,12 @@ public class ServicioCuestionarioImpl implements ServicioCuestionario {
         if (!preguntas.isEmpty()) {
             nuevoCuestionario.setCategoria(preguntas.get(0).getCategoria());
         }
+
         nuevoCuestionario.setDificultad(obtenerDificultadEntidad(dificultad));
         for (Preguntas p : preguntas) {
             p.setCuestionario(nuevoCuestionario);
         }
+
         nuevoCuestionario.setPreguntas(preguntas);
 
         repositorioCuestionario.guardar(nuevoCuestionario);
@@ -104,6 +106,7 @@ public class ServicioCuestionarioImpl implements ServicioCuestionario {
         if (text == null) {
             return null;
         }
+
         return HtmlUtils.htmlUnescape(text);
     }
 
@@ -138,8 +141,8 @@ public class ServicioCuestionarioImpl implements ServicioCuestionario {
                 cuestionario.setVidas(4);
                 break;
             default:
-            cuestionario.setVidas(5);
-            break;
+                cuestionario.setVidas(5);
+                break;
         }
     }
 

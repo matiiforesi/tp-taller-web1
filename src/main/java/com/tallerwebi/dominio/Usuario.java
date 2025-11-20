@@ -8,15 +8,21 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String email;
+
     private String password;
+
     private String rol;
+
     private Boolean activo = false;
 
     private String nombre = "";
-    @Column(name="puntaje")
+
+    @Column(name = "puntaje")
     private Long puntaje = 0L;
-    @Column(name="monedas")
+
+    @Column(name = "monedas")
     private Long monedas = 0L;
 
     public Long getId() {return id;}

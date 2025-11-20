@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio;
 
 public interface RepositorioUsuario {
+
     Usuario buscarUsuario(String email, String password);
 
     void guardar(Usuario usuario);
@@ -15,4 +16,3 @@ public interface RepositorioUsuario {
 
     void actualizarMonedas(Long idUsuario, Long nuevasMonedas);
 }
-

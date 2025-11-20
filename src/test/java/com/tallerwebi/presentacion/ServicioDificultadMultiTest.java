@@ -55,4 +55,3 @@ public class ServicioDificultadMultiTest {
         assertThat(multiplicador, is(5));
     }
 }
-

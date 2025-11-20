@@ -20,10 +20,10 @@ public class RepositorioIntentoCuestionarioImpl implements RepositorioIntento {
     @Override
     public IntentoCuestionario buscarPorUsuarioYCuestionario(Long idUsuario, Long idCuestionario) {
         return (IntentoCuestionario) sessionFactory.getCurrentSession().createCriteria(IntentoCuestionario.class)
-                .createAlias("usuario","u")
-                .createAlias("cuestionario","c")
-                .add(Restrictions.eq("u.id",idUsuario))
-                .add(Restrictions.eq("c.id",idCuestionario))
+                .createAlias("usuario", "u")
+                .createAlias("cuestionario", "c")
+                .add(Restrictions.eq("u.id", idUsuario))
+                .add(Restrictions.eq("c.id", idCuestionario))
                 .uniqueResult();
     }
 
@@ -36,13 +36,14 @@ public class RepositorioIntentoCuestionarioImpl implements RepositorioIntento {
     public void actualizar(IntentoCuestionario intentoCuestionario) {
         sessionFactory.getCurrentSession().update(intentoCuestionario);
     }
+
     @Override
-    public Integer contarIntentos(Long idUsuario,Long idCuestionario) {
-        Long cantidad=(Long)sessionFactory.getCurrentSession()
+    public Integer contarIntentos(Long idUsuario, Long idCuestionario) {
+        Long cantidad = (Long) sessionFactory.getCurrentSession()
                 .createQuery("SELECT COUNT(i) FROM IntentoCuestionario i " +
                         "WHERE i.usuario.id = :idUsuario AND i.cuestionario.id = :idCuestionario")
                 .setParameter("idUsuario", idUsuario)
-                .setParameter("idCuestionario",idCuestionario)
+                .setParameter("idCuestionario", idCuestionario)
                 .uniqueResult();
 
         return cantidad != null ? cantidad.intValue() : 0;

@@ -26,9 +26,9 @@ public class ControladorJuegoTest {
     private RepositorioCompraItem repositorioCompraItem = mock(RepositorioCompraItem.class);
     private ServicioCompra servCompra = mock(ServicioCompra.class);
 
-    private ServicioJuegoImpl servJuego = new ServicioJuegoImpl(repositorioCompraItem,repoUsuario, repoHistorial, repoIntento, servCuestionario, servPregunta, servDificultad,servConfigJuego);
+    private ServicioJuegoImpl servJuego = new ServicioJuegoImpl(repositorioCompraItem, repoUsuario, repoHistorial, repoIntento, servCuestionario, servPregunta, servDificultad, servConfigJuego);
 
-    private ControladorJuego controladorJuego = new ControladorJuego(servJuego, servPregunta, servCuestionario,servCompra);
+    private ControladorJuego controladorJuego = new ControladorJuego(servJuego, servPregunta, servCuestionario, servCompra);
 
     private Preguntas pregunta;
     private Cuestionario cuestionario = new Cuestionario();
@@ -53,22 +53,10 @@ public class ControladorJuegoTest {
 
     @Test
     public void queDevuelvaLaPreguntaConSusOpciones() {
-        //preparacion
         givenCuestionario();
-        //ejecucion
         ModelAndView vista = whenCuestionarioDevuelvaLaPregunta();
-        //validacion
         thenCuestionario(vista);
     }
-
-   /* @Test
-    public void siNoEncuentraElCuestionarioMuestraError() {
-        Cuestionario ejem = new Cuestionario();
-        HttpSession sesion = mock(HttpSession.class);
-        ejem.setId(1L);
-        ModelAndView mav = controladorJuego.iniciarPorFormulario(1L, sesion);
-        assertEquals("vista-error-cuestionario", mav.getViewName());
-    } */
 
     public void givenCuestionario() {
         when(servJuego.obtenerCuestionario(3L)).thenReturn(cuestionario);

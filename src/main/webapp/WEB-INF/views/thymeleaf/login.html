@@ -3,47 +3,53 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <title>Taller Web I</title>
-
-    <!-- Boostrap core css -->
+    <!-- Boostrap CSS -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-
-    <!-- custom style -->
+    <!-- Estilos -->
     <link rel="stylesheet" th:href="@{/css/colores.css}">
     <link rel="stylesheet" th:href="@{/css/login.css}"/>
-
 </head>
 
 <body>
 
-<nav class="navbar navbar-expand-md navbar-dark fixed-top">
-    <a class="navbar-brand ms-3" href="#">UNLAM</a>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top px-4">
+    <a class="navbar-brand" href="#">UNLAM</a>
 </nav>
 
 <main role="main" class="d-flex justify-content-center align-items-center min-vh-100">
 
-        <div class="login-container">
-            <form action="#" th:action="@{/validar-login}" method="POST" th:object="${datosLogin}">
-                <h3 class="form-signin-heading">Taller Web I</h3>
-                <hr class="colorgraph"><br>
+    <div class="login-container">
+        <form action="#" th:action="@{/validar-login}" method="POST" th:object="${datosLogin}">
+            <h3 class="form-signin-heading">Taller Web I - Login</h3>
+            <hr class="colorgraph">
 
-                <input th:field="*{email}" id="email" type="email" class="form-control" required/><br>
-                <input th:field="*{password}" type="password" id="password" class="form-control" required/>
-                <br>
-                <button id="btn-login" class="btn btn-lg btn-primary btn-block" Type="Submit" disabled>Login</button>
+            <input th:field="*{email}" id="email" type="email"
+                   class="form-control mb-3" placeholder="Email" required/>
 
-                <p th:if="${error != null}" class="alert alert-danger" th:text="'Error ' + ${error}">
-                </p>
-            </form>
-            <br>
-            <a id="btn-register" href="nuevo-usuario">Registrarme</a>
-        </div>
+            <input th:field="*{password}" type="password" id="password"
+                   class="form-control mb-3" placeholder="Contraseña" required/>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <button id="btn-login" class="btn btn-lg btn-primary" type="submit" disabled>
+                    Iniciar sesión
+                </button>
+
+                <a id="btn-register" href="nuevo-usuario" class="ms-3">
+                    ¿No tienes cuenta? Registrate
+                </a>
+            </div>
+
+            <p th:if="${error != null}" class="alert alert-danger mt-3"
+               th:text="'Error: ' + ${error}">
+            </p>
+        </form>
+
+    </div>
 
 </main>
-<!-- /.container -->
 
-<!-- Boostrap core js -->
+<!-- Boostrap JS -->
 <script type="text/javascript" th:src="@{webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
 <script type="module" th:src="@{js/login.js}"></script>
 </body>

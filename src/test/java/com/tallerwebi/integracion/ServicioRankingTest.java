@@ -20,9 +20,7 @@ public class ServicioRankingTest {
     private ServicioRankingImpl servicioRanking = new ServicioRankingImpl(repoUsuario, repoHistorial);
 
     @BeforeEach
-    void setUp() {
-        Mockito.reset(repoHistorial);
-    }
+    void setUp() {Mockito.reset(repoHistorial);}
 
     @Test
     public void queSeLlameAlRepoAlObtenerRankingGeneral() {
@@ -35,9 +33,7 @@ public class ServicioRankingTest {
         when(repoHistorial.buscarRankingGeneral()).thenReturn(Collections.emptyList());
     }
 
-    private List<RankingGeneralDTO> whenObtenerRankingGeneral() {
-        return servicioRanking.obtenerRankingGeneral();
-    }
+    private List<RankingGeneralDTO> whenObtenerRankingGeneral() {return servicioRanking.obtenerRankingGeneral();}
 
     private void thenSeLlamaABuscarRankingGeneral() {
         verify(repoHistorial, times(1)).buscarRankingGeneral();
@@ -97,11 +93,7 @@ public class ServicioRankingTest {
         when(repoHistorial.buscarRankingGeneral()).thenReturn(Collections.emptyList());
     }
 
-    private List<RankingGeneralDTO> whenObtieneRankingGeneral() {
-        return servicioRanking.obtenerRankingGeneral();
-    }
+    private List<RankingGeneralDTO> whenObtieneRankingGeneral() {return servicioRanking.obtenerRankingGeneral();}
 
-    private void thenRankingVacio(List<RankingGeneralDTO> ranking) {
-        assertEquals(0, ranking.size());
-    }
+    private void thenRankingVacio(List<RankingGeneralDTO> ranking) {assertEquals(0, ranking.size());}
 }

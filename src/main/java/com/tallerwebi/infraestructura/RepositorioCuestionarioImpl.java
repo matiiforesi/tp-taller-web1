@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 @Repository("repositorioCuestionario")
@@ -19,6 +20,7 @@ public class RepositorioCuestionarioImpl implements RepositorioCuestionario {
     public RepositorioCuestionarioImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
+
     @Override
     public void guardar(Cuestionario cuestionario) {
         sessionFactory.getCurrentSession().save(cuestionario);
@@ -26,7 +28,6 @@ public class RepositorioCuestionarioImpl implements RepositorioCuestionario {
 
     @Override
     public Cuestionario buscar(Long id) {
-
         final Session session = sessionFactory.getCurrentSession();
         return (Cuestionario) session.createCriteria(Cuestionario.class)
                 .add(Restrictions.eq("id", id)).uniqueResult();
@@ -56,17 +57,17 @@ public class RepositorioCuestionarioImpl implements RepositorioCuestionario {
     }
 
     @Override
-    public List<Cuestionario> buscarTodo(){
+    public List<Cuestionario> buscarTodo() {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("from Cuestionario", Cuestionario.class).list();
         }
     }
 
     @Override
-    public Integer contarCuestionarios(){
-        Long cantidad=(Long)sessionFactory.getCurrentSession()
+    public Integer contarCuestionarios() {
+        Long cantidad = (Long) sessionFactory.getCurrentSession()
                 .createQuery("select count(*) from Cuestionario").uniqueResult();
-        return cantidad!=null?cantidad.intValue():0;
+        return cantidad != null ? cantidad.intValue() : 0;
     }
 
     @Override
@@ -89,7 +90,8 @@ public class RepositorioCuestionarioImpl implements RepositorioCuestionario {
     @Override
     public List<String> obtenerTodasLasCategorias() {
         final Session session = sessionFactory.getCurrentSession();
-        List<String> categorias = session.createQuery("SELECT DISTINCT categoria FROM Cuestionario ORDER BY categoria").list();
+        List<String> categorias = session.createQuery(
+                "SELECT DISTINCT categoria FROM Cuestionario ORDER BY categoria").list();
         return categorias;
     }
 }

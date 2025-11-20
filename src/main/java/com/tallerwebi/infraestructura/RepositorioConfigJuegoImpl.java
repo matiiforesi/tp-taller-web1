@@ -14,21 +14,25 @@ public class RepositorioConfigJuegoImpl implements RepositorioConfigJuego {
     public RepositorioConfigJuegoImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
+
     @Override
     public String getValor(String clave, String valorPorDefecto) {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(RepositorioConfigJuego.class);
-        ConfiguracionJuego config= (ConfiguracionJuego) criteria.add(Restrictions.eq("clave",clave)).uniqueResult();
+        ConfiguracionJuego config = (ConfiguracionJuego) criteria.add(Restrictions.eq("clave", clave)).uniqueResult();
+
         return (config != null) ? config.getValor() : valorPorDefecto;
     }
+
     @Override
     public Integer getInt(String clave, Integer valorPorDefecto) {
-        String valor= getValor(clave,String.valueOf(valorPorDefecto));
-        try{
+        String valor = getValor(clave, String.valueOf(valorPorDefecto));
+        try {
             return Integer.parseInt(valor);
-        }catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             return valorPorDefecto;
         }
     }
+
     @Override
     public void save(ConfiguracionJuego configuracionJuego) {
         sessionFactory.getCurrentSession().save(configuracionJuego);

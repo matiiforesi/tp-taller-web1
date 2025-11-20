@@ -19,10 +19,13 @@ import java.util.List;
 public class ControladorLogin {
 
     private ServicioLogin servicioLogin;
+
     @Autowired
     private ServicioCuestionario servicioCuestionario;
+
     @Autowired
     private ServicioAdmin servicioAdmin;
+
     @Autowired
     private ServicioDificultad servicioDificultad;
 
@@ -56,11 +59,9 @@ public class ControladorLogin {
         return new ModelAndView("login", model);
     }
 
-
     @RequestMapping(path = "/registrarme", method = RequestMethod.POST)
     public ModelAndView registrarme(@ModelAttribute("usuario") Usuario usuario) {
         ModelMap model = new ModelMap();
-
         try {
             servicioLogin.registrar(usuario);
         } catch (UsuarioExistente e) {
@@ -116,12 +117,9 @@ public class ControladorLogin {
         model.put("dificultades", dificultades);
         model.put("categorias", categorias);
         model.put("monedas", usuarioEncontrado.getMonedas());
-
         return new ModelAndView("home", model);
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
-    public ModelAndView inicio() {
-        return new ModelAndView("redirect:/login");
-    }
+    public ModelAndView inicio() {return new ModelAndView("redirect:/login");}
 }

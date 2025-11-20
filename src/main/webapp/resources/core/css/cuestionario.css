@@ -1,0 +1,65 @@
+body {
+    padding: 1.9rem !important;
+    background: var(--gradient-radial);
+    min-height: 100vh;
+    color: var(--white);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form {
+    background: var(--ink-black);
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+}
+
+.form-label {
+    font-weight: 600;
+}
+
+.text-end {
+    color: var(--white) !important;
+}
+
+textarea {
+    resize: none;
+}
+
+.card {
+    background: var(--ink-black);
+    color: var(--white);
+}
+
+.card-body {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+}
+
+.card-title {
+    color: var(--fresh-sky);
+    font-weight: bold;
+}
+
+.cuestionario-id {
+    font-size: 0.9rem;
+    color: var(--white);
+}
+
+.card-text strong {
+    color: var(--steel-blue);
+}
+
+ul {
+    margin-left: 1rem;
+}
+
+li b {
+    color: var(--fresh-sky);
+}
+
+.incorrecta {
+    color: var(--white) !important;
+}

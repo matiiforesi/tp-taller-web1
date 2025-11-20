@@ -27,7 +27,7 @@ public class RepositorioCompraItemImpl implements RepositorioCompraItem {
     @Override
     public List<CompraItem> obtenerComprasPorUsuario(Long idUsuario) {
         return sessionFactory.getCurrentSession().createCriteria(CompraItem.class)
-                .add(Restrictions.eq("usuario.id",idUsuario)).list();
+                .add(Restrictions.eq("usuario.id", idUsuario)).list();
     }
 
     @Override
@@ -37,12 +37,13 @@ public class RepositorioCompraItemImpl implements RepositorioCompraItem {
 
     @Override
     public Long contarComprasPorUsuarioYTipo(Long idUsuario, TIPO_ITEMS tipo) {
-        Long resultado= (Long)sessionFactory.getCurrentSession().createCriteria(CompraItem.class,"compra")
-                .createAlias("compra.item","item")
-                .add(Restrictions.eq("compra.usuario.id",idUsuario))
-                .add(Restrictions.eq("item.tipoItem",tipo))
-                .add(Restrictions.eq("compra.usado",false))
+        Long resultado = (Long) sessionFactory.getCurrentSession().createCriteria(CompraItem.class, "compra")
+                .createAlias("compra.item", "item")
+                .add(Restrictions.eq("compra.usuario.id", idUsuario))
+                .add(Restrictions.eq("item.tipoItem", tipo))
+                .add(Restrictions.eq("compra.usado", false))
                 .setProjection(Projections.rowCount()).uniqueResult();
-        return resultado!=null ? resultado : 0L;
+
+        return resultado != null ? resultado : 0L;
     }
 }

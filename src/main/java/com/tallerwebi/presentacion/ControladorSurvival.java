@@ -13,8 +13,8 @@ import java.util.Collections;
 import java.util.List;
 
 @Controller
-@SessionAttributes({"gestorPreguntas", "survivalPuntaje", "survivalCorrectas", 
-                   "survivalErradas", "survivalVidas", "survivalDificultad", "usuario", "respondida"})
+@SessionAttributes({"gestorPreguntas", "survivalPuntaje", "survivalCorrectas",
+        "survivalErradas", "survivalVidas", "survivalDificultad", "usuario", "respondida"})
 public class ControladorSurvival {
 
     private static final String DIFICULTAD_EASY = "easy";
@@ -51,7 +51,7 @@ public class ControladorSurvival {
 
         List<Preguntas> preguntas = servicioSurvival.obtenerPreguntasSurvival(
                 DIFICULTAD_EASY, CANTIDAD_PREGUNTAS_INICIALES);
-        
+
         if (preguntas == null || preguntas.isEmpty()) {
             ModelMap errorModel = new ModelMap();
             errorModel.put("error", "No se pudieron cargar las preguntas. Intenta nuevamente.");
@@ -59,14 +59,12 @@ public class ControladorSurvival {
         }
 
         inicializarSessionSurvival(session, usuario, preguntas, gestor);
-
         return siguientePreguntaSurvival(session);
     }
 
-    private void inicializarSessionSurvival(HttpSession session, Usuario usuario, 
-                                           List<Preguntas> preguntas, GestorPreguntasSurvival gestor) {
+    private void inicializarSessionSurvival(HttpSession session, Usuario usuario,
+                                            List<Preguntas> preguntas, GestorPreguntasSurvival gestor) {
         gestor.inicializar(preguntas, DIFICULTAD_EASY);
-        
         session.setAttribute("gestorPreguntas", gestor);
         session.setAttribute("survivalPuntaje", 0);
         session.setAttribute("survivalCorrectas", 0);
@@ -87,29 +85,32 @@ public class ControladorSurvival {
         if (estado.usuario == null) {
             return new ModelAndView("redirect:/login");
         }
+
         if (estado.gestorPreguntas == null) {
             return new ModelAndView("redirect:/home");
         }
+
         if (estado.vidas <= 0) {
-            return finalizarSurvival(session, estado.usuario, estado.puntajeTotal, 
-                                   estado.correctas, estado.erradas, estado.vidas);
+            return finalizarSurvival(session, estado.usuario, estado.puntajeTotal,
+                    estado.correctas, estado.erradas, estado.vidas);
         }
+
         boolean debeAvanzar = Boolean.TRUE.equals(estado.respondida);
-        
+
         if (debeAvanzar) {
             estado.gestorPreguntas.marcarPreguntaComoRespondida();
         }
 
         Preguntas pregunta = estado.gestorPreguntas.obtenerSiguientePregunta(servicioSurvival);
-        
+
         if (pregunta == null) {
             if (estado.gestorPreguntas.cargarNuevasPreguntas(servicioSurvival)) {
                 pregunta = estado.gestorPreguntas.obtenerSiguientePregunta(servicioSurvival);
             }
-            
+
             if (pregunta == null) {
-                return finalizarSurvival(session, estado.usuario, estado.puntajeTotal, 
-                                       estado.correctas, estado.erradas, estado.vidas);
+                return finalizarSurvival(session, estado.usuario, estado.puntajeTotal,
+                        estado.correctas, estado.erradas, estado.vidas);
             }
         }
 
@@ -117,10 +118,10 @@ public class ControladorSurvival {
         List<Preguntas> todasLasPreguntas = obtenerTodasLasPreguntasParaVista(estado.gestorPreguntas);
         Cuestionario cuestionario = crearCuestionarioDummy(todasLasPreguntas);
 
-        return prepararVistaSurvival(cuestionario, pregunta, estado.timer, 
-                                    false, null, estado.usuario, estado.puntajeTotal, 
-                                    estado.correctas, estado.erradas, estado.vidas, 
-                                    estado.dificultadActual, false, session);
+        return prepararVistaSurvival(cuestionario, pregunta, estado.timer,
+                false, null, estado.usuario, estado.puntajeTotal,
+                estado.correctas, estado.erradas, estado.vidas,
+                estado.dificultadActual, false, session);
     }
 
     private EstadoSurvival obtenerEstadoSurvival(HttpSession session) {
@@ -150,12 +151,13 @@ public class ControladorSurvival {
         session.setAttribute("survivalCorrectas", estado.correctas);
         session.setAttribute("survivalErradas", estado.erradas);
         session.setAttribute("survivalVidas", estado.vidas);
-        
+
         if (estado.timer == null) {
             estado.timer = new TimerPregunta(TIEMPO_PREGUNTA_SEGUNDOS);
         } else {
             estado.timer.reiniciar();
         }
+
         session.setAttribute("timer", estado.timer);
         session.setAttribute("respondida", false);
     }
@@ -166,6 +168,7 @@ public class ControladorSurvival {
         if (preguntaActual != null) {
             preguntas.add(preguntaActual);
         }
+
         return preguntas;
     }
 
@@ -191,8 +194,8 @@ public class ControladorSurvival {
 
     @RequestMapping("/survival/validar")
     public ModelAndView validarPreguntaSurvival(@RequestParam String respuesta,
-                                               @RequestParam(required = false) String tiempoAgotado,
-                                               HttpSession session) {
+                                                @RequestParam(required = false) String tiempoAgotado,
+                                                HttpSession session) {
         EstadoSurvival estado = obtenerEstadoSurvival(session);
 
         if (estado.gestorPreguntas == null) {
@@ -200,46 +203,48 @@ public class ControladorSurvival {
         }
 
         Preguntas pregunta = estado.gestorPreguntas.getPreguntaActual(servicioSurvival);
-        
+
         if (pregunta == null) {
             return new ModelAndView("redirect:/home");
         }
+
         boolean esCorrecta = validarRespuesta(pregunta, respuesta, tiempoAgotado);
-        
+
         actualizarEstadoDespuesDeValidacion(estado, esCorrecta, session);
-        
+
         if (estado.vidas <= 0) {
-            return finalizarSurvival(session, estado.usuario, estado.puntajeTotal, 
-                                   estado.correctas, estado.erradas, estado.vidas);
+            return finalizarSurvival(session, estado.usuario, estado.puntajeTotal,
+                    estado.correctas, estado.erradas, estado.vidas);
         }
 
         List<Preguntas> todasLasPreguntas = obtenerTodasLasPreguntasParaVista(estado.gestorPreguntas);
         Cuestionario cuestionario = crearCuestionarioDummy(todasLasPreguntas);
         boolean tiempoAgotadoFlag = "true".equals(tiempoAgotado);
 
-        return prepararVistaSurvival(cuestionario, pregunta, estado.timer, true, 
-                                    esCorrecta, estado.usuario, estado.puntajeTotal, 
-                                    estado.correctas, estado.erradas, estado.vidas, 
-                                    estado.dificultadActual, tiempoAgotadoFlag, session);
+        return prepararVistaSurvival(cuestionario, pregunta, estado.timer, true,
+                esCorrecta, estado.usuario, estado.puntajeTotal,
+                estado.correctas, estado.erradas, estado.vidas,
+                estado.dificultadActual, tiempoAgotadoFlag, session);
     }
 
     private boolean validarRespuesta(Preguntas pregunta, String respuesta, String tiempoAgotado) {
         if ("true".equals(tiempoAgotado)) {
             return false;
         }
+
         return pregunta.getRespuestaCorrecta().equals(respuesta.trim());
     }
 
-    private void actualizarEstadoDespuesDeValidacion(EstadoSurvival estado, boolean esCorrecta, 
+    private void actualizarEstadoDespuesDeValidacion(EstadoSurvival estado, boolean esCorrecta,
                                                      HttpSession session) {
         if (esCorrecta) {
             procesarRespuestaCorrecta(estado, session);
         } else {
             procesarRespuestaIncorrecta(estado);
         }
-        
+
         estado.gestorPreguntas.marcarPreguntaComoRespondida();
-        
+
         session.setAttribute("gestorPreguntas", estado.gestorPreguntas);
         session.setAttribute("survivalPuntaje", estado.puntajeTotal);
         session.setAttribute("survivalCorrectas", estado.correctas);
@@ -253,16 +258,17 @@ public class ControladorSurvival {
         int multiplicador = servicioSurvival.calcularMultiplicadorSurvival(estado.dificultadActual);
         int tiempoBonus = calcularTiempoBonus(estado.timer);
         int puntosGanados = (PUNTAJE_BASE + tiempoBonus) * multiplicador;
-        
+
         estado.puntajeTotal += puntosGanados;
         estado.correctas++;
-        
+
         int monedasGanadas = calcularMonedasGanadas(puntosGanados);
-        
+
         Integer monedasGanadasTotales = (Integer) session.getAttribute("survivalMonedasGanadas");
         if (monedasGanadasTotales == null) {
             monedasGanadasTotales = 0;
         }
+
         monedasGanadasTotales += monedasGanadas;
         session.setAttribute("survivalMonedasGanadas", monedasGanadasTotales);
 
@@ -270,17 +276,18 @@ public class ControladorSurvival {
         if (puntajeGanado == null) {
             puntajeGanado = 0;
         }
+
         puntajeGanado += puntosGanados;
         session.setAttribute("puntajeGanado", puntajeGanado);
 
         Usuario usuarioActualizado = servicioSurvival.actualizarPuntajeYMonedas(
                 estado.usuario.getId(), puntosGanados);
-        
+
         if (usuarioActualizado != null) {
             estado.usuario = usuarioActualizado;
             session.setAttribute("usuario", usuarioActualizado);
         }
-        
+
         String nuevaDificultad = servicioSurvival.obtenerDificultadSurvival(estado.correctas);
         if (!nuevaDificultad.equals(estado.dificultadActual)) {
             estado.dificultadActual = nuevaDificultad;
@@ -297,22 +304,23 @@ public class ControladorSurvival {
         if (timer == null) {
             return 0;
         }
+
         return timer.segundosRestantes().intValue() * BONIFICACION_TIEMPO;
     }
 
-    private ModelAndView finalizarSurvival(HttpSession session, Usuario usuario, 
-                                          Integer puntajeTotal, Integer correctas, 
-                                          Integer erradas, Integer vidas) {
+    private ModelAndView finalizarSurvival(HttpSession session, Usuario usuario,
+                                           Integer puntajeTotal, Integer correctas,
+                                           Integer erradas, Integer vidas) {
         Integer monedasGanadas = (Integer) session.getAttribute("survivalMonedasGanadas");
         if (monedasGanadas == null) {
             monedasGanadas = calcularMonedasGanadas(puntajeTotal);
         }
-        
+
         Integer puntajeGanado = (Integer) session.getAttribute("puntajeGanado");
         if (puntajeGanado == null) {
             puntajeGanado = puntajeTotal != null ? puntajeTotal : 0;
         }
-        
+
         limpiarSessionSurvival(session);
 
         ModelMap model = new ModelMap();
@@ -348,11 +356,11 @@ public class ControladorSurvival {
     }
 
     private ModelAndView prepararVistaSurvival(Cuestionario cuestionario, Preguntas pregunta,
-                                              TimerPregunta timer, Boolean respondida,
-                                              Boolean esCorrecta, Usuario usuario, Integer puntajeTotal,
-                                              Integer correctas, Integer erradas, Integer vidas,
-                                              String dificultadActual, Boolean tiempoAgotado, 
-                                              HttpSession session) {
+                                               TimerPregunta timer, Boolean respondida,
+                                               Boolean esCorrecta, Usuario usuario, Integer puntajeTotal,
+                                               Integer correctas, Integer erradas, Integer vidas,
+                                               String dificultadActual, Boolean tiempoAgotado,
+                                               HttpSession session) {
         if (pregunta == null) {
             return new ModelAndView("redirect:/home");
         }
@@ -362,8 +370,8 @@ public class ControladorSurvival {
         Integer puntajeGanado = (Integer) session.getAttribute("puntajeGanado");
 
         ModelMap model = crearModeloVista(cuestionario, pregunta, opciones, respondida,
-                                         esCorrecta, usuario, puntajeTotal, correctas, erradas,
-                                         vidas, dificultadActual, tiempoAgotado, timer, monedasGanadas, puntajeGanado);
+                esCorrecta, usuario, puntajeTotal, correctas, erradas,
+                vidas, dificultadActual, tiempoAgotado, timer, monedasGanadas, puntajeGanado);
 
         return new ModelAndView("pregunta_survival", model);
     }
@@ -380,10 +388,10 @@ public class ControladorSurvival {
     }
 
     private ModelMap crearModeloVista(Cuestionario cuestionario, Preguntas pregunta,
-                                     List<String> opciones, Boolean respondida, Boolean esCorrecta,
-                                     Usuario usuario, Integer puntajeTotal, Integer correctas,
-                                     Integer erradas, Integer vidas, String dificultadActual,
-                                     Boolean tiempoAgotado, TimerPregunta timer, Integer monedasGanadas, Integer puntajeGanado) {
+                                      List<String> opciones, Boolean respondida, Boolean esCorrecta,
+                                      Usuario usuario, Integer puntajeTotal, Integer correctas,
+                                      Integer erradas, Integer vidas, String dificultadActual,
+                                      Boolean tiempoAgotado, TimerPregunta timer, Integer monedasGanadas, Integer puntajeGanado) {
         ModelMap model = new ModelMap();
         model.put("cuestionario", cuestionario);
         model.put("pregunta", pregunta);
@@ -403,4 +411,3 @@ public class ControladorSurvival {
         return model;
     }
 }
-

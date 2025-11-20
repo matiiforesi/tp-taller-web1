@@ -13,44 +13,44 @@ import java.util.List;
 @Repository
 public class RepositorioDificultadImpl implements RepositorioDificultad {
 
-	private SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
-	@Autowired
-	public RepositorioDificultadImpl(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+    @Autowired
+    public RepositorioDificultadImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
-	@Override
-	public Dificultad buscarPorNombre(String nombre) {
-		final Session session = sessionFactory.getCurrentSession();
-		return (Dificultad) session.createCriteria(Dificultad.class)
-				.add(Restrictions.eq("nombre", nombre))
-				.uniqueResult();
-	}
+    @Override
+    public Dificultad buscarPorNombre(String nombre) {
+        final Session session = sessionFactory.getCurrentSession();
+        return (Dificultad) session.createCriteria(Dificultad.class)
+                .add(Restrictions.eq("nombre", nombre))
+                .uniqueResult();
+    }
 
-	@Override
-	public Dificultad buscarPorId(Long id) {
-		final Session session = sessionFactory.getCurrentSession();
-		return (Dificultad) session.createCriteria(Dificultad.class)
-				.add(Restrictions.eq("id", id))
-				.uniqueResult();
-	}
+    @Override
+    public Dificultad buscarPorId(Long id) {
+        final Session session = sessionFactory.getCurrentSession();
+        return (Dificultad) session.createCriteria(Dificultad.class)
+                .add(Restrictions.eq("id", id))
+                .uniqueResult();
+    }
 
-	@Override
-	public void guardar(Dificultad dificultad) {
-		sessionFactory.getCurrentSession().save(dificultad);
-	}
+    @Override
+    public void guardar(Dificultad dificultad) {
+        sessionFactory.getCurrentSession().save(dificultad);
+    }
 
-	@Override
-	public void modificar(Dificultad dificultad) {
-		sessionFactory.getCurrentSession().update(dificultad);
-	}
+    @Override
+    public void modificar(Dificultad dificultad) {
+        sessionFactory.getCurrentSession().update(dificultad);
+    }
 
-	@Override
-	public List<Dificultad> buscarTodas() {
-		final Session session = sessionFactory.getCurrentSession();
-		return session.createQuery("from Dificultad ORDER BY id").list();
-	}
+    @Override
+    public List<Dificultad> buscarTodas() {
+        final Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("from Dificultad ORDER BY id").list();
+    }
 }
 
 

@@ -1,0 +1,27 @@
+body {
+    background: var(--gradient-radial);
+    min-height: 100vh;
+}
+
+.card {
+    background: var(--white);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+}
+
+.card h1 {
+    color: var(--fresh-sky);
+}
+
+.stats-box {
+    text-align: center;
+}
+
+.stats-box p {
+    margin: .5rem 0;
+    font-size: 1.15rem;
+}
+
+.stats-box span {
+    font-size: 1.4rem;
+    font-weight: 700;
+}

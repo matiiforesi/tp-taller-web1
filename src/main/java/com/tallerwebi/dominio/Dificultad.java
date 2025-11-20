@@ -16,27 +16,12 @@ public class Dificultad {
 
     private static Integer multiplicadorDificultad;
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() {return id;}
+    public void setId(Long id) {this.id = id;}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getNombre() {return nombre;}
+    public void setNombre(String nombre) {this.nombre = nombre;}
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public Integer getMultiplicadorDificultad() {
-        return multiplicadorDificultad;
-    }
-
-    public void setMultiplicadorDificultad(Integer multiplicadorDificultad) {
-        this.multiplicadorDificultad = multiplicadorDificultad;
-    }
+    public Integer getMultiplicadorDificultad() {return multiplicadorDificultad;}
+    public void setMultiplicadorDificultad(Integer multiplicadorDificultad) {this.multiplicadorDificultad = multiplicadorDificultad;}
 }

@@ -79,29 +79,29 @@ public class ControladorCuestionarioTest {
 
             when(mock.buscarPreguntas(org.mockito.ArgumentMatchers.anyInt(),
                     org.mockito.ArgumentMatchers.anyInt(),
-                    org.mockito.ArgumentMatchers.argThat(arg -> 
-                        arg != null && !arg.equalsIgnoreCase("multi"))))
+                    org.mockito.ArgumentMatchers.argThat(arg ->
+                            arg != null && !arg.equalsIgnoreCase("multi"))))
                     .thenReturn(respuesta);
 
             when(mock.buscarPreguntas(org.mockito.ArgumentMatchers.anyInt(),
                     org.mockito.ArgumentMatchers.anyInt(),
-                    org.mockito.ArgumentMatchers.argThat(arg -> 
-                        arg != null && arg.equalsIgnoreCase("multi"))))
+                    org.mockito.ArgumentMatchers.argThat(arg ->
+                            arg != null && arg.equalsIgnoreCase("multi"))))
                     .thenReturn(respuestaMulti);
 
             RespuestaCategorias respuestaCategorias = new RespuestaCategorias();
             TriviaCategory categoria1 = new TriviaCategory();
             categoria1.setId(9);
             categoria1.setName("General Knowledge");
-            
+
             TriviaCategory categoria2 = new TriviaCategory();
             categoria2.setId(22);
             categoria2.setName("Geography");
-            
+
             TriviaCategory categoria3 = new TriviaCategory();
             categoria3.setId(23);
             categoria3.setName("History");
-            
+
             respuestaCategorias.setTriviaCategories(asList(categoria1, categoria2, categoria3));
 
             when(mock.obtenerCategorias()).thenReturn(respuestaCategorias);
@@ -180,7 +180,7 @@ public class ControladorCuestionarioTest {
         assertThat(mv.getViewName(), equalToIgnoringCase("cuestionario_form"));
         assertThat(mv.getModel().containsKey("triviaCategories"), is(true));
         assertThat(mv.getModel().get("triviaCategories"), is(notNullValue()));
-        
+
         @SuppressWarnings("unchecked")
         List<TriviaCategory> categorias = (List<TriviaCategory>) mv.getModel().get("triviaCategories");
         assertThat(categorias.size(), is(3));

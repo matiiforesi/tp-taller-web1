@@ -41,6 +41,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
 }
 
 .store-icon {
@@ -80,8 +81,8 @@ body {
 }
 
 /* MODAL CONFIRMACION */
-.modal-header {
-    /*border-bottom: none !important;*/
+.modal-content {
+    padding: 0 1rem;
 }
 
 .modal-footer {

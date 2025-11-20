@@ -16,12 +16,14 @@ public class ServicioSurvivalImpl implements ServicioSurvival {
     private final ServicioTrivia servicioTrivia;
     private final ServicioDificultad servicioDificultad;
     private final RepositorioUsuario repositorioUsuario;
+    private final RepositorioHistorial repositorioHistorial;
 
     @Autowired
-    public ServicioSurvivalImpl(ServicioTrivia servicioTrivia, ServicioDificultad servicioDificultad, RepositorioUsuario repositorioUsuario) {
+    public ServicioSurvivalImpl(ServicioTrivia servicioTrivia, ServicioDificultad servicioDificultad, RepositorioUsuario repositorioUsuario, RepositorioHistorial repositorioHistorial) {
         this.servicioTrivia = servicioTrivia;
         this.servicioDificultad = servicioDificultad;
         this.repositorioUsuario = repositorioUsuario;
+        this.repositorioHistorial = repositorioHistorial;
     }
 
     @Override
@@ -31,12 +33,13 @@ public class ServicioSurvivalImpl implements ServicioSurvival {
         if (respuestaTrivia == null || respuestaTrivia.getResults() == null) {
             return new ArrayList<>();
         }
+
         return mapearPreguntasSurvival(respuestaTrivia);
     }
 
     @Override
     public String obtenerDificultadSurvival(int respuestasCorrectas) {
-        // 0-4 correctas: easy, 5-9: medium, 10+: hard
+        // 0-4 = easy, 5-9 = medium, >10 = hard
         if (respuestasCorrectas < 5) return "easy";
         if (respuestasCorrectas < 10) return "medium";
         return "hard";
@@ -45,7 +48,6 @@ public class ServicioSurvivalImpl implements ServicioSurvival {
     @Override
     public void asignarMonedas(Usuario jugador, Integer puntaje) {
         if (jugador.getMonedas() == null) jugador.setMonedas(0L);
-
         Long monedasGanadas = (long) (puntaje * 0.1);
         jugador.setMonedas(jugador.getMonedas() + monedasGanadas);
         repositorioUsuario.modificar(jugador);
@@ -73,26 +75,35 @@ public class ServicioSurvivalImpl implements ServicioSurvival {
         if (usuario == null) {
             return null;
         }
-        
+
         // Acumular puntaje
         Long puntajeAnterior = usuario.getPuntaje() != null ? usuario.getPuntaje() : 0L;
         usuario.setPuntaje(puntajeAnterior + puntosGanados);
-        
+
         // Calcular y acumular monedas
         Long monedasGanadas = (long) Math.floor(puntosGanados * 0.1);
         Long monedasAnteriores = usuario.getMonedas() != null ? usuario.getMonedas() : 0L;
         usuario.setMonedas(monedasAnteriores + monedasGanadas);
-        
+
         // Persistir en la base de datos
         repositorioUsuario.modificar(usuario);
-        
+
+        // Guardar historial para sumar al ranking
+        HistorialCuestionario historial = new HistorialCuestionario();
+        historial.setJugador(usuario);
+        historial.setNombreUsuario(usuario.getNombre());
+        historial.setNombreCuestionario("Survival Mode");
+        historial.setPuntaje(Long.valueOf(puntosGanados));
+        historial.setPreguntasCorrectas(0);
+        historial.setPreguntasErradas(0);
+
+        repositorioHistorial.guardar(historial);
+
         return usuario;
     }
-    
+
     @Override
-    public Usuario obtenerUsuarioPorId(Long idUsuario) {
-        return repositorioUsuario.buscarPorId(idUsuario);
-    }
+    public Usuario obtenerUsuarioPorId(Long idUsuario) {return repositorioUsuario.buscarPorId(idUsuario);}
 
     private List<Preguntas> mapearPreguntasSurvival(RespuestaTrivia respuestaTrivia) {
         return respuestaTrivia.getResults().stream()
@@ -113,6 +124,7 @@ public class ServicioSurvivalImpl implements ServicioSurvival {
             if (incorrects.size() > 1) p.setRespuestaIncorrecta2(decodeHtmlEntities(incorrects.get(1)));
             if (incorrects.size() > 2) p.setRespuestaIncorrecta3(decodeHtmlEntities(incorrects.get(2)));
         }
+
         return p;
     }
 
@@ -120,6 +132,7 @@ public class ServicioSurvivalImpl implements ServicioSurvival {
         if (text == null) {
             return null;
         }
+
         return HtmlUtils.htmlUnescape(text);
     }
 
@@ -132,4 +145,3 @@ public class ServicioSurvivalImpl implements ServicioSurvival {
         return servicioDificultad.obtenerPorNombre(normalizado);
     }
 }
-

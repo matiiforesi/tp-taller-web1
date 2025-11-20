@@ -41,6 +41,7 @@ label {
     border-radius: 12px;
     color: var(--black);
     font-weight: bold;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
 }
 
 img {
@@ -54,6 +55,8 @@ img {
     color: var(--white);
     border-radius: 12px;
     padding: 1rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+!important;
 }
 
 /* RESPUESTA */
@@ -61,6 +64,7 @@ img {
     color: var(--white);
     background-color: var(--deep-space-blue);
     transition: 0.3s;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
 }
 
 .btn-respuesta:hover {
@@ -77,6 +81,7 @@ img {
     border-radius: 12px;
     transition: 0.3s;
     font-weight: bold;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
 }
 
 .btn-ayuda:hover {

@@ -11,13 +11,13 @@ import javax.servlet.Filter;
 public class MyServletInitializer
         extends AbstractAnnotationConfigDispatcherServletInitializer {
 
-    // services and data sources
+    // Services and Data Sources
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class[0];
     }
 
-    // controller, view resolver, handler mapping
+    // Controller, View resolver, Handler mapping
     @Override
     protected Class<?>[] getServletConfigClasses() {
         return new Class[]{SpringWebConfig.class, HibernateConfig.class, DatabaseInitializationConfig.class};

@@ -46,9 +46,7 @@ public class ControladorRankingTest {
         thenSeRenderizaVistaRankingGeneral(mav);
     }
 
-    private void givenUsuarioEnSesion() {
-        when(session.getAttribute("usuario")).thenReturn(usuario);
-    }
+    private void givenUsuarioEnSesion() {when(session.getAttribute("usuario")).thenReturn(usuario);}
 
     private void givenServicioRankingGeneral() {
         RankingGeneralDTO r1 = new RankingGeneralDTO(2L, "Juan", 110L);
@@ -56,9 +54,7 @@ public class ControladorRankingTest {
         when(servRanking.obtenerRankingGeneral()).thenReturn(Arrays.asList(r1, r2));
     }
 
-    private ModelAndView whenObtieneRankingGeneral() {
-        return controladorRanking.mostrarRankingGeneral(session);
-    }
+    private ModelAndView whenObtieneRankingGeneral() {return controladorRanking.mostrarRankingGeneral(session);}
 
     private void thenSeRenderizaVistaRankingGeneral(ModelAndView mav) {
         verify(servRanking, times(1)).obtenerRankingGeneral();
@@ -161,7 +157,5 @@ public class ControladorRankingTest {
         assertEquals("redirect:/login", mavCuestionario.getViewName());
     }
 
-    private void givenSinUsuarioEnSesion() {
-        when(session.getAttribute("usuario")).thenReturn(null);
-    }
+    private void givenSinUsuarioEnSesion() {when(session.getAttribute("usuario")).thenReturn(null);}
 }

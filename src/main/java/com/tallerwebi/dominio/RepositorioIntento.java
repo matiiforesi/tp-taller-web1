@@ -1,8 +1,12 @@
 package com.tallerwebi.dominio;
 
 public interface RepositorioIntento {
-    IntentoCuestionario buscarPorUsuarioYCuestionario(Long idUsuario,Long idCuestionario);
+
+    IntentoCuestionario buscarPorUsuarioYCuestionario(Long idUsuario, Long idCuestionario);
+
     void guardar(IntentoCuestionario intentoCuestionario);
+
     void actualizar(IntentoCuestionario intentoCuestionario);
-    Integer contarIntentos(Long idUsuario,Long idCuestionario);
+
+    Integer contarIntentos(Long idUsuario, Long idCuestionario);
 }

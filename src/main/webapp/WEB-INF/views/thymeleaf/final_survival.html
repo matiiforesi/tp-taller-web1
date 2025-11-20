@@ -3,35 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Final de Modo Supervivencia</title>
-    <!-- Boostrap core css -->
+    <!-- Boostrap CSS -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-
-    <!-- custom style -->
+    <!-- Estilos -->
     <link rel="stylesheet" th:href="@{/css/colores.css}">
-    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" th:href="@{/css/final_partida.css}"/>
 </head>
 <body>
 <div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="card p-5" style="width:20em">
-        <h1 class="text-center mb-4"> Modo Supervivencia Finalizado</h1>
-        <div class="mb-3">
-            <p class="mb-2"><strong>Puntaje en este juego:</strong> <span th:text="${survivalPuntaje != null ? survivalPuntaje : 0}"></span></p>
-            <p class="mb-2" th:if="${usuario != null and usuario.puntaje != null}">
-                <strong>Puntaje total acumulado:</strong> <span th:text="${usuario.puntaje}"></span>
-            </p>
-            <p class="mb-2"><strong>Respuestas correctas:</strong> <span th:text="${survivalCorrectas != null ? survivalCorrectas : 0}"></span></p>
-            <p class="mb-2"><strong>Respuestas incorrectas:</strong> <span th:text="${survivalErradas != null ? survivalErradas : 0}"></span></p>
-            <p class="mb-2"><strong>Vidas restantes:</strong> <span th:text="${survivalVidas != null ? survivalVidas : 0}"></span></p>
-            <p class="mb-2"><strong>Monedas ganadas en este juego:</strong> <span th:text="${monedas != null ? monedas : 0}"></span></p>
-            <p class="mb-2" th:if="${usuario != null and usuario.monedas != null}">
-                <strong>Total de monedas:</strong> <span th:text="${usuario.monedas}"></span>
-            </p>
+    <div class="card p-5">
+        <h1 class="mb-3 text-center">¡Modo Supervivencia finalizado!</h1>
+
+        <div class="stats-box mb-4 text-center">
+            <p>Puntaje final: <span th:text="${survivalPuntaje}"></span></p>
+            <p>Respuestas correctas: <span th:text="${survivalCorrectas}"></span></p>
+            <p>Monedas ganadas: <span th:text="${monedas}"></span></p>
         </div>
-        <div class="text-center">
-            <a th:href="@{/home}" class="btn btn-primary">Volver al inicio</a>
-        </div>
+
+        <a th:href="@{/home}" class="btn btn-primary">Volver al inicio</a>
     </div>
 </div>
 </body>
 </html>
-

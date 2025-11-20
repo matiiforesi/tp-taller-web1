@@ -16,5 +16,3 @@ public interface ServicioDificultad {
     
     List<Dificultad> obtenerTodas();
 }
-
-
